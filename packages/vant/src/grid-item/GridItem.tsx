@@ -1,7 +1,18 @@
-import { computed, CSSProperties, defineComponent } from 'vue';
+import {
+  computed,
+  defineComponent,
+  type CSSProperties,
+  type ExtractPropTypes,
+} from 'vue';
 
 // Utils
-import { createNamespace, BORDER, addUnit, extend } from '../utils';
+import {
+  BORDER,
+  extend,
+  addUnit,
+  numericProp,
+  createNamespace,
+} from '../utils';
 import { GRID_KEY } from '../grid/Grid';
 
 // Composables
@@ -14,17 +25,21 @@ import { Badge } from '../badge';
 
 const [name, bem] = createNamespace('grid-item');
 
+const gridItemProps = extend({}, routeProps, {
+  dot: Boolean,
+  text: String,
+  icon: String,
+  badge: numericProp,
+  iconColor: String,
+  iconPrefix: String,
+});
+
+export type GridItemProps = ExtractPropTypes<typeof gridItemProps>;
+
 export default defineComponent({
   name,
 
-  props: extend({}, routeProps, {
-    dot: Boolean,
-    text: String,
-    icon: String,
-    badge: [Number, String],
-    iconPrefix: String,
-    iconColor: String,
-  }),
+  props: gridItemProps,
 
   setup(props, { slots }) {
     const { parent, index } = useParent(GRID_KEY);
@@ -74,9 +89,11 @@ export default defineComponent({
     const renderIcon = () => {
       if (slots.icon) {
         return (
-          <Badge dot={props.dot} content={props.badge}>
-            {slots.icon()}
-          </Badge>
+          <Badge
+            v-slots={{ default: slots.icon }}
+            dot={props.dot}
+            content={props.badge}
+          />
         );
       }
 

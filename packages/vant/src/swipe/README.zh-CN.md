@@ -128,8 +128,8 @@ export default {
   <van-swipe-item>2</van-swipe-item>
   <van-swipe-item>3</van-swipe-item>
   <van-swipe-item>4</van-swipe-item>
-  <template #indicator="{ active }">
-    <div class="custom-indicator">{{ active + 1 }}/4</div>
+  <template #indicator="{ active, total }">
+    <div class="custom-indicator">{{ active + 1 }}/{{ total }}</div>
   </template>
 </van-swipe>
 
@@ -192,7 +192,7 @@ export default {
 组件导出以下类型定义：
 
 ```ts
-import type { SwipeInstance, SwipeToOptions } from 'vant';
+import type { SwipeProps, SwipeInstance, SwipeToOptions } from 'vant';
 ```
 
 `SwipeInstance` 是组件实例的类型，用法如下：
@@ -214,10 +214,10 @@ swipeRef.value?.next();
 
 ### Swipe Slots
 
-| 名称                | 说明         | 参数                 |
-| ------------------- | ------------ | -------------------- |
-| default             | 轮播内容     | -                    |
-| indicator `v3.0.16` | 自定义指示器 | _{ active: number }_ |
+| 名称               | 说明         | 参数                                |
+| ------------------ | ------------ | ----------------------------------- |
+| default            | 轮播内容     | -                                   |
+| indicator `v3.3.8` | 自定义指示器 | _{ active: number, total: number }_ |
 
 ## 主题定制
 

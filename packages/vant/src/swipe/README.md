@@ -120,8 +120,8 @@ export default {
   <van-swipe-item>2</van-swipe-item>
   <van-swipe-item>3</van-swipe-item>
   <van-swipe-item>4</van-swipe-item>
-  <template #indicator="{ active }">
-    <div class="custom-indicator">{{ active + 1 }}/4</div>
+  <template #indicator="{ active, total }">
+    <div class="custom-indicator">{{ active + 1 }}/{{ total }}</div>
   </template>
 </van-swipe>
 
@@ -184,7 +184,7 @@ Use [ref](https://v3.vuejs.org/guide/component-template-refs.html) to get Swipe 
 The component exports the following type definitions:
 
 ```ts
-import type { SwipeInstance, SwipeToOptions } from 'vant';
+import type { SwipeProps, SwipeInstance, SwipeToOptions } from 'vant';
 ```
 
 `SwipeInstance` is the type of component instance:
@@ -206,10 +206,10 @@ swipeRef.value?.next();
 
 ### Swipe Slots
 
-| Name                | Description      | SlotProps            |
-| ------------------- | ---------------- | -------------------- |
-| default             | Content          | -                    |
-| indicator `v3.0.16` | Custom indicator | _{ active: number }_ |
+| Name               | Description      | SlotProps                           |
+| ------------------ | ---------------- | ----------------------------------- |
+| default            | Content          | -                                   |
+| indicator `v3.3.8` | Custom indicator | _{ active: number, total: number }_ |
 
 ## Theming
 

@@ -157,7 +157,12 @@ export default {
 组件导出以下类型定义：
 
 ```ts
-import type { PopupPosition, PopupCloseIconPosition } from 'vant';
+import type {
+  PopupProps,
+  PopupPosition,
+  PopupInstance,
+  PopupCloseIconPosition,
+} from 'vant';
 ```
 
 ## 主题定制
@@ -168,11 +173,10 @@ import type { PopupPosition, PopupCloseIconPosition } from 'vant';
 
 | 名称 | 默认值 | 描述 |
 | --- | --- | --- |
-| --van-popup-background-color | _var(--van-white)_ | - |
+| --van-popup-background-color | _var(--van-background-color-light)_ | - |
 | --van-popup-transition | _transform var(--van-animation-duration-base)_ | - |
 | --van-popup-round-border-radius | _16px_ | - |
 | --van-popup-close-icon-size | _22px_ | - |
 | --van-popup-close-icon-color | _var(--van-gray-5)_ | - |
-| --van-popup-close-icon-active-color | _var(--van-gray-6)_ | - |
 | --van-popup-close-icon-margin | _16px_ | - |
 | --van-popup-close-icon-z-index | _1_ | - |

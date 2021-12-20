@@ -1,53 +1,33 @@
-import {
-  watch,
-  computed,
-  defineComponent,
-  ExtractPropTypes,
-  ComponentPublicInstance,
-} from 'vue';
+import { watch, computed, defineComponent, type ExtractPropTypes } from 'vue';
 
 // Utils
-import { truthProp, createNamespace } from '../utils';
+import {
+  truthProp,
+  makeStringProp,
+  makeNumericProp,
+  createNamespace,
+} from '../utils';
 import { parseFormat } from './utils';
 
 // Composables
-import { useCountDown, CurrentTime } from '@vant/use';
+import { useCountDown } from '@vant/use';
 import { useExpose } from '../composables/use-expose';
 
 const [name, bem] = createNamespace('count-down');
 
-const props = {
+const countDownProps = {
+  time: makeNumericProp(0),
+  format: makeStringProp('HH:mm:ss'),
   autoStart: truthProp,
   millisecond: Boolean,
-  time: {
-    type: [Number, String],
-    default: 0,
-  },
-  format: {
-    type: String,
-    default: 'HH:mm:ss',
-  },
 };
 
-type CountDownProps = ExtractPropTypes<typeof props>;
-
-type CountDownExpose = {
-  start: () => void;
-  pause: () => void;
-  reset: () => void;
-};
-
-export type CountDownInstance = ComponentPublicInstance<
-  CountDownProps,
-  CountDownExpose
->;
-
-export type CountDownCurrentTime = CurrentTime;
+export type CountDownProps = ExtractPropTypes<typeof countDownProps>;
 
 export default defineComponent({
   name,
 
-  props,
+  props: countDownProps,
 
   emits: ['change', 'finish'],
 
@@ -78,7 +58,7 @@ export default defineComponent({
     });
 
     return () => (
-      <div class={bem()}>
+      <div role="timer" class={bem()}>
         {slots.default ? slots.default(current.value) : timeText.value}
       </div>
     );

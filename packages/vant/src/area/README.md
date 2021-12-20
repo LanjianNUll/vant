@@ -55,7 +55,14 @@ export default {
 Vant officially provides a default area data, which can be imported through [@vant/area-data](https://github.com/youzan/vant/tree/dev/packages/vant-area-data):
 
 ```bash
+# with npm
+npm i @vant/area-data
+
+# with yarn
 yarn add @vant/area-data
+
+# with pnpm
+pnpm add @vant/area-data
 ```
 
 ```ts
@@ -169,7 +176,7 @@ Use [ref](https://v3.vuejs.org/guide/component-template-refs.html) to get Area i
 The component exports the following type definitions:
 
 ```ts
-import type { AreaList, AreaInstance, AreaColumnOption } from 'vant';
+import type { AreaProps, AreaList, AreaInstance, AreaColumnOption } from 'vant';
 ```
 
 `AreaInstance` is the type of component instance:

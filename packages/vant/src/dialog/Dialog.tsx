@@ -1,4 +1,9 @@
-import { PropType, reactive, defineComponent } from 'vue';
+import {
+  reactive,
+  defineComponent,
+  type PropType,
+  type ExtractPropTypes,
+} from 'vue';
 
 // Utils
 import {
@@ -10,6 +15,8 @@ import {
   BORDER_TOP,
   BORDER_LEFT,
   unknownProp,
+  numericProp,
+  makeStringProp,
   callInterceptor,
   createNamespace,
 } from '../utils';
@@ -21,14 +28,39 @@ import { Button } from '../button';
 import { ActionBar } from '../action-bar';
 import { ActionBarButton } from '../action-bar-button';
 
+// Types
+import type {
+  DialogTheme,
+  DialogAction,
+  DialogMessage,
+  DialogMessageAlign,
+} from './types';
+
 const [name, bem, t] = createNamespace('dialog');
 
-export type DialogTheme = 'default' | 'round-button';
-export type DialogAction = 'confirm' | 'cancel';
-export type DialogMessage = string | (() => JSX.Element);
-export type DialogMessageAlign = 'left' | 'center' | 'right';
+const dialogProps = extend({}, popupSharedProps, {
+  title: String,
+  theme: String as PropType<DialogTheme>,
+  width: numericProp,
+  message: [String, Function] as PropType<DialogMessage>,
+  callback: Function as PropType<(action?: DialogAction) => void>,
+  allowHtml: Boolean,
+  className: unknownProp,
+  transition: makeStringProp('van-dialog-bounce'),
+  messageAlign: String as PropType<DialogMessageAlign>,
+  closeOnPopstate: truthProp,
+  showCancelButton: Boolean,
+  cancelButtonText: String,
+  cancelButtonColor: String,
+  confirmButtonText: String,
+  confirmButtonColor: String,
+  showConfirmButton: truthProp,
+  closeOnClickOverlay: Boolean,
+});
 
-const popupKeys = [
+export type DialogProps = ExtractPropTypes<typeof dialogProps>;
+
+const popupInheritKeys = [
   ...popupSharedPropKeys,
   'transition',
   'closeOnPopstate',
@@ -37,28 +69,7 @@ const popupKeys = [
 export default defineComponent({
   name,
 
-  props: extend({}, popupSharedProps, {
-    title: String,
-    theme: String as PropType<DialogTheme>,
-    width: [Number, String],
-    message: [String, Function] as PropType<DialogMessage>,
-    callback: Function as PropType<(action?: DialogAction) => void>,
-    allowHtml: Boolean,
-    className: unknownProp,
-    messageAlign: String as PropType<DialogMessageAlign>,
-    closeOnPopstate: truthProp,
-    showCancelButton: Boolean,
-    cancelButtonText: String,
-    cancelButtonColor: String,
-    confirmButtonText: String,
-    confirmButtonColor: String,
-    showConfirmButton: truthProp,
-    closeOnClickOverlay: Boolean,
-    transition: {
-      type: String,
-      default: 'van-dialog-bounce',
-    },
-  }),
+  props: dialogProps,
 
   emits: ['confirm', 'cancel', 'update:show'],
 
@@ -72,10 +83,7 @@ export default defineComponent({
 
     const close = (action: DialogAction) => {
       updateShow(false);
-
-      if (props.callback) {
-        props.callback(action);
-      }
+      props.callback?.(action);
     };
 
     const getActionHandler = (action: DialogAction) => () => {
@@ -88,8 +96,7 @@ export default defineComponent({
 
       if (props.beforeClose) {
         loading[action] = true;
-        callInterceptor({
-          interceptor: props.beforeClose,
+        callInterceptor(props.beforeClose, {
           args: [action],
           done() {
             close(action);
@@ -226,8 +233,8 @@ export default defineComponent({
           class={[bem([theme]), className]}
           style={{ width: addUnit(width) }}
           aria-labelledby={title || message}
-          {...pick(props, popupKeys)}
-          {...{ 'onUpdate:show': updateShow }}
+          onUpdate:show={updateShow}
+          {...pick(props, popupInheritKeys)}
         >
           {renderTitle()}
           {renderContent()}

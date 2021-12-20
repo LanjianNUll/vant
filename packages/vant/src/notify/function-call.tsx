@@ -4,38 +4,23 @@ import {
   isObject,
   inBrowser,
   withInstall,
-  ComponentInstance,
+  type ComponentInstance,
 } from '../utils';
 import { mountComponent, usePopupState } from '../utils/mount-component';
-import VanNotify, { NotifyType } from './Notify';
+import VanNotify from './Notify';
+import type { NotifyMessage, NotifyOptions } from './types';
 
 let timer: number;
 let instance: ComponentInstance;
 
-export type NotifyMessage = string | number;
-
-export type NotifyOptions = {
-  type?: NotifyType;
-  color?: string;
-  message?: NotifyMessage;
-  duration?: number;
-  className?: unknown;
-  background?: string;
-  lockScroll?: boolean;
-  onClick?: (event: MouseEvent) => void;
-  onClose?: () => void;
-  onOpened?: () => void;
-};
-
-function parseOptions(message: NotifyMessage | NotifyOptions) {
-  return isObject(message) ? message : { message };
-}
+const parseOptions = (message: NotifyMessage | NotifyOptions) =>
+  isObject(message) ? message : { message };
 
 function initInstance() {
   ({ instance } = mountComponent({
     setup() {
       const { state, toggle } = usePopupState();
-      return () => <VanNotify {...state} {...{ 'onUpdate:show': toggle }} />;
+      return () => <VanNotify {...state} onUpdate:show={toggle} />;
     },
   }));
 }
@@ -61,20 +46,19 @@ function Notify(options: NotifyMessage | NotifyOptions) {
   return instance;
 }
 
-function defaultOptions() {
-  return {
-    type: 'danger',
-    color: undefined,
-    message: '',
-    onClose: undefined,
-    onClick: undefined,
-    onOpened: undefined,
-    duration: 3000,
-    className: '',
-    lockScroll: false,
-    background: undefined,
-  } as NotifyOptions;
-}
+const getDefaultOptions = (): NotifyOptions => ({
+  type: 'danger',
+  color: undefined,
+  message: '',
+  onClose: undefined,
+  onClick: undefined,
+  onOpened: undefined,
+  duration: 3000,
+  position: undefined,
+  className: '',
+  lockScroll: false,
+  background: undefined,
+});
 
 Notify.clear = () => {
   if (instance) {
@@ -82,14 +66,14 @@ Notify.clear = () => {
   }
 };
 
-Notify.currentOptions = defaultOptions();
+Notify.currentOptions = getDefaultOptions();
 
 Notify.setDefaultOptions = (options: NotifyOptions) => {
   extend(Notify.currentOptions, options);
 };
 
 Notify.resetDefaultOptions = () => {
-  Notify.currentOptions = defaultOptions();
+  Notify.currentOptions = getDefaultOptions();
 };
 
 Notify.Component = withInstall(VanNotify);

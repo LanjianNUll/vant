@@ -3,4 +3,5 @@ import _CountDown from './CountDown';
 
 export const CountDown = withInstall(_CountDown);
 export default CountDown;
-export type { CountDownInstance, CountDownCurrentTime } from './CountDown';
+export type { CountDownProps } from './CountDown';
+export type { CountDownInstance, CountDownCurrentTime } from './types';

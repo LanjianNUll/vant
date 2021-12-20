@@ -2,9 +2,9 @@ import {
   ref,
   watch,
   computed,
-  PropType,
   defineComponent,
-  ExtractPropTypes,
+  type PropType,
+  type ExtractPropTypes,
 } from 'vue';
 
 // Utils
@@ -12,8 +12,12 @@ import {
   extend,
   unitToPx,
   truthProp,
+  makeArrayProp,
   preventDefault,
+  makeStringProp,
+  makeNumericProp,
   createNamespace,
+  HAPTICS_FEEDBACK,
   BORDER_UNSET_TOP_BOTTOM,
 } from '../utils';
 
@@ -37,51 +41,35 @@ import type {
 
 const [name, bem, t] = createNamespace('picker');
 
-export const pickerProps = {
+export const pickerSharedProps = {
   title: String,
   loading: Boolean,
   readonly: Boolean,
   allowHtml: Boolean,
+  itemHeight: makeNumericProp(44),
   showToolbar: truthProp,
+  swipeDuration: makeNumericProp(1000),
+  visibleItemCount: makeNumericProp(6),
   cancelButtonText: String,
   confirmButtonText: String,
-  itemHeight: {
-    type: [Number, String],
-    default: 44,
-  },
-  visibleItemCount: {
-    type: [Number, String],
-    default: 6,
-  },
-  swipeDuration: {
-    type: [Number, String],
-    default: 1000,
-  },
 };
+
+const pickerProps = extend({}, pickerSharedProps, {
+  columns: makeArrayProp<PickerOption | PickerColumn>(),
+  // @deprecated
+  // should be removed in next major version
+  valueKey: String,
+  defaultIndex: makeNumericProp(0),
+  toolbarPosition: makeStringProp<PickerToolbarPosition>('top'),
+  columnsFieldNames: Object as PropType<PickerFieldNames>,
+});
 
 export type PickerProps = ExtractPropTypes<typeof pickerProps>;
 
 export default defineComponent({
   name,
 
-  props: extend({}, pickerProps, {
-    // @deprecated
-    // should be removed in next major version
-    valueKey: String,
-    columnsFieldNames: Object as PropType<PickerFieldNames>,
-    columns: {
-      type: Array as PropType<PickerOption[] | PickerColumn[]>,
-      default: () => [],
-    },
-    defaultIndex: {
-      type: [Number, String],
-      default: 0,
-    },
-    toolbarPosition: {
-      type: String as PropType<PickerToolbarPosition>,
-      default: 'top',
-    },
-  }),
+  props: pickerProps,
 
   emits: ['confirm', 'cancel', 'change'],
 
@@ -311,7 +299,11 @@ export default defineComponent({
     const renderCancel = () => {
       const text = props.cancelButtonText || t('cancel');
       return (
-        <button type="button" class={bem('cancel')} onClick={cancel}>
+        <button
+          type="button"
+          class={[bem('cancel'), HAPTICS_FEEDBACK]}
+          onClick={cancel}
+        >
           {slots.cancel ? slots.cancel() : text}
         </button>
       );
@@ -320,7 +312,11 @@ export default defineComponent({
     const renderConfirm = () => {
       const text = props.confirmButtonText || t('confirm');
       return (
-        <button type="button" class={bem('confirm')} onClick={confirm}>
+        <button
+          type="button"
+          class={[bem('confirm'), HAPTICS_FEEDBACK]}
+          onClick={confirm}
+        >
           {slots.confirm ? slots.confirm() : text}
         </button>
       );

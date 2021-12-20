@@ -1,5 +1,5 @@
-import { computed, CSSProperties, defineComponent } from 'vue';
-import { createNamespace, isDef, truthProp } from '../utils';
+import { computed, defineComponent, type CSSProperties } from 'vue';
+import { isDef, truthProp, numericProp, createNamespace } from '../utils';
 import { Badge } from '../badge';
 
 const [name, bem] = createNamespace('tab');
@@ -8,13 +8,15 @@ export default defineComponent({
   name,
 
   props: {
+    id: String,
     dot: Boolean,
     type: String,
     color: String,
     title: String,
-    badge: [Number, String],
+    badge: numericProp,
     isActive: Boolean,
     disabled: Boolean,
+    controls: String,
     scrollable: Boolean,
     activeColor: String,
     renderTitle: Function,
@@ -75,6 +77,7 @@ export default defineComponent({
 
     return () => (
       <div
+        id={props.id}
         role="tab"
         class={[
           bem({
@@ -83,7 +86,10 @@ export default defineComponent({
           }),
         ]}
         style={style.value}
+        tabindex={props.disabled ? undefined : props.isActive ? 0 : -1}
         aria-selected={props.isActive}
+        aria-disabled={props.disabled || undefined}
+        aria-controls={props.controls}
       >
         {renderText()}
       </div>

@@ -1,37 +1,14 @@
-import { ref, App, TeleportProps, getCurrentInstance, watch } from 'vue';
+import { ref, watch, getCurrentInstance, type App } from 'vue';
 import {
   extend,
   isObject,
   inBrowser,
   withInstall,
-  ComponentInstance,
+  type ComponentInstance,
 } from '../utils';
 import { mountComponent, usePopupState } from '../utils/mount-component';
-import VanToast, { ToastType, ToastPosition } from './Toast';
-import type { LoadingType } from '../loading';
-
-export type ToastOptions = {
-  icon?: string;
-  type?: ToastType;
-  mask?: boolean;
-  message?: string | number;
-  onClose?: () => void;
-  onOpened?: () => void;
-  overlay?: boolean;
-  duration?: number;
-  teleport?: TeleportProps['to'];
-  iconSize?: number | string;
-  position?: ToastPosition;
-  className?: unknown;
-  transition?: string;
-  iconPrefix?: string;
-  loadingType?: LoadingType;
-  forbidClick?: boolean;
-  closeOnClick?: boolean;
-  overlayClass?: unknown;
-  overlayStyle?: Record<string, any>;
-  closeOnClickOverlay?: boolean;
-};
+import VanToast from './Toast';
+import type { ToastType, ToastOptions } from './types';
 
 const defaultOptions: ToastOptions = {
   icon: '',
@@ -162,9 +139,12 @@ Toast.clear = (all?: boolean) => {
 
 function setDefaultOptions(options: ToastOptions): void;
 function setDefaultOptions(type: ToastType, options: ToastOptions): void;
-function setDefaultOptions(type: ToastType | ToastOptions, options?: any) {
+function setDefaultOptions(
+  type: ToastType | ToastOptions,
+  options?: ToastOptions
+) {
   if (typeof type === 'string') {
-    defaultOptionsMap.set(type, options);
+    defaultOptionsMap.set(type, options!);
   } else {
     extend(currentOptions, type);
   }

@@ -78,7 +78,7 @@ app.use(Progress);
 组件导出以下类型定义：
 
 ```ts
-import type { ProgressInstance } from 'vant';
+import type { ProgressProps, ProgressInstance } from 'vant';
 ```
 
 `ProgressInstance` 是组件实例的类型，用法如下：
@@ -102,6 +102,7 @@ progressRef.value?.resize();
 | ------------------------------------- | -------------------------- | ---- |
 | --van-progress-height                 | _4px_                      | -    |
 | --van-progress-color                  | _var(--van-primary-color)_ | -    |
+| --van-progress-inactive-color         | _var(--van-gray-5)_        | -    |
 | --van-progress-background-color       | _var(--van-gray-3)_        | -    |
 | --van-progress-pivot-padding          | _0 5px_                    | -    |
 | --van-progress-pivot-text-color       | _var(--van-white)_         | -    |

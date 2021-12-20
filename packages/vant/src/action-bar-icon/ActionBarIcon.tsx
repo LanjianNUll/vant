@@ -1,5 +1,5 @@
-import { defineComponent } from 'vue';
-import { extend, createNamespace, unknownProp } from '../utils';
+import { defineComponent, type ExtractPropTypes } from 'vue';
+import { extend, createNamespace, unknownProp, numericProp } from '../utils';
 import { ACTION_BAR_KEY } from '../action-bar/ActionBar';
 
 // Composables
@@ -12,18 +12,22 @@ import { Badge } from '../badge';
 
 const [name, bem] = createNamespace('action-bar-icon');
 
+const actionBarIconProps = extend({}, routeProps, {
+  dot: Boolean,
+  text: String,
+  icon: String,
+  color: String,
+  badge: numericProp,
+  iconClass: unknownProp,
+  iconPrefix: String,
+});
+
+export type ActionBarIconProps = ExtractPropTypes<typeof actionBarIconProps>;
+
 export default defineComponent({
   name,
 
-  props: extend({}, routeProps, {
-    dot: Boolean,
-    text: String,
-    icon: String,
-    color: String,
-    badge: [Number, String],
-    iconClass: unknownProp,
-    iconPrefix: String,
-  }),
+  props: actionBarIconProps,
 
   setup(props, { slots }) {
     const route = useRoute();
@@ -35,9 +39,12 @@ export default defineComponent({
 
       if (slots.icon) {
         return (
-          <Badge dot={dot} content={badge} class={bem('icon')}>
-            {slots.icon()}
-          </Badge>
+          <Badge
+            v-slots={{ default: slots.icon }}
+            dot={dot}
+            content={badge}
+            class={bem('icon')}
+          />
         );
       }
 

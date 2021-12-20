@@ -1,43 +1,8 @@
-import { App, CSSProperties, TeleportProps } from 'vue';
-import {
-  extend,
-  inBrowser,
-  withInstall,
-  Interceptor,
-  ComponentInstance,
-} from '../utils';
+import { App } from 'vue';
+import { extend, inBrowser, withInstall, ComponentInstance } from '../utils';
 import { mountComponent, usePopupState } from '../utils/mount-component';
-import VanDialog, {
-  DialogTheme,
-  DialogAction,
-  DialogMessage,
-  DialogMessageAlign,
-} from './Dialog';
-
-export type DialogOptions = {
-  title?: string;
-  width?: string | number;
-  theme?: DialogTheme;
-  message?: DialogMessage;
-  overlay?: boolean;
-  teleport?: TeleportProps['to'];
-  className?: unknown;
-  allowHtml?: boolean;
-  lockScroll?: boolean;
-  transition?: string;
-  beforeClose?: Interceptor;
-  messageAlign?: DialogMessageAlign;
-  overlayClass?: string;
-  overlayStyle?: CSSProperties;
-  closeOnPopstate?: boolean;
-  cancelButtonText?: string;
-  showCancelButton?: boolean;
-  showConfirmButton?: boolean;
-  cancelButtonColor?: string;
-  confirmButtonText?: string;
-  confirmButtonColor?: string;
-  closeOnClickOverlay?: boolean;
-};
+import VanDialog from './Dialog';
+import type { DialogAction, DialogOptions } from './types';
 
 let instance: ComponentInstance;
 
@@ -45,7 +10,7 @@ function initInstance() {
   const Wrapper = {
     setup() {
       const { state, toggle } = usePopupState();
-      return () => <VanDialog {...state} {...{ 'onUpdate:show': toggle }} />;
+      return () => <VanDialog {...state} onUpdate:show={toggle} />;
     },
   };
 
@@ -84,7 +49,7 @@ Dialog.defaultOptions = {
   className: '',
   allowHtml: false,
   lockScroll: true,
-  transition: 'van-dialog-bounce',
+  transition: undefined,
   beforeClose: null,
   overlayClass: '',
   overlayStyle: undefined,

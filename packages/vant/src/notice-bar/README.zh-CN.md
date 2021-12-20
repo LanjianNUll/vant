@@ -25,7 +25,7 @@ app.use(NoticeBar);
 ```html
 <van-notice-bar
   left-icon="volume-o"
-  text="在代码阅读过程中人们说脏话的频率是衡量代码质量的唯一标准。"
+  text="无论我们能活多久，我们能够享受的只有无法分割的此刻，此外别无其他。"
 />
 ```
 
@@ -35,12 +35,12 @@ app.use(NoticeBar);
 
 ```html
 <!-- 文字较短时，通过设置 scrollable 属性开启滚动播放 -->
-<van-notice-bar scrollable text="技术是开发它的人的共同灵魂。" />
+<van-notice-bar scrollable text="米袋虽空——樱花开哉！" />
 
 <!-- 文字较长时，通过禁用 scrollable 属性关闭滚动播放 -->
 <van-notice-bar
   :scrollable="false"
-  text="在代码阅读过程中人们说脏话的频率是衡量代码质量的唯一标准。"
+  text="不会回头的东西有四件：说出口的话、离弦的箭、逝去的生活和失去的机会。"
 />
 ```
 
@@ -52,7 +52,7 @@ app.use(NoticeBar);
 <van-notice-bar
   wrapable
   :scrollable="false"
-  text="在代码阅读过程中人们说脏话的频率是衡量代码质量的唯一标准。"
+  text="不会回头的东西有四件：说出口的话、离弦的箭、逝去的生活和失去的机会。"
 />
 ```
 
@@ -62,10 +62,10 @@ app.use(NoticeBar);
 
 ```html
 <!-- closeable 模式，在右侧显示关闭按钮 -->
-<van-notice-bar mode="closeable">技术是开发它的人的共同灵魂。</van-notice-bar>
+<van-notice-bar mode="closeable">米袋虽空——樱花开哉！</van-notice-bar>
 
 <!-- link 模式，在右侧显示链接箭头 -->
-<van-notice-bar mode="link">技术是开发它的人的共同灵魂。</van-notice-bar>
+<van-notice-bar mode="link">米袋虽空——樱花开哉！</van-notice-bar>
 ```
 
 ### 自定义样式
@@ -74,13 +74,13 @@ app.use(NoticeBar);
 
 ```html
 <van-notice-bar color="#1989fa" background="#ecf9ff" left-icon="info-o">
-  技术是开发它的人的共同灵魂。
+  米袋虽空——樱花开哉！
 </van-notice-bar>
 ```
 
 ### 垂直滚动
 
-搭配 NoticeBar 和 Swipe 组件可以实现垂直滚动的效果。
+搭配 NoticeBar 和 Swipe 组件，可以实现垂直滚动的效果。
 
 ```html
 <van-notice-bar left-icon="volume-o" :scrollable="false">
@@ -90,9 +90,9 @@ app.use(NoticeBar);
     :autoplay="3000"
     :show-indicators="false"
   >
-    <van-swipe-item>内容 1</van-swipe-item>
-    <van-swipe-item>内容 2</van-swipe-item>
-    <van-swipe-item>内容 3</van-swipe-item>
+    <van-swipe-item>明月直入，无心可猜。</van-swipe-item>
+    <van-swipe-item>仙人抚我顶，结发受长生。</van-swipe-item>
+    <van-swipe-item>今人不见古时月，今月曾经照古人。</van-swipe-item>
   </van-swipe>
 </van-notice-bar>
 
@@ -112,8 +112,8 @@ app.use(NoticeBar);
 | --- | --- | --- | --- |
 | mode | 通知栏模式，可选值为 `closeable` `link` | _string_ | `''` |
 | text | 通知文本内容 | _string_ | `''` |
-| color | 通知文本颜色 | _string_ | `#f60` |
-| background | 滚动条背景 | _string_ | `#fff7cc` |
+| color | 通知文本颜色 | _string_ | `#ed6a0c` |
+| background | 滚动条背景 | _string_ | `#fffbe8` |
 | left-icon | 左侧[图标名称](#/zh-CN/icon)或图片链接 | _string_ | - |
 | delay | 动画延迟时间 (s) | _number \| string_ | `1` |
 | speed | 滚动速率 (px/s) | _number \| string_ | `60` |
@@ -141,7 +141,7 @@ app.use(NoticeBar);
 组件导出以下类型定义：
 
 ```ts
-import type { NoticeBarMode, NoticeBarInstance } from 'vant';
+import type { NoticeBarMode, NoticeBarProps, NoticeBarInstance } from 'vant';
 ```
 
 `NoticeBarInstance` 是组件实例的类型，用法如下：

@@ -105,7 +105,6 @@ export default {
 | save | Emitted when the save button is clicked | content：form content |
 | focus | Emitted when field is focused | key: field name |
 | delete | Emitted when confirming delete | content：form content |
-| cancel-delete | Emitted when canceling delete | content：form content |
 | select-search | Emitted when a search result is selected | value: search content |
 | click-area | Emitted when the area field is clicked | - |
 | change-area | Emitted when area changed | values: area values |
@@ -133,6 +132,7 @@ The component exports the following type definitions:
 ```ts
 import type {
   AddressEditInfo,
+  AddressEditProps,
   AddressEditInstance,
   AddressEditSearchItem,
 } from 'vant';

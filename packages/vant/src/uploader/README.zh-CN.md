@@ -328,8 +328,8 @@ export default {
 | after-read | 文件读取完成后的回调函数 | _Function_ | - |
 | before-read | 文件读取前的回调函数，返回 `false` 可终止文件读取，<br>支持返回 `Promise` | _Function_ | - |
 | before-delete | 文件删除前的回调函数，返回 `false` 可终止文件读取，<br>支持返回 `Promise` | _Function_ | - |
-| max-size `v3.0.17` | 文件大小限制，单位为 `byte` | _number \| string \| (file: File) => boolean_ | - |
-| max-count | 文件上传数量限制 | _number \| string_ | - |
+| max-size `v3.0.17` | 文件大小限制，单位为 `byte` | _number \| string \| (file: File) => boolean_ | `Infinity` |
+| max-count | 文件上传数量限制 | _number \| string_ | `Infinity` |
 | result-type | 文件读取结果类型，可选值为 `file` `text` | _string_ | `dataUrl` |
 | upload-text | 上传区域文字提示 | _string_ | - |
 | image-fit | 预览图裁剪模式，可选值见 [Image](#/zh-CN/image) 组件 | _string_ | `cover` |
@@ -388,6 +388,7 @@ before-read、after-read、before-delete 执行时会传递以下回调参数：
 
 ```ts
 import type {
+  UploaderProps,
   UploaderInstance,
   UploaderResultType,
   UploaderFileListItem,
@@ -416,7 +417,7 @@ uploaderRef.value?.chooseFile();
 | --van-uploader-size | _80px_ | - |
 | --van-uploader-icon-size | _24px_ | - |
 | --van-uploader-icon-color | _var(--van-gray-4)_ | - |
-| --van-uploader-text-color | _var(--van-gray-6)_ | - |
+| --van-uploader-text-color | _var(--van-text-color-2)_ | - |
 | --van-uploader-text-font-size | _var(--van-font-size-sm)_ | - |
 | --van-uploader-upload-background-color | _var(--van-gray-1)_ | - |
 | --van-uploader-upload-active-color | _var(--van-active-color)_ | - |
@@ -440,6 +441,14 @@ uploaderRef.value?.chooseFile();
 | --van-uploader-disabled-opacity | _var(--van-disabled-opacity)_ | - |
 
 ## 常见问题
+
+### Uploader 在部分安卓机型上无法上传图片？
+
+Uploader 采用了 HTML 原生的 `<input type="file />` 标签进行上传，能否上传取决于当前系统和浏览器的兼容性。当遇到无法上传的问题时，一般有以下几种情况：
+
+1. 遇到了安卓 App WebView 的兼容性问题，需要在安卓原生代码中进行兼容，可以参考此[文章](https://blog.csdn.net/qq_32756581/article/details/112861088)。
+2. 图片格式不正确，在当前系统/浏览器中无法识别，比如 `webp` 或 `heic` 格式。
+3. 其他浏览器兼容性问题。
 
 ### 拍照上传的图片被旋转 90 度？
 

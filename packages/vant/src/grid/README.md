@@ -85,7 +85,7 @@ app.use(GridItem);
 ```html
 <van-grid clickable :column-num="2">
   <van-grid-item icon="home-o" text="Vue Router" to="/" />
-  <van-grid-item icon="search" text="URL" url="/vant/mobile.html" />
+  <van-grid-item icon="search" text="URL" url="https://github.com" />
 </van-grid>
 ```
 
@@ -147,7 +147,7 @@ app.use(GridItem);
 The component exports the following type definitions:
 
 ```ts
-import type { GridDirection } from 'vant';
+import type { GridProps, GridDirection, GridItemProps } from 'vant';
 ```
 
 ## Theming
@@ -159,7 +159,7 @@ The component provides the following CSS variables, which can be used to customi
 | Name | Default Value | Description |
 | --- | --- | --- |
 | --van-grid-item-content-padding | _var(--van-padding-md) var(--van-padding-xs)_ | - |
-| --van-grid-item-content-background-color | _var(--van-white)_ | - |
+| --van-grid-item-content-background-color | _var(--van-background-color-light)_ | - |
 | --van-grid-item-content-active-color | _var(--van-active-color)_ | - |
 | --van-grid-item-icon-size | _28px_ | - |
 | --van-grid-item-text-color | _var(--van-gray-7)_ | - |

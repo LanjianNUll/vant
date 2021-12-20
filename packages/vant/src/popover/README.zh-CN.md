@@ -251,14 +251,14 @@ export default {
 
 ### Events
 
-| 事件名        | 说明                     | 回调参数                        |
-| ------------- | ------------------------ | ------------------------------- |
-| select        | 点击选项时触发           | _action: Action, index: number_ |
-| open          | 打开菜单时触发           | -                               |
-| close         | 关闭菜单时触发           | -                               |
-| opened        | 打开菜单且动画结束后触发 | -                               |
-| closed        | 关闭菜单且动画结束后触发 | -                               |
-| click-overlay | 点击遮罩层时触发         | _event: MouseEvent_             |
+| 事件名 | 说明 | 回调参数 |
+| --- | --- | --- |
+| select | 点击选项时触发 | _action: PopoverAction, index: number_ |
+| open | 打开菜单时触发 | - |
+| close | 关闭菜单时触发 | - |
+| opened | 打开菜单且动画结束后触发 | - |
+| closed | 关闭菜单且动画结束后触发 | - |
+| click-overlay | 点击遮罩层时触发 | _event: MouseEvent_ |
 
 ### Slots
 
@@ -273,6 +273,7 @@ export default {
 
 ```ts
 import type {
+  PopoverProps,
   PopoverTheme,
   PopoverAction,
   PopoverTrigger,
@@ -296,11 +297,11 @@ import type {
 | --van-popover-action-line-height | _var(--van-line-height-md)_ | - |
 | --van-popover-action-icon-size | _20px_ | - |
 | --van-popover-light-text-color | _var(--van-text-color)_ | - |
-| --van-popover-light-background-color | _var(--van-white)_ | - |
-| --van-popover-light-action-disabled-text-color | _var(--van-gray-5)_ | - |
+| --van-popover-light-background-color | _var(--van-background-color-light)_ | - |
+| --van-popover-light-action-disabled-text-color | _var(--van-text-color-3)_ | - |
 | --van-popover-dark-text-color | _var(--van-white)_ | - |
 | --van-popover-dark-background-color | _#4a4a4a_ | - |
-| --van-popover-dark-action-disabled-text-color | _var(--van-gray-6)_ | - |
+| --van-popover-dark-action-disabled-text-color | _var(--van-text-color-2)_ | - |
 
 ## 常见问题
 

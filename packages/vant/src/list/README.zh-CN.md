@@ -211,7 +211,7 @@ export default {
 组件导出以下类型定义：
 
 ```ts
-import type { ListInstance, ListDirection } from 'vant';
+import type { ListProps, ListInstance, ListDirection } from 'vant';
 ```
 
 `ListInstance` 是组件实例的类型，用法如下：
@@ -242,7 +242,7 @@ listRef.value?.check();
 
 | 名称                         | 默认值                    | 描述 |
 | ---------------------------- | ------------------------- | ---- |
-| --van-list-text-color        | _var(--van-gray-6)_       | -    |
+| --van-list-text-color        | _var(--van-text-color-2)_ | -    |
 | --van-list-text-font-size    | _var(--van-font-size-md)_ | -    |
 | --van-list-text-line-height  | _50px_                    | -    |
 | --van-list-loading-icon-size | _16px_                    | -    |

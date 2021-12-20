@@ -99,7 +99,7 @@ app.use(GridItem);
 ```html
 <van-grid clickable :column-num="2">
   <van-grid-item icon="home-o" text="路由跳转" to="/" />
-  <van-grid-item icon="search" text="URL 跳转" url="/vant/mobile.html" />
+  <van-grid-item icon="search" text="URL 跳转" url="https://github.com" />
 </van-grid>
 ```
 
@@ -163,7 +163,7 @@ app.use(GridItem);
 组件导出以下类型定义：
 
 ```ts
-import type { GridDirection } from 'vant';
+import type { GridProps, GridDirection, GridItemProps } from 'vant';
 ```
 
 ## 主题定制
@@ -175,7 +175,7 @@ import type { GridDirection } from 'vant';
 | 名称 | 默认值 | 描述 |
 | --- | --- | --- |
 | --van-grid-item-content-padding | _var(--van-padding-md) var(--van-padding-xs)_ | - |
-| --van-grid-item-content-background-color | _var(--van-white)_ | - |
+| --van-grid-item-content-background-color | _var(--van-background-color-light)_ | - |
 | --van-grid-item-content-active-color | _var(--van-active-color)_ | - |
 | --van-grid-item-icon-size | _28px_ | - |
 | --van-grid-item-text-color | _var(--van-gray-7)_ | - |

@@ -212,6 +212,14 @@ export default {
 | ---- | ---------- | ----------------- |
 | icon | 自定义图标 | _active: boolean_ |
 
+### 类型定义
+
+组件导出以下类型定义：
+
+```ts
+import type { TabbarProps, TabbarItemProps } from 'vant';
+```
+
 ## 主题定制
 
 ### 样式变量
@@ -222,11 +230,11 @@ export default {
 | --- | --- | --- |
 | --van-tabbar-height | _50px_ | - |
 | --van-tabbar-z-index | _1_ | - |
-| --van-tabbar-background-color | _var(--van-white)_ | - |
+| --van-tabbar-background-color | _var(--van-background-color-light)_ | - |
 | --van-tabbar-item-font-size | _var(--van-font-size-sm)_ | - |
 | --van-tabbar-item-text-color | _var(--van-gray-7)_ | - |
 | --van-tabbar-item-active-color | _var(--van-primary-color)_ | - |
-| --van-tabbar-item-active-background-color | _var(--van-white)_ | - |
+| --van-tabbar-item-active-background-color | _var(--van-background-color-light)_ | - |
 | --van-tabbar-item-line-height | _1_ | - |
 | --van-tabbar-item-icon-size | _22px_ | - |
 | --van-tabbar-item-icon-margin-bottom | _var(--van-padding-base)_ | - |

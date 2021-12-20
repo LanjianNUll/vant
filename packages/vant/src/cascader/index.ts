@@ -3,4 +3,5 @@ import _Cascader from './Cascader';
 
 export const Cascader = withInstall(_Cascader);
 export default Cascader;
-export type { CascaderOption, CascaderFieldNames } from './Cascader';
+export type { CascaderProps } from './Cascader';
+export type { CascaderOption, CascaderFieldNames } from './types';

@@ -132,6 +132,14 @@ export default {
 | ----- | ----------- |
 | title | 自定义标题  |
 
+### 类型定义
+
+组件导出以下类型定义：
+
+```ts
+import type { SidebarProps, SidebarItemProps } from 'vant';
+```
+
 ## 主题定制
 
 ### 样式变量
@@ -144,7 +152,7 @@ export default {
 | --van-sidebar-font-size | _var(--van-font-size-md)_ | - |
 | --van-sidebar-line-height | _var(--van-line-height-md)_ | - |
 | --van-sidebar-text-color | _var(--van-text-color)_ | - |
-| --van-sidebar-disabled-text-color | _var(--van-gray-5)_ | - |
+| --van-sidebar-disabled-text-color | _var(--van-text-color-3)_ | - |
 | --van-sidebar-padding | _20px var(--van-padding-sm)_ | - |
 | --van-sidebar-active-color | _var(--van-active-color)_ | - |
 | --van-sidebar-background-color | _var(--van-background-color)_ | - |
@@ -153,4 +161,4 @@ export default {
 | --van-sidebar-selected-border-width | _4px_ | - |
 | --van-sidebar-selected-border-height | _16px_ | - |
 | --van-sidebar-selected-border-color | _var(--van-danger-color)_ | - |
-| --van-sidebar-selected-background-color | _var(--van-white)_ | - |
+| --van-sidebar-selected-background-color | _var(--van-background-color-light)_ | - |

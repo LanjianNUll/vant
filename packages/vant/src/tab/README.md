@@ -36,7 +36,7 @@ import { ref } from 'vue';
 
 export default {
   setup() {
-    const active = ref(2);
+    const active = ref(0);
     return { active };
   },
 };
@@ -286,7 +286,7 @@ Use [ref](https://v3.vuejs.org/guide/component-template-refs.html) to get Tabs i
 The component exports the following type definitions:
 
 ```ts
-import type { TabsType, TabsInstance } from 'vant';
+import type { TabProps, TabsType, TabsProps, TabsInstance } from 'vant';
 ```
 
 `TabsInstance` is the type of component instance:
@@ -321,17 +321,17 @@ tabsRef.value?.scrollTo(0);
 
 The component provides the following CSS variables, which can be used to customize styles. Please refer to [ConfigProvider component](#/en-US/config-provider).
 
-| Name                            | Default Value               | Description |
-| ------------------------------- | --------------------------- | ----------- |
-| --van-tab-text-color            | _var(--van-gray-7)_         | -           |
-| --van-tab-active-text-color     | _var(--van-text-color)_     | -           |
-| --van-tab-disabled-text-color   | _var(--van-gray-5)_         | -           |
-| --van-tab-font-size             | _var(--van-font-size-md)_   | -           |
-| --van-tab-line-height           | _var(--van-line-height-md)_ | -           |
-| --van-tabs-default-color        | _var(--van-danger-color)_   | -           |
-| --van-tabs-line-height          | _44px_                      | -           |
-| --van-tabs-card-height          | _30px_                      | -           |
-| --van-tabs-nav-background-color | _var(--van-white)_          | -           |
-| --van-tabs-bottom-bar-width     | _40px_                      | -           |
-| --van-tabs-bottom-bar-height    | _3px_                       | -           |
-| --van-tabs-bottom-bar-color     | _var(--van-danger-color)_   | -           |
+| Name | Default Value | Description |
+| --- | --- | --- |
+| --van-tab-text-color | _var(--van-gray-7)_ | - |
+| --van-tab-active-text-color | _var(--van-text-color)_ | - |
+| --van-tab-disabled-text-color | _var(--van-text-color-3)_ | - |
+| --van-tab-font-size | _var(--van-font-size-md)_ | - |
+| --van-tab-line-height | _var(--van-line-height-md)_ | - |
+| --van-tabs-default-color | _var(--van-danger-color)_ | - |
+| --van-tabs-line-height | _44px_ | - |
+| --van-tabs-card-height | _30px_ | - |
+| --van-tabs-nav-background-color | _var(--van-background-color-light)_ | - |
+| --van-tabs-bottom-bar-width | _40px_ | - |
+| --van-tabs-bottom-bar-height | _3px_ | - |
+| --van-tabs-bottom-bar-color | _var(--van-danger-color)_ | - |

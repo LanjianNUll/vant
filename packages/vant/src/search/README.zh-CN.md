@@ -130,9 +130,11 @@ export default {
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
+| v-model | 当前输入的值 | _number \| string_ | - |
 | label | 搜索框左侧文本 | _string_ | - |
+| name `v3.2.3` | 名称，作为提交表单时的标识符 | _string_ | - |
 | shape | 搜索框形状，可选值为 `round` | _string_ | `square` |
-| id `v3.2.2` | 搜索框 id，同时会设置 label 的 for 属性 | _string_ | - |
+| id `v3.2.2` | 搜索框 id，同时会设置 label 的 for 属性 | _string_ | `van-search-n-input` |
 | background | 搜索框外部背景色 | _string_ | `#f2f2f2` |
 | maxlength | 输入的最大字符数 | _number \| string_ | - |
 | placeholder | 占位提示文字 | _string_ | - |
@@ -151,6 +153,7 @@ export default {
 | input-align | 输入框内容对齐方式，可选值为 `center` `right` | _string_ | `left` |
 | left-icon | 输入框左侧[图标名称](#/zh-CN/icon)或图片链接 | _string_ | `search` |
 | right-icon | 输入框右侧[图标名称](#/zh-CN/icon)或图片链接 | _string_ | - |
+| autocomplete `v3.2.3` | input 标签原生的[自动完成属性](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) | _string_ | - |
 
 ### Events
 
@@ -178,7 +181,7 @@ export default {
 组件导出以下类型定义：
 
 ```ts
-import type { SearchShape, SearchInstance } from 'vant';
+import type { SearchProps, SearchShape, SearchInstance } from 'vant';
 ```
 
 `SearchInstance` 是组件实例的类型，用法如下：
@@ -208,19 +211,19 @@ searchRef.value?.focus();
 
 组件提供了下列 CSS 变量，可用于自定义样式，使用方法请参考 [ConfigProvider 组件](#/zh-CN/config-provider)。
 
-| 名称                                  | 默认值                       | 描述 |
-| ------------------------------------- | ---------------------------- | ---- |
-| --van-search-padding                  | _10px var(--van-padding-sm)_ | -    |
-| --van-search-background-color         | _var(--van-white)_           | -    |
-| --van-search-content-background-color | _var(--van-gray-1)_          | -    |
-| --van-search-input-height             | _34px_                       | -    |
-| --van-search-label-padding            | _0 5px_                      | -    |
-| --van-search-label-color              | _var(--van-text-color)_      | -    |
-| --van-search-label-font-size          | _var(--van-font-size-md)_    | -    |
-| --van-search-left-icon-color          | _var(--van-gray-6)_          | -    |
-| --van-search-action-padding           | _0 var(--van-padding-xs)_    | -    |
-| --van-search-action-text-color        | _var(--van-text-color)_      | -    |
-| --van-search-action-font-size         | _var(--van-font-size-md)_    | -    |
+| 名称 | 默认值 | 描述 |
+| --- | --- | --- |
+| --van-search-padding | _10px var(--van-padding-sm)_ | - |
+| --van-search-background-color | _var(--van-background-color-light)_ | - |
+| --van-search-content-background-color | _var(--van-gray-1)_ | - |
+| --van-search-input-height | _34px_ | - |
+| --van-search-label-padding | _0 5px_ | - |
+| --van-search-label-color | _var(--van-text-color)_ | - |
+| --van-search-label-font-size | _var(--van-font-size-md)_ | - |
+| --van-search-left-icon-color | _var(--van-gray-6)_ | - |
+| --van-search-action-padding | _0 var(--van-padding-xs)_ | - |
+| --van-search-action-text-color | _var(--van-text-color)_ | - |
+| --van-search-action-font-size | _var(--van-font-size-md)_ | - |
 
 ## 常见问题
 

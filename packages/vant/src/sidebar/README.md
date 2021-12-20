@@ -124,6 +124,14 @@ export default {
 | ----- | ----------------- |
 | title | Custom item title |
 
+### Types
+
+The component exports the following type definitions:
+
+```ts
+import type { SidebarProps, SidebarItemProps } from 'vant';
+```
+
 ## Theming
 
 ### CSS Variables
@@ -136,7 +144,7 @@ The component provides the following CSS variables, which can be used to customi
 | --van-sidebar-font-size | _var(--van-font-size-md)_ | - |
 | --van-sidebar-line-height | _var(--van-line-height-md)_ | - |
 | --van-sidebar-text-color | _var(--van-text-color)_ | - |
-| --van-sidebar-disabled-text-color | _var(--van-gray-5)_ | - |
+| --van-sidebar-disabled-text-color | _var(--van-text-color-3)_ | - |
 | --van-sidebar-padding | _20px var(--van-padding-sm)_ | - |
 | --van-sidebar-active-color | _var(--van-active-color)_ | - |
 | --van-sidebar-background-color | _var(--van-background-color)_ | - |
@@ -145,4 +153,4 @@ The component provides the following CSS variables, which can be used to customi
 | --van-sidebar-selected-border-width | _4px_ | - |
 | --van-sidebar-selected-border-height | _16px_ | - |
 | --van-sidebar-selected-border-color | _var(--van-danger-color)_ | - |
-| --van-sidebar-selected-background-color | _var(--van-white)_ | - |
+| --van-sidebar-selected-background-color | _var(--van-background-color-light)_ | - |

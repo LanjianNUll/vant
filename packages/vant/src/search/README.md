@@ -118,9 +118,11 @@ Use `action` slot to custom right button, `cancel` event will no longer be Emitt
 
 | Attribute | Description | Type | Default |
 | --- | --- | --- | --- |
+| v-model | Input value | _number \| string_ | - |
 | label | Left side label | _string_ | - |
+| name `v3.2.3` | As the identifier when submitting the form | _string_ | - |
 | shape | Shape of field, can be set to `round` | _string_ | `square` |
-| id `v3.2.2` | Input id, the for attribute of the label also will be set | _string_ | - |
+| id `v3.2.2` | Input id, the for attribute of the label also will be set | _string_ | `van-search-n-input` |
 | background | Background color of field | _string_ | `#f2f2f2` |
 | maxlength | Max length of value | _number \| string_ | - |
 | placeholder | Placeholder | _string_ | - |
@@ -139,6 +141,7 @@ Use `action` slot to custom right button, `cancel` event will no longer be Emitt
 | input-align | Text align of field, can be set to `center` `right` | _string_ | `left` |
 | left-icon | Left icon name | _string_ | `search` |
 | right-icon | Right icon name | _string_ | - |
+| autocomplete `v3.2.3` | [autocomplete](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) attribute of native input element | _string_ | - |
 
 ### Events
 
@@ -166,7 +169,7 @@ Use [ref](https://v3.vuejs.org/guide/component-template-refs.html) to get Search
 The component exports the following type definitions:
 
 ```ts
-import type { SearchShape, SearchInstance } from 'vant';
+import type { SearchProps, SearchShape, SearchInstance } from 'vant';
 ```
 
 `SearchInstance` is the type of component instance:
@@ -199,7 +202,7 @@ The component provides the following CSS variables, which can be used to customi
 | Name | Default Value | Description |
 | --- | --- | --- |
 | --van-search-padding | _10px var(--van-padding-sm)_ | - |
-| --van-search-background-color | _var(--van-white)_ | - |
+| --van-search-background-color | _var(--van-background-color-light)_ | - |
 | --van-search-content-background-color | _var(--van-gray-1)_ | - |
 | --van-search-input-height | _34px_ | - |
 | --van-search-label-padding | _0 5px_ | - |

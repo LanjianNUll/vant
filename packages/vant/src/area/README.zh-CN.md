@@ -57,7 +57,14 @@ const areaList = {
 Vant 官方提供了一份默认的省市区数据，可以通过 [@vant/area-data](https://github.com/youzan/vant/tree/dev/packages/vant-area-data) 引入：
 
 ```bash
+# 通过 npm
+npm i @vant/area-data
+
+# 通过 yarn
 yarn add @vant/area-data
+
+# 通过 pnpm
+pnpm add @vant/area-data
 ```
 
 ```ts
@@ -171,7 +178,7 @@ confirm 事件返回的数据整体为一个数组，数组每一项对应一列
 组件导出以下类型定义：
 
 ```ts
-import type { AreaList, AreaInstance, AreaColumnOption } from 'vant';
+import type { AreaProps, AreaList, AreaInstance, AreaColumnOption } from 'vant';
 ```
 
 `AreaInstance` 是组件实例的类型，用法如下：

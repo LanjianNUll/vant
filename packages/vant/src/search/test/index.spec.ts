@@ -29,7 +29,7 @@ test('should emit cancel event when cancel button click is clicked', () => {
   const cancel = wrapper.find('.van-search__action');
   cancel.trigger('click');
 
-  expect(wrapper.emitted('cancel')!.length).toEqual(1);
+  expect(wrapper.emitted('cancel')).toHaveLength(1);
   expect(wrapper.emitted('update:modelValue')![0]).toEqual(['']);
 });
 
@@ -57,7 +57,7 @@ test('should emit search event when enter key is pressed', () => {
   input.trigger('keypress.enter');
   input.trigger('keypress.a');
 
-  expect(wrapper.emitted('search')!.length).toEqual(1);
+  expect(wrapper.emitted('search')).toHaveLength(1);
 });
 
 test('should render label slot correctly', () => {
@@ -149,4 +149,24 @@ test('should render id prop correctly', async () => {
 
   expect(wrapper.find('input').attributes('id')).toEqual('my-id');
   expect(wrapper.find('label').attributes('for')).toEqual('my-id');
+});
+
+test('should allow to set autocomplete attribute', () => {
+  const wrapper = mount(Search, {
+    props: {
+      autocomplete: 'on',
+    },
+  });
+  expect(wrapper.find('input').element.getAttribute('autocomplete')).toEqual(
+    'on'
+  );
+});
+
+test('should render input name when using name prop', () => {
+  const wrapper = mount(Search, {
+    props: {
+      name: 'foo',
+    },
+  });
+  expect(wrapper.find('input').element.getAttribute('name')).toEqual('foo');
 });
