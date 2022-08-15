@@ -94,7 +94,7 @@ export default {
 | --- | --- | --- | --- |
 | price | Price | _number_ | - |
 | decimal-length | Price decimal length | _number \| string_ | `2` |
-| label | Price left label | _string_ | `Total：` |
+| label | Price left label | _string_ | `Total: ` |
 | suffix-label | Price right label | _string_ | - |
 | text-align | Price label text align can be set to `left` | _string_ | `right` |
 | button-text | Button text | _string_ | - |
@@ -106,6 +106,7 @@ export default {
 | disabled | Whether to disable button | _boolean_ | `false` |
 | loading | Whether to show loading icon | _boolean_ | `false` |
 | safe-area-inset-bottom | Whether to enable bottom safe area adaptation | _boolean_ | `true` |
+| placeholder `v3.5.1` | Whether to generate a placeholder element | _boolean_ | `false` |
 
 ### Events
 

@@ -31,22 +31,22 @@ app.use(Button);
 ### Plain
 
 ```html
-<van-button plain type="primary">Primary</van-button>
-<van-button plain type="primary">Danger</van-button>
+<van-button plain type="primary">Plain</van-button>
+<van-button plain type="success">Plain</van-button>
 ```
 
 ### Hairline
 
 ```html
 <van-button plain hairline type="primary">Hairline</van-button>
-<van-button plain hairline type="primary">Hairline</van-button>
+<van-button plain hairline type="success">Hairline</van-button>
 ```
 
 ### Disabled
 
 ```html
 <van-button disabled type="primary">Disabled</van-button>
-<van-button disabled type="primary">Disabled</van-button>
+<van-button disabled type="success">Disabled</van-button>
 ```
 
 ### Loading
@@ -54,14 +54,14 @@ app.use(Button);
 ```html
 <van-button loading type="primary" />
 <van-button loading type="primary" loading-type="spinner" />
-<van-button loading type="primary" loading-text="Loading..." />
+<van-button loading type="success" loading-text="Loading..." />
 ```
 
 ### Shape
 
 ```html
 <van-button square type="primary">Square</van-button>
-<van-button round type="primary">Round</van-button>
+<van-button round type="success">Round</van-button>
 ```
 
 ### Icon
@@ -69,7 +69,10 @@ app.use(Button);
 ```html
 <van-button icon="plus" type="primary" />
 <van-button icon="plus" type="primary">Button</van-button>
-<van-button icon="https://img.yzcdn.cn/vant/user-active.png" type="primary">
+<van-button
+  icon="https://fastly.jsdelivr.net/npm/@vant/assets/user-active.png"
+  type="primary"
+>
   Button
 </van-button>
 ```
@@ -126,7 +129,7 @@ app.use(Button);
 | round | Whether to be round button | _boolean_ | `false` |
 | square | Whether to be square button | _boolean_ | `false` |
 | disabled | Whether to disable button | _boolean_ | `false` |
-| loading | Whether show loading status | _boolean_ | `false` |
+| loading | Whether to show loading status | _boolean_ | `false` |
 | loading-text | Loading text | _string_ | - |
 | loading-type | Loading type, can be set to `spinner` | _string_ | `circular` |
 | loading-size | Loading icon size | _number \| string_ | `20px` |

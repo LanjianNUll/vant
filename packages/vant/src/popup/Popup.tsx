@@ -3,6 +3,7 @@ import {
   watch,
   provide,
   Teleport,
+  nextTick,
   computed,
   onMounted,
   Transition,
@@ -47,6 +48,7 @@ const popupProps = extend({}, popupSharedProps, {
   iconPrefix: String,
   closeOnPopstate: Boolean,
   closeIconPosition: makeStringProp<PopupCloseIconPosition>('top-right'),
+  safeAreaInsetTop: Boolean,
   safeAreaInsetBottom: Boolean,
 });
 
@@ -68,6 +70,7 @@ export default defineComponent({
     'close',
     'opened',
     'closed',
+    'keydown',
     'update:show',
     'click-overlay',
     'click-close-icon',
@@ -141,6 +144,8 @@ export default defineComponent({
             zIndex={zIndex.value}
             duration={props.duration}
             customStyle={props.overlayStyle}
+            role={props.closeOnClickOverlay ? 'button' : undefined}
+            tabindex={props.closeOnClickOverlay ? 0 : undefined}
             onClick={onClickOverlay}
           />
         );
@@ -172,21 +177,29 @@ export default defineComponent({
 
     const onOpened = () => emit('opened');
     const onClosed = () => emit('closed');
+    const onKeydown = (event: KeyboardEvent) => emit('keydown', event);
 
     const renderPopup = lazyRender(() => {
-      const { round, position, safeAreaInsetBottom } = props;
+      const { round, position, safeAreaInsetTop, safeAreaInsetBottom } = props;
+
       return (
         <div
           v-show={props.show}
           ref={popupRef}
           style={style.value}
+          role="dialog"
+          tabindex={0}
           class={[
             bem({
               round,
               [position]: position,
             }),
-            { 'van-safe-area-bottom': safeAreaInsetBottom },
+            {
+              'van-safe-area-top': safeAreaInsetTop,
+              'van-safe-area-bottom': safeAreaInsetBottom,
+            },
           ]}
+          onKeydown={onKeydown}
           {...attrs}
         >
           {slots.default?.()}
@@ -213,10 +226,17 @@ export default defineComponent({
 
     watch(
       () => props.show,
-      (value) => {
-        if (value) {
+      (show) => {
+        if (show && !opened) {
           open();
-        } else {
+
+          if (attrs.tabindex === 0) {
+            nextTick(() => {
+              popupRef.value?.focus();
+            });
+          }
+        }
+        if (!show && opened) {
           opened = false;
           emit('close');
         }
@@ -248,7 +268,8 @@ export default defineComponent({
     });
 
     onDeactivated(() => {
-      if (props.show) {
+      // teleported popup should be closed when deactivated
+      if (props.show && props.teleport) {
         close();
         shouldReopen = true;
       }

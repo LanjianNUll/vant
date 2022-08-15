@@ -281,7 +281,7 @@ export default {
 | required | 是否显示表单必填星号 | _boolean_ | `false` |
 | center | 是否使内容垂直居中 | _boolean_ | `false` |
 | clearable | 是否启用清除图标，点击清除图标后会清空输入框 | _boolean_ | `false` |
-| clear-icon `v3.0.12` | 清除[图标名称](#/zh-CN/icon)或图片链接 | _string_ | `clear` |
+| clear-icon `v3.0.12` | 清除图标名称或图片链接，等同于 Icon 组件的 [name 属性](#/zh-CN/icon#props) | _string_ | `clear` |
 | clear-trigger | 显示清除图标的时机，`always` 表示输入框不为空时展示，<br>`focus` 表示输入框聚焦且不为空时展示 | _FieldClearTrigger_ | `focus` |
 | clickable | 是否开启点击反馈 | _boolean_ | `false` |
 | is-link | 是否展示右侧箭头并开启点击反馈 | _boolean_ | `false` |
@@ -298,24 +298,27 @@ export default {
 | label-align | 左侧文本对齐方式，可选值为 `center` `right` | _FieldTextAlign_ | `left` |
 | input-align | 输入框对齐方式，可选值为 `center` `right` | _FieldTextAlign_ | `left` |
 | autosize | 是否自适应内容高度，只对 textarea 有效，<br>可传入对象,如 { maxHeight: 100, minHeight: 50 }，<br>单位为`px` | _boolean \| FieldAutosizeConfig_ | `false` |
-| left-icon | 左侧[图标名称](#/zh-CN/icon)或图片链接 | _string_ | - |
-| right-icon | 右侧[图标名称](#/zh-CN/icon)或图片链接 | _string_ | - |
+| left-icon | 左侧图标名称或图片链接，等同于 Icon 组件的 [name 属性](#/zh-CN/icon#props) | _string_ | - |
+| right-icon | 右侧图标名称或图片链接，等同于 Icon 组件的 [name 属性](#/zh-CN/icon#props) | _string_ | - |
 | icon-prefix | 图标类名前缀，等同于 Icon 组件的 [class-prefix 属性](#/zh-CN/icon#props) | _string_ | `van-icon` |
 | rules | 表单校验规则，详见 [Form 组件](#/zh-CN/form#rule-shu-ju-jie-gou) | _FieldRule[]_ | - |
-| autocomplete `v3.0.3` | input 标签原生的[自动完成属性](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) | _string_ | - |
+| autocomplete `v3.0.3` | HTML 原生属性，用于控制自动完成功能，详见 [MDN - autocomplete](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) | _string_ | - |
+| enterkeyhint `v3.4.8` | HTML 原生属性，用于控制回车键样式，此 API 仅在部分浏览器支持，详见 [MDN - enterkeyhint](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/enterkeyhint)<br> | _string_ | - |
 
 ### Events
 
-| 事件               | 说明                 | 回调参数                       |
-| ------------------ | -------------------- | ------------------------------ |
+| 事件 | 说明 | 回调参数 |
+| --- | --- | --- |
 | update:model-value | 输入框内容变化时触发 | _value: string (当前输入的值)_ |
-| focus              | 输入框获得焦点时触发 | _event: Event_                 |
-| blur               | 输入框失去焦点时触发 | _event: Event_                 |
-| clear              | 点击清除按钮时触发   | _event: MouseEvent_            |
-| click              | 点击组件时触发       | _event: MouseEvent_            |
-| click-input        | 点击输入区域时触发   | _event: MouseEvent_            |
-| click-left-icon    | 点击左侧图标时触发   | _event: MouseEvent_            |
-| click-right-icon   | 点击右侧图标时触发   | _event: MouseEvent_            |
+| focus | 输入框获得焦点时触发 | _event: Event_ |
+| blur | 输入框失去焦点时触发 | _event: Event_ |
+| clear | 点击清除按钮时触发 | _event: MouseEvent_ |
+| click | 点击组件时触发 | _event: MouseEvent_ |
+| click-input | 点击输入区域时触发 | _event: MouseEvent_ |
+| click-left-icon | 点击左侧图标时触发 | _event: MouseEvent_ |
+| click-right-icon | 点击右侧图标时触发 | _event: MouseEvent_ |
+| start-validate `v3.5.1` | 开始表单校验时触发 | - |
+| end-validate `v3.5.1` | 结束表单校验时触发 | _{ status: string }_ |
 
 ### 方法
 
@@ -345,6 +348,7 @@ import type {
   FieldValidateError,
   FieldAutosizeConfig,
   FieldValidateTrigger,
+  FieldValidationStatus,
 } from 'vant';
 ```
 
@@ -404,6 +408,16 @@ fieldRef.value?.focus();
 ### 设置 type 为 number 后，为什么 input 标签的类型仍为 text?
 
 HTML 原生的 `type="number"` 属性在 iOS 和 Android 系统上都存在一定问题，比如 maxlength 属性不生效、无法获取到完整的输入内容等。因此设置 type 为 `number` 时，Field 不会使用原生的 `type="number"` 属性，而是用现代浏览器支持的 [inputmode 属性](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Global_attributes/inputmode)来控制输入键盘的类型。
+
+### 为什么 v-model 绑定的值被更新为 string 类型？
+
+Field 组件内部会将传入的 v-model 格式化为 string 类型，便于组件内部进行处理。
+
+如果你希望在 v-model 上绑定 number 类型，可以使用 Vue 提供的 [.number 修饰符](https://vuejs.org/guide/essentials/forms.html#lazy)。
+
+```html
+<van-field v-model.number="value" type="tel" />
+```
 
 ### 在桌面端点击清除按钮无效？
 

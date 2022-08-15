@@ -36,14 +36,6 @@ exports[`should render columns-top、columns-bottom slot correctly 1`] = `
       >
       </ul>
     </div>
-    <div class="van-picker__mask"
-         style="background-size: 100% 110px;"
-    >
-    </div>
-    <div class="van-hairline-unset--top-bottom van-picker__frame"
-         style="height: 44px;"
-    >
-    </div>
   </div>
   Bottom
 </div>

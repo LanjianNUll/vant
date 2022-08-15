@@ -108,11 +108,12 @@ export default {
 | button-type | 按钮类型 | _string_ | `danger` |
 | button-color | 自定义按钮颜色 | _string_ | - |
 | tip | 在订单栏上方的提示文案 | _string_ | - |
-| tip-icon | 提示文案左侧的[图标名称](#/zh-CN/icon)或图片链接 | _string_ | - |
+| tip-icon | 提示文案左侧的图标名称或图片链接，等同于 Icon 组件的 [name 属性](#/zh-CN/icon#props) | _string_ | - |
 | currency | 货币符号 | _string_ | `¥` |
 | disabled | 是否禁用按钮 | _boolean_ | `false` |
 | loading | 是否显示将按钮显示为加载中状态 | _boolean_ | `false` |
 | safe-area-inset-bottom | 是否开启[底部安全区适配](#/zh-CN/advanced-usage#di-bu-an-quan-qu-gua-pei) | _boolean_ | `true` |
+| placeholder `v3.5.1` | 是否在标签位置生成一个等高的占位元素 | _boolean_ | `false` |
 
 ### Events
 

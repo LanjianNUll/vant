@@ -251,41 +251,49 @@ exports[`color prop when type is single 1`] = `
           23
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           24
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           25
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           26
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           27
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           28
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           29
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           30
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           31
@@ -484,41 +492,49 @@ exports[`formatter prop 1`] = `
           23
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           24
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           25
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           26
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           27
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           28
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           29
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           30
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           31
@@ -541,14 +557,18 @@ exports[`formatter prop 1`] = `
 `;
 
 exports[`popup wrapper 1`] = `
-<transition-stub>
+<transition-stub role="button"
+                 tabindex="0"
+>
 </transition-stub>
 <transition-stub>
 </transition-stub>
 `;
 
 exports[`popup wrapper 2`] = `
-<transition-stub>
+<transition-stub role="button"
+                 tabindex="0"
+>
   <div style="z-index: 2001;"
        class="van-overlay"
   >
@@ -556,6 +576,8 @@ exports[`popup wrapper 2`] = `
 </transition-stub>
 <transition-stub>
   <div style="z-index: 2001;"
+       role="dialog"
+       tabindex="0"
        class="van-popup van-popup--round van-popup--bottom van-calendar__popup"
   >
     <div class="van-calendar">
@@ -836,49 +858,49 @@ exports[`row-height prop 1`] = `
           23
         </div>
         <div role="gridcell"
-             style="height: 50px;"
+             style="height: 50px; margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           24
         </div>
         <div role="gridcell"
-             style="height: 50px;"
+             style="height: 50px; margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           25
         </div>
         <div role="gridcell"
-             style="height: 50px;"
+             style="height: 50px; margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           26
         </div>
         <div role="gridcell"
-             style="height: 50px;"
+             style="height: 50px; margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           27
         </div>
         <div role="gridcell"
-             style="height: 50px;"
+             style="height: 50px; margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           28
         </div>
         <div role="gridcell"
-             style="height: 50px;"
+             style="height: 50px; margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           29
         </div>
         <div role="gridcell"
-             style="height: 50px;"
+             style="height: 50px; margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           30
         </div>
         <div role="gridcell"
-             style="height: 50px;"
+             style="height: 50px; margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           31
@@ -1083,41 +1105,49 @@ exports[`should render title、footer、subtitle slot correctly 1`] = `
           23
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           24
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           25
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           26
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           27
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           28
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           29
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           30
         </div>
         <div role="gridcell"
+             style="margin-bottom: 0px;"
              class="van-calendar__day van-calendar__day--disabled"
         >
           31

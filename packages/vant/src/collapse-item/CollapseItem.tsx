@@ -35,6 +35,7 @@ const collapseItemProps = extend({}, cellSharedProps, {
   isLink: truthProp,
   disabled: Boolean,
   readonly: Boolean,
+  lazyRender: truthProp,
 });
 
 export type CollapseItemProps = ExtractPropTypes<typeof collapseItemProps>;
@@ -62,7 +63,7 @@ export default defineComponent({
     const expanded = computed(() => parent.isExpanded(name.value));
 
     const show = ref(expanded.value);
-    const lazyRender = useLazyRender(show);
+    const lazyRender = useLazyRender(() => show.value || !props.lazyRender);
 
     const onTransitionEnd = () => {
       if (!expanded.value) {
@@ -160,7 +161,7 @@ export default defineComponent({
       </div>
     ));
 
-    useExpose({ toggle });
+    useExpose({ toggle, expanded, itemName: name });
 
     return () => (
       <div class={[bem({ border: index.value && props.border })]}>

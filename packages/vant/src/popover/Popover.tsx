@@ -93,25 +93,31 @@ export default defineComponent({
     const wrapperRef = ref<HTMLElement>();
     const popoverRef = ref<ComponentInstance>();
 
+    const getPopoverOptions = () => ({
+      placement: props.placement,
+      modifiers: [
+        {
+          name: 'computeStyles',
+          options: {
+            adaptive: false,
+            gpuAcceleration: false,
+          },
+        },
+        extend({}, offsetModifier, {
+          options: {
+            offset: props.offset,
+          },
+        }),
+      ],
+    });
+
     const createPopperInstance = () => {
       if (wrapperRef.value && popoverRef.value) {
-        return createPopper(wrapperRef.value, popoverRef.value.popupRef.value, {
-          placement: props.placement,
-          modifiers: [
-            {
-              name: 'computeStyles',
-              options: {
-                adaptive: false,
-                gpuAcceleration: false,
-              },
-            },
-            extend({}, offsetModifier, {
-              options: {
-                offset: props.offset,
-              },
-            }),
-          ],
-        });
+        return createPopper(
+          wrapperRef.value,
+          popoverRef.value.popupRef.value,
+          getPopoverOptions()
+        );
       }
       return null;
     };
@@ -125,9 +131,7 @@ export default defineComponent({
         if (!popper) {
           popper = createPopperInstance();
         } else {
-          popper.setOptions({
-            placement: props.placement,
-          });
+          popper.setOptions(getPopoverOptions());
         }
       });
     };
@@ -166,8 +170,25 @@ export default defineComponent({
       }
     };
 
+    const renderActionContent = (action: PopoverAction, index: number) => {
+      if (slots.action) {
+        return slots.action({ action, index });
+      }
+
+      return [
+        action.icon && (
+          <Icon
+            name={action.icon}
+            classPrefix={props.iconPrefix}
+            class={bem('action-icon')}
+          />
+        ),
+        <div class={[bem('action-text'), BORDER_BOTTOM]}>{action.text}</div>,
+      ];
+    };
+
     const renderAction = (action: PopoverAction, index: number) => {
-      const { icon, text, color, disabled, className } = action;
+      const { icon, color, disabled, className } = action;
       return (
         <div
           role="menuitem"
@@ -177,14 +198,7 @@ export default defineComponent({
           aria-disabled={disabled || undefined}
           onClick={() => onClickAction(action, index)}
         >
-          {icon && (
-            <Icon
-              name={icon}
-              classPrefix={props.iconPrefix}
-              class={bem('action-icon')}
-            />
-          )}
-          <div class={[bem('action-text'), BORDER_BOTTOM]}>{text}</div>
+          {renderActionContent(action, index)}
         </div>
       );
     };
@@ -197,7 +211,7 @@ export default defineComponent({
       }
     });
 
-    watch(() => [props.show, props.placement], updateLocation);
+    watch(() => [props.show, props.offset, props.placement], updateLocation);
 
     useClickAway(wrapperRef, onClickAway, { eventName: 'touchstart' });
 

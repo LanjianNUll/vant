@@ -115,7 +115,7 @@ export default {
   setup() {
     const value1 = ref('');
     const value2 = ref('');
-    const value3 = ref('');
+    const value3 = ref('abc');
     const value4 = ref('');
     const pattern = /\d{6}/;
 
@@ -129,7 +129,7 @@ export default {
 
         setTimeout(() => {
           Toast.clear();
-          resolve(/\d{6}/.test(val));
+          resolve(val === '1234');
         }, 1000);
       });
 
@@ -308,7 +308,9 @@ import { ref } from 'vue';
 
 export default {
   setup() {
-    const value = ref([{ url: 'https://img.yzcdn.cn/vant/leaf.jpg' }]);
+    const value = ref([
+      { url: 'https://fastly.jsdelivr.net/npm/@vant/assets/leaf.jpeg' },
+    ]);
     return { value };
   },
 };
@@ -495,7 +497,7 @@ export default {
 | label-align | Field label align, can be set to `center` `right` | _string_ | `left` |
 | input-align | Field input align, can be set to `center` `right` | _string_ | `left` |
 | error-message-align | Error message align, can be set to `center` `right` | _string_ | `left` |
-| validate-trigger | When to validate the form，can be set to `onChange`、`onSubmit` | _string_ | `onBlur` |
+| validate-trigger | When to validate the form, can be set to `onChange`、`onSubmit`, supports using array to set multiple values | _string \| string[]_ | `onBlur` |
 | colon | Whether to display colon after label | _boolean_ | `false` |
 | disabled | Whether to disable form | _boolean_ | `false` |
 | readonly | Whether to be readonly | _boolean_ | `false` |
@@ -509,12 +511,13 @@ export default {
 
 | Key | Description | Type |
 | --- | --- | --- |
-| required | Whether to be a required field, the value is not allowed to be empty string, empty array, `undefined`, `null` | _boolean_ |
-| message | Error message | _string \| (value, rule) => string_ |
-| validator | Custom validator | _(value, rule) => boolean \| string \| Promise_ |
-| pattern | Regex pattern | _RegExp_ |
-| trigger | When to validate the form，can be set to `onChange`、`onBlur` | _string_ |
+| required | Whether to be a required field, the value is not allowed to be empty (empty string, empty array, `false`, `undefined`, `null`) | _boolean_ |
+| message | Error message, can be a function to dynamically return message content | _string \| (value, rule) => string_ |
+| validator | Custom validator, can return a Promise to validate dynamically | _(value, rule) => boolean \| string \| Promise_ |
+| pattern | Regexp pattern, if the regexp cannot match, means that the validation fails | _RegExp_ |
+| trigger | When to validate the form, priority is higher than the `validate-trigger` of the Form component, can be set to `onChange`, `onBlur`, `onSubmit` | _string \| string[]_ |
 | formatter | Format value before validate | _(value, rule) => any_ |
+| validateEmpty `v3.6.0` | Controls whether the `validator` and `pattern` options to verify empty values, the default value is `true`, you can set to `false` to disable this behavior | _boolean_ |
 
 ### validate-trigger
 
@@ -538,8 +541,10 @@ Use [ref](https://v3.vuejs.org/guide/component-template-refs.html) to get Form i
 | Name | Description | Attribute | Return value |
 | --- | --- | --- | --- |
 | submit | Submit form | - | - |
-| validate | Validate form | _name?: string \| string[]_ | _Promise_ |
+| getValues `v3.4.8` | Get current form values | - | _Record<string, unknown>_ |
+| validate | Validate form | _name?: string \| string[]_ | _Promise\<void\>_ |
 | resetValidation | Reset validation | _name?: string \| string[]_ | - |
+| getValidationStatus `v3.5.0` | Get validation status of all fields，status can be `passed`、`failed`、`unvalidated` | - | _Record\<string, FieldValidationStatus\>_ |
 | scrollToField | Scroll to field | _name: string, alignToTop: boolean_ | - |
 
 ### Types

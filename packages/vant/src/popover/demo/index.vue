@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import VanPopover from '..';
+import { ref } from 'vue';
+import VanPopover, { PopoverPlacement } from '..';
 import VanButton from '../../button';
 import VanField from '../../field';
 import VanPopup from '../../popup';
 import VanPicker from '../../picker';
 import VanGrid from '../../grid';
 import VanGridItem from '../../grid-item';
-import { ref } from 'vue';
-import { useTranslate } from '../../../docs/site/use-translate';
 import { Toast } from '../../toast';
+import { useTranslate } from '../../../docs/site';
 
 const t = useTranslate({
   'zh-CN': {
@@ -83,9 +83,20 @@ const show = ref({
   disableAction: false,
 });
 const showPicker = ref(false);
-const currentPlacement = ref('top');
+const currentPlacement = ref<PopoverPlacement>('top');
 
-const onPickerChange = (value: string) => {
+const onClickChoosePlacement = () => {
+  showPicker.value = true;
+
+  setTimeout(() => {
+    show.value = {
+      ...show.value,
+      placement: true,
+    };
+  }, 300);
+};
+
+const onPickerChange = (value: PopoverPlacement) => {
   setTimeout(() => {
     show.value.placement = true;
     currentPlacement.value = value;
@@ -129,7 +140,7 @@ const onSelect = (action: { text: string }) => Toast(action.text);
       readonly
       name="picker"
       :label="t('choosePlacement')"
-      @click="showPicker = true"
+      @click="onClickChoosePlacement"
     />
 
     <van-popup

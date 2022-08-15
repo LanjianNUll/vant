@@ -10,13 +10,13 @@ Vant 提供了一套默认主题，CSS 命名采用 BEM 的风格，方便使用
 
 ### 示例工程
 
-我们提供了一个基于 Vue Cli 3 的示例工程，仓库地址为 [Vant Demo](https://github.com/youzan/vant-demo)，其中包含了定制主题的基本配置，可以作为参考。
+我们提供了一个基于 Vue CLI 3 的示例工程，仓库地址为 [Vant Demo](https://github.com/vant-ui/vant-demo)，其中包含了定制主题的基本配置，可以作为参考。
 
 ### 样式变量
 
 Vant 使用了 [Less](http://lesscss.org/) 对样式进行预处理，并内置了一些样式变量，通过替换样式变量即可定制你自己需要的主题。
 
-下面是所有的[基础样式变量](https://github.com/youzan/vant/blob/dev/packages/vant/src/style/var.less)，组件的样式变量请参考各个组件的文档，或查看组件源码目录下的 `var.less` 文件。
+下面是所有的[基础样式变量](https://github.com/vant-ui/vant/blob/dev/packages/vant/src/style/var.less)，组件的样式变量请参考各个组件的文档，或查看组件源码目录下的 `var.less` 文件。
 
 ```less
 // Color Palette
@@ -180,46 +180,5 @@ module.exports = {
       },
     },
   },
-};
-```
-
-### Vite 项目
-
-如果是 vite 项目，可以跳过以上步骤，直接在 `vite.config.js` 中添加如下配置即可。
-
-```js
-// vite.config.js
-import vue from '@vitejs/plugin-vue';
-import styleImport from 'vite-plugin-style-import';
-
-export default {
-  css: {
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true,
-        // 覆盖样式变量
-        modifyVars: {
-          'text-color': '#111',
-          'border-color': '#eee',
-        },
-      },
-    },
-  },
-  resolve: {
-    alias: [{ find: /^~/, replacement: '' }],
-  },
-  plugins: [
-    vue(),
-    // 按需引入样式源文件
-    styleImport({
-      libs: [
-        {
-          libraryName: 'vant',
-          esModule: true,
-          resolveStyle: (name) => `vant/es/${name}/style/less`,
-        },
-      ],
-    }),
-  ],
 };
 ```

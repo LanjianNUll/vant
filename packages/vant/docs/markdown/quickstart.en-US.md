@@ -7,21 +7,21 @@
 Using `npm` to install:
 
 ```bash
-# install Vant 2 for Vue 2 project
-npm i vant@2
+# install latest Vant for Vue 3 project
+npm i vant
 
-# install Vant 3 for Vue 3 project
-npm i vant@3
+# install Vant 2 for Vue 2 project
+npm i vant@latest-v2
 ```
 
 Using `yarn` or `pnpm`:
 
 ```bash
 # with yarn
-yarn add vant@3
+yarn add vant
 
 # with pnpm
-pnpm add vant@3
+pnpm add vant
 ```
 
 ### CDN
@@ -32,12 +32,12 @@ The easiest way to use Vant is to include a CDN link in the html file, after whi
 <!-- import style -->
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/vant@next/lib/index.css"
+  href="https://fastly.jsdelivr.net/npm/vant@3/lib/index.css"
 />
 
 <!-- import script -->
-<script src="https://cdn.jsdelivr.net/npm/vue@next"></script>
-<script src="https://cdn.jsdelivr.net/npm/vant@next/lib/vant.min.js"></script>
+<script src="https://fastly.jsdelivr.net/npm/vue@3"></script>
+<script src="https://fastly.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
 
 <script>
   // Render the Button component
@@ -73,10 +73,10 @@ For enterprise developers, we recommend:
 
 ### CLI
 
-We recommend to use [Vue Cli](https://cli.vuejs.org/) to create a new project.
+We recommend to use [Vue CLI](https://cli.vuejs.org/) to create a new project.
 
 ```bash
-# Install Vue Cli
+# Install Vue CLI
 npm install -g @vue/cli
 
 # Create a project
@@ -86,41 +86,75 @@ vue create hello-world
 vue ui
 ```
 
-![](https://img.yzcdn.cn/vant/vue-cli-demo-201809030812.png)
+![](https://fastly.jsdelivr.net/npm/@vant/assets/vue-cli-demo-201809030812.png)
 
 In the GUI, click on 'Dependencies' -> `Install Dependencies` and add `vant` to the dependencies.
 
 ## Usage
 
-### Import on demand in vite projects (recommended)
+### Import on demand (recommended)
 
-If you are using vite, please use [vite-plugin-style-import](https://github.com/anncwb/vite-plugin-style-import).
+If you are using vite, webpack or vue-cli, please use [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components).
 
 #### 1. Install Plugin
 
 ```bash
-npm i vite-plugin-style-import@1.2.0 -D
+# with npm
+npm i unplugin-vue-components -D
+
+# with yarn
+yarn add unplugin-vue-components -D
+
+# with pnpm
+pnpm add unplugin-vue-components -D
 ```
 
 #### 2. Configure Plugin
 
-Configure the plugin in the `vite.config.js` file:
+For `vite` based project，configure the plugin in the `vite.config.js` file:
 
 ```js
 import vue from '@vitejs/plugin-vue';
-import styleImport from 'vite-plugin-style-import';
+import Components from 'unplugin-vue-components/vite';
+import { VantResolver } from 'unplugin-vue-components/resolvers';
 
 export default {
   plugins: [
     vue(),
-    styleImport({
-      libs: [
-        {
-          libraryName: 'vant',
-          esModule: true,
-          resolveStyle: (name) => `vant/es/${name}/style/index`,
-        },
-      ],
+    Components({
+      resolvers: [VantResolver()],
+    }),
+  ],
+};
+```
+
+For `vue-cli` based project，configure the plugin in the `vue.config.js` file:
+
+```js
+const { VantResolver } = require('unplugin-vue-components/resolvers');
+const ComponentsPlugin = require('unplugin-vue-components/webpack');
+
+module.exports = {
+  configureWebpack: {
+    plugins: [
+      ComponentsPlugin({
+        resolvers: [VantResolver()],
+      }),
+    ],
+  },
+};
+```
+
+For `webpack` based project，configure the plugin in the `webpack.config.js` file:
+
+```js
+const { VantResolver } = require('unplugin-vue-components/resolvers');
+const ComponentsPlugin = require('unplugin-vue-components/webpack');
+
+module.exports = {
+  plugins: [
+    ComponentsPlugin({
+      resolvers: [VantResolver()],
     }),
   ],
 };
@@ -138,51 +172,29 @@ const app = createApp();
 app.use(Button);
 ```
 
-> Vant supports Tree Shaking by default.
+#### 4. Style of Function Components
 
-### Import on demand in non-vite projects (recommended)
-
-In non-vite projects, use [babel-plugin-import](https://github.com/ant-design/babel-plugin-import) to import components on demand.
-
-#### 1. Install Plugin
-
-```bash
-npm i babel-plugin-import -D
-```
-
-#### 2. Configure Plugin
-
-Set babel config in `.babelrc` or `babel.config.js`:
-
-```json
-{
-  "plugins": [
-    [
-      "import",
-      {
-        "libraryName": "vant",
-        "libraryDirectory": "es",
-        "style": true
-      }
-    ]
-  ]
-}
-```
-
-#### 3. Import Components
-
-Then you can import components from Vant:
+Some components of Vant are provided as function, including `Toast`, `Dialog`, `Notify` and `ImagePreview`. When using function components, `unplugin-vue-components` can not auto import the component style, so we need to import style manually.
 
 ```js
-// Input
-import { Button } from 'vant';
+// Toast
+import { Toast } from 'vant';
+import 'vant/es/toast/style';
 
-// Output
-import Button from 'vant/es/button';
-import 'vant/es/button/style';
+// Dialog
+import { Dialog } from 'vant';
+import 'vant/es/dialog/style';
+
+// Notify
+import { Notify } from 'vant';
+import 'vant/es/notify/style';
+
+// ImagePreview
+import { ImagePreview } from 'vant';
+import 'vant/es/image-preview/style';
 ```
 
-> If you are using TypeScript，please use [ts-import-plugin](https://github.com/Brooooooklyn/ts-import-plugin) instead.
+> Vant supports tree shaking by default, so you don't necessarily need the webpack plugin, if you can't accept the full import of css.
 
 ### Import all components (not recommended)
 
@@ -196,8 +208,6 @@ import 'vant/lib/index.css';
 const app = createApp();
 app.use(Vant);
 ```
-
-> If you configured babel-plugin-import, you won't be allowed to import all components.
 
 ### Manually import (not recommended)
 

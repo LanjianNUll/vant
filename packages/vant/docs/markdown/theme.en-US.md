@@ -10,7 +10,7 @@ Vant use [Less](http://lesscss.org/) as css preprocessor，you can override the 
 
 ### Less variables
 
-There are some [basic variables](<(https://github.com/youzan/vant/blob/dev/packages/vant/src/style/var.less)>) below, for component less variables, please refer to the documentation of each component, or view the `var.less` file in the component source directory.
+There are some [basic variables](<(https://github.com/vant-ui/vant/blob/dev/packages/vant/src/style/var.less)>) below, for component less variables, please refer to the documentation of each component, or view the `var.less` file in the component source directory.
 
 ```less
 // Color Palette
@@ -172,44 +172,5 @@ module.exports = {
       },
     },
   },
-};
-```
-
-### Vite
-
-Add the following config in `vite.config.js`.
-
-```js
-// vite.config.js
-import vue from '@vitejs/plugin-vue';
-import styleImport from 'vite-plugin-style-import';
-
-export default {
-  css: {
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true,
-        modifyVars: {
-          'text-color': '#111',
-          'border-color': '#eee',
-        },
-      },
-    },
-  },
-  resolve: {
-    alias: [{ find: /^~/, replacement: '' }],
-  },
-  plugins: [
-    vue(),
-    styleImport({
-      libs: [
-        {
-          libraryName: 'vant',
-          esModule: true,
-          resolveStyle: (name) => `vant/es/${name}/style/less`,
-        },
-      ],
-    }),
-  ],
 };
 ```

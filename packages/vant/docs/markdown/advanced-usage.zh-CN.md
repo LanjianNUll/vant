@@ -92,8 +92,10 @@ export default {
   data() {
     return {
       checked: true,
-      activeIcon: 'https://img.yzcdn.cn/vant/user-active.png',
-      inactiveIcon: 'https://img.yzcdn.cn/vant/user-inactive.png',
+      activeIcon:
+        'https://fastly.jsdelivr.net/npm/@vant/assets/user-active.png',
+      inactiveIcon:
+        'https://fastly.jsdelivr.net/npm/@vant/assets/user-inactive.png',
     };
   },
 };
@@ -193,7 +195,7 @@ module.exports = {
 
 Vant 是一个面向移动端的组件库，因此默认只适配了移动端设备，这意味着组件只监听了移动端的 `touch` 事件，没有监听桌面端的 `mouse` 事件。
 
-如果你需要在桌面端使用 Vant，可以引入我们提供的 [@vant/touch-emulator](https://github.com/youzan/vant/tree/dev/packages/vant-touch-emulator)，这个库会在桌面端自动将 `mouse` 事件转换成对应的 `touch` 事件，使得组件能够在桌面端使用。
+如果你需要在桌面端使用 Vant，可以引入我们提供的 [@vant/touch-emulator](https://github.com/vant-ui/vant/tree/dev/packages/vant-touch-emulator)，这个库会在桌面端自动将 `mouse` 事件转换成对应的 `touch` 事件，使得组件能够在桌面端使用。
 
 ```bash
 # 安装模块
@@ -223,4 +225,4 @@ iPhone X 等机型底部存在底部指示条，指示条的操作区域与页�
 <van-number-keyboard safe-area-inset-bottom />
 ```
 
-<img src="https://img.yzcdn.cn/vant/safearea.png">
+<img src="https://fastly.jsdelivr.net/npm/@vant/assets/safearea.png">

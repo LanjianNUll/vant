@@ -23,7 +23,6 @@ import {
   unitToPx,
   truthProp,
   numericProp,
-  Interceptor,
   windowWidth,
   getElementTop,
   makeStringProp,
@@ -32,6 +31,8 @@ import {
   makeNumericProp,
   setRootScrollTop,
   BORDER_TOP_BOTTOM,
+  type Numeric,
+  type Interceptor,
   type ComponentInstance,
 } from '../utils';
 import { scrollLeftTo, scrollTopTo } from './utils';
@@ -65,6 +66,7 @@ const tabsProps = {
   color: String,
   border: Boolean,
   sticky: Boolean,
+  shrink: Boolean,
   active: makeNumericProp(0),
   duration: makeNumericProp(0.3),
   animated: Boolean,
@@ -138,7 +140,10 @@ export default defineComponent({
 
     // whether the nav is scrollable
     const scrollable = computed(
-      () => children.length > props.swipeThreshold || !props.ellipsis
+      () =>
+        children.length > props.swipeThreshold ||
+        !props.ellipsis ||
+        props.shrink
     );
 
     const navStyle = computed(() => ({
@@ -146,10 +151,8 @@ export default defineComponent({
       background: props.background,
     }));
 
-    const getTabName = (
-      tab: ComponentInstance,
-      index: number
-    ): number | string => tab.name ?? index;
+    const getTabName = (tab: ComponentInstance, index: number): Numeric =>
+      tab.name ?? index;
 
     const currentName = computed(() => {
       const activeTab = children[state.currentIndex];
@@ -258,7 +261,7 @@ export default defineComponent({
     };
 
     // correct the index of active tab
-    const setCurrentIndexByName = (name: number | string) => {
+    const setCurrentIndexByName = (name: Numeric) => {
       const matched = children.find(
         (tab, index) => getTabName(tab, index) === name
       );
@@ -332,7 +335,7 @@ export default defineComponent({
       emit('scroll', params);
     };
 
-    const scrollTo = (name: number | string) => {
+    const scrollTo = (name: Numeric) => {
       nextTick(() => {
         setCurrentIndexByName(name);
         scrollToCurrentContent(true);
@@ -361,16 +364,18 @@ export default defineComponent({
     const renderNav = () =>
       children.map((item, index) => (
         <TabsTitle
+          key={item.id}
+          v-slots={{ title: item.$slots.title }}
           id={`${id}-${index}`}
           ref={setTitleRefs(index)}
           type={props.type}
           color={props.color}
           style={item.titleStyle}
           class={item.titleClass}
+          shrink={props.shrink}
           isActive={index === state.currentIndex}
           controls={item.id}
           scrollable={scrollable.value}
-          renderTitle={item.$slots.title}
           activeColor={props.titleActiveColor}
           inactiveColor={props.titleInactiveColor}
           onClick={(event: MouseEvent) => onClickTab(item, index, event)}
@@ -396,14 +401,17 @@ export default defineComponent({
         <div
           ref={wrapRef}
           class={[
-            bem('wrap', { scrollable: scrollable.value }),
+            bem('wrap'),
             { [BORDER_TOP_BOTTOM]: type === 'line' && border },
           ]}
         >
           <div
             ref={navRef}
             role="tablist"
-            class={bem('nav', [type, { complete: scrollable.value }])}
+            class={bem('nav', [
+              type,
+              { shrink: props.shrink, complete: scrollable.value },
+            ])}
             style={navStyle.value}
             aria-orientation="horizontal"
           >
@@ -466,7 +474,7 @@ export default defineComponent({
       });
     };
 
-    const onRendered = (name: string | number, title?: string) =>
+    const onRendered = (name: Numeric, title?: string) =>
       emit('rendered', name, title);
 
     useExpose({

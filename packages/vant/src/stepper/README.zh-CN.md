@@ -148,7 +148,7 @@ export default {
 | max | 最大值 | _number \| string_ | - |
 | default-value | 初始值，当 v-model 为空时生效 | _number \| string_ | `1` |
 | step | 步长，每次点击时改变的值 | _number \| string_ | `1` |
-| name | 标识符，可以在 `change` 事件回调参数中获取 | _number \| string_ | - |
+| name | 标识符，通常为一个唯一的字符串或数字，可以在 `change` 事件回调参数中获取 | _number \| string_ | - |
 | input-width | 输入框宽度，默认单位为 `px` | _number \| string_ | `32px` |
 | button-size | 按钮大小以及输入框高度，默认单位为 `px` | _number \| string_ | `28px` |
 | decimal-length | 固定显示的小数位数 | _number \| string_ | - |
@@ -163,8 +163,8 @@ export default {
 | show-plus | 是否显示增加按钮 | _boolean_ | `true` |
 | show-minus | 是否显示减少按钮 | _boolean_ | `true` |
 | show-input | 是否显示输入框 | _boolean_ | `true` |
-| long-press | 是否开启长按手势 | _boolean_ | `true` |
-| allow-empty | 是否允许输入的值为空 | _boolean_ | `false` |
+| long-press | 是否开启长按手势，开启后可以长按增加和减少按钮 | _boolean_ | `true` |
+| allow-empty | 是否允许输入的值为空，设置为 `true` 后允许传入空字符串 | _boolean_ | `false` |
 
 ### Events
 

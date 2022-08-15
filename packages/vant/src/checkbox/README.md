@@ -89,8 +89,10 @@ export default {
     const checked = ref(true);
     return {
       checked,
-      activeIcon: 'https://img.yzcdn.cn/vant/user-active.png',
-      inactiveIcon: 'https://img.yzcdn.cn/vant/user-inactive.png',
+      activeIcon:
+        'https://fastly.jsdelivr.net/npm/@vant/assets/user-active.png',
+      inactiveIcon:
+        'https://fastly.jsdelivr.net/npm/@vant/assets/user-inactive.png',
     };
   },
 };
@@ -248,7 +250,7 @@ export default {
 | Attribute | Description | Type | Default |
 | --- | --- | --- | --- |
 | v-model | Check status | _boolean_ | `false` |
-| name | Checkbox name | _any_ | - |
+| name | Checkbox name, usually a unique string or number | _any_ | - |
 | shape | Can be set to `square` | _string_ | `round` |
 | disabled | Disable checkbox | _boolean_ | `false` |
 | label-disabled | Whether to disable label click | _boolean_ | `false` |
@@ -299,21 +301,24 @@ Use [ref](https://v3.vuejs.org/guide/component-template-refs.html) to get Checkb
 ### toggleAll Usage
 
 ```js
-const { checkboxGroup } = this.$refs;
+import { ref } from 'vue';
+import type { CheckboxGroupInstance } from 'vant';
+
+const checkboxGroupRef = ref<CheckboxGroupInstance>();
 
 // Toggle all
-checkboxGroup.toggleAll();
+checkboxGroup.value?.toggleAll();
 // Select all
-checkboxGroup.toggleAll(true);
+checkboxGroup.value?.toggleAll(true);
 // Unselect all
-checkboxGroup.toggleAll(false);
+checkboxGroup.value?.toggleAll(false);
 
 // Toggle all, skip disabled
-checkboxGroup.toggleAll({
+checkboxGroup.value?.toggleAll({
   skipDisabled: true,
 });
 // Select all, skip disabled
-checkboxGroup.toggleAll({
+checkboxGroup.value?.toggleAll({
   checked: true,
   skipDisabled: true,
 });

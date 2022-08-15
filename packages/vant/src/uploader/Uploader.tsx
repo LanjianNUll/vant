@@ -11,20 +11,20 @@ import {
 import {
   pick,
   extend,
+  toArray,
   isPromise,
   truthProp,
-  numericProp,
   Interceptor,
   getSizeStyle,
   makeArrayProp,
   makeStringProp,
   makeNumericProp,
+  type Numeric,
   type ComponentInstance,
 } from '../utils';
 import {
   bem,
   name,
-  toArray,
   isOversize,
   filterFiles,
   isImageFile,
@@ -70,9 +70,11 @@ const uploaderProps = {
   modelValue: makeArrayProp<UploaderFileListItem>(),
   beforeRead: Function as PropType<UploaderBeforeRead>,
   beforeDelete: Function as PropType<Interceptor>,
-  previewSize: numericProp,
+  previewSize: [Number, String, Array] as PropType<
+    Numeric | [Numeric, Numeric]
+  >,
   previewImage: truthProp,
-  previewOptions: Object as PropType<ImagePreviewOptions>,
+  previewOptions: Object as PropType<Partial<ImagePreviewOptions>>,
   previewFullImage: truthProp,
   maxSize: {
     type: [Number, String, Function] as PropType<UploaderMaxSize>,
@@ -228,7 +230,7 @@ export default defineComponent({
         const imageFiles = props.modelValue.filter(isImageFile);
         const images = imageFiles
           .map((item) => {
-            if (item.file && !item.url) {
+            if (item.file && !item.url && item.status !== 'failed') {
               item.url = URL.createObjectURL(item.file);
               urls.push(item.url);
             }
@@ -278,7 +280,7 @@ export default defineComponent({
 
       return (
         <UploaderPreviewItem
-          v-slots={{ 'preview-cover': slots['preview-cover'] }}
+          v-slots={pick(slots, ['preview-cover', 'preview-delete'])}
           item={item}
           index={index}
           onClick={() => emit('click-preview', item, getDetail(index))}

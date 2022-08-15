@@ -5,62 +5,44 @@ export default {
     namedExport: true,
     skipInstall: ['lazyload'],
     packageManager: 'pnpm',
+    extensions: {
+      esm: '.mjs',
+    },
     site: {
       publicPath:
-        (typeof window === 'undefined' && process.env.PUBLIC_PATH) ||
-        '/vant/v3/',
-    },
-    vetur: {
-      tagPrefix: 'van-',
+        (typeof window === 'undefined' && process.env.PUBLIC_PATH) || '/vant/',
     },
   },
   site: {
     defaultLang: 'en-US',
     versions: [
       { label: 'v1', link: '/vant/v1/' },
-      { label: 'v2', link: '/vant/' },
+      { label: 'v2', link: '/vant/v2/' },
+      { label: 'v4', link: '/vant/v4/' },
     ],
     baiduAnalytics: {
-      seed: 'ad6b5732c36321f2dafed737ac2da92f',
+      seed: 'af5d41bc4e446e76665dbe3ec18d55c3',
     },
     htmlMeta: {
       'docsearch:version': 'v3',
     },
     locales: {
       'zh-CN': {
-        title: 'Vant',
+        title: 'Vant 3',
+        subtitle: '（适用于 Vue 3）',
         description: '轻量、可靠的移动端组件库',
-        logo: 'https://img.yzcdn.cn/vant/logo.png',
+        logo: 'https://fastly.jsdelivr.net/npm/@vant/assets/logo.png',
         langLabel: '中',
         links: [
           {
-            logo: 'https://b.yzcdn.cn/vant/logo/weapp.svg',
+            logo: 'https://fastly.jsdelivr.net/npm/@vant/assets/weapp.svg',
             url: 'https://vant-contrib.gitee.io/vant-weapp/',
           },
           {
-            logo: 'https://b.yzcdn.cn/vant/logo/github.svg',
-            url: 'https://github.com/youzan/vant',
+            logo: 'https://fastly.jsdelivr.net/npm/@vant/assets/github.svg',
+            url: 'https://github.com/vant-ui/vant',
           },
         ],
-        searchConfig: {
-          apiKey: '90067aecdaa2c85220e2783cd305caac',
-          indexName: 'vant',
-          searchParameters: {
-            facetFilters: ['lang:zh-CN', 'version:v3'],
-          },
-          transformItems(items) {
-            if (location.hostname !== 'youzan.github.io') {
-              items.forEach((item) => {
-                if (item.url) {
-                  item.url =
-                    item.url &&
-                    item.url.replace('youzan.github.io', location.hostname);
-                }
-              });
-            }
-            return items;
-          },
-        },
         nav: [
           {
             title: '开发指南',
@@ -137,6 +119,10 @@ export default {
               {
                 path: 'popup',
                 title: 'Popup 弹出层',
+              },
+              {
+                path: 'space',
+                title: 'Space 间距',
               },
               {
                 path: 'style',
@@ -474,23 +460,17 @@ export default {
         ],
       },
       'en-US': {
-        title: 'Vant',
-        description: 'Mobile UI Components built on Vue',
-        logo: 'https://img.yzcdn.cn/vant/logo.png',
+        title: 'Vant 3',
+        subtitle: ' (for Vue 3)',
+        description: 'Lightweight Mobile UI Components built on Vue',
+        logo: 'https://fastly.jsdelivr.net/npm/@vant/assets/logo.png',
         langLabel: 'EN',
         links: [
           {
-            logo: 'https://b.yzcdn.cn/vant/logo/github.svg',
-            url: 'https://github.com/youzan/vant',
+            logo: 'https://fastly.jsdelivr.net/npm/@vant/assets/github.svg',
+            url: 'https://github.com/vant-ui/vant',
           },
         ],
-        searchConfig: {
-          apiKey: '90067aecdaa2c85220e2783cd305caac',
-          indexName: 'vant',
-          searchParameters: {
-            facetFilters: ['lang:en-US', 'version:v3'],
-          },
-        },
         nav: [
           {
             title: 'Essentials',
@@ -551,6 +531,10 @@ export default {
               {
                 path: 'popup',
                 title: 'Popup',
+              },
+              {
+                path: 'space',
+                title: 'Space',
               },
               {
                 path: 'style',
@@ -850,30 +834,30 @@ export default {
                 path: 'use-event-listener',
                 title: 'useEventListener',
               },
-              // {
-              //   path: 'use-page-visibility',
-              //   title: 'usePageVisibility',
-              // },
-              // {
-              //   path: 'use-rect',
-              //   title: 'useRect',
-              // },
-              // {
-              //   path: 'use-relation',
-              //   title: 'useRelation',
-              // },
-              // {
-              //   path: 'use-scroll-parent',
-              //   title: 'useScrollParent',
-              // },
+              {
+                path: 'use-page-visibility',
+                title: 'usePageVisibility',
+              },
+              {
+                path: 'use-rect',
+                title: 'useRect',
+              },
+              {
+                path: 'use-relation',
+                title: 'useRelation',
+              },
+              {
+                path: 'use-scroll-parent',
+                title: 'useScrollParent',
+              },
               {
                 path: 'use-toggle',
                 title: 'useToggle',
               },
-              // {
-              //   path: 'use-window-size',
-              //   title: 'useWindowSize',
-              // },
+              {
+                path: 'use-window-size',
+                title: 'useWindowSize',
+              },
             ],
           },
           {

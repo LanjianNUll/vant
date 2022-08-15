@@ -213,8 +213,8 @@ export default {
 | v-model:show | Whether to show Popover | _boolean_ | `false` |
 | actions | Actions | _PopoverAction[]_ | `[]` |
 | placement | Placement | _PopoverPlacement_ | `bottom` |
-| theme | Theme，can be set to `dark` | _PopoverTheme_ | `light` |
-| trigger | Trigger mode，can be set to `manual` | _PopoverTrigger_ | `click` |
+| theme | Theme, can be set to `dark` | _PopoverTheme_ | `light` |
+| trigger | Trigger mode, can be set to `manual` | _PopoverTrigger_ | `click` |
 | duration | Transition duration, unit second | _number \| string_ | `0.3` |
 | offset | Distance to reference | _[number, number]_ | `[0, 8]` |
 | overlay | Whether to show overlay | _boolean_ | `false` |
@@ -250,10 +250,11 @@ export default {
 
 ### Slots
 
-| Name      | Description       |
-| --------- | ----------------- |
-| default   | Custom content    |
-| reference | Reference Element |
+| Name | Description | SlotProps |
+| --- | --- | --- |
+| default | Custom content | - |
+| reference | Reference Element | - |
+| action `v3.4.0` | Custom the content of option | _{ action: PopoverAction, index: number }_ |
 
 ### Types
 

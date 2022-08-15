@@ -1,36 +1,40 @@
-# Vant Cli
+# Vant CLI
 
-Vant Cli 是一个 Vue 组件库构建工具，通过 Vant Cli 可以快速搭建一套功能完备的 Vue 组件库。
+Vant CLI is a tool for building vue component library. You can quickly build a full-featured Vue component library with vant-cli.
 
-### 特性
+🇨🇳 <a href="./README.zh-CN.md">查看中文版介绍</a>
 
-- 提供丰富的命令，涵盖从开发测试到构建发布的完整流程
-- 基于约定的目录结构，自动生成优雅的文档站点和组件示例
-- 内置 ESlint、Stylelint 校验规则，提交代码时自动执行校验
-- 构建后的组件库默认支持按需引入、主题定制、Tree Shaking
+---
 
-### 快速上手
+### Features
 
-执行以下命令可以快速创建一个基于 Vant Cli 的项目：
+- Provides rich commands covering the complete process from development to deploy
+- Based on conventional directory structure. Generate elegant document website and component examples automatically.
+- ESlint built-in.
+- Support Tree Shaking/Theme Customization/Import on Demand
+
+### Quickstart
+
+To create a Vant CLI project, run:
 
 ```bash
 yarn create vant-cli-app
 ```
 
-### 手动安装
+### Install Manually
 
 ```shell
-# 通过 npm
+# via npm
 npm i @vant/cli -D
 
-# 通过 yarn
+# via yarn
 yarn add @vant/cli -D
 
-# 通过 pnpm
+# via pnpm
 pnpm add @vant/cli -D
 ```
 
-安装完成后，请将以下配置添加到 package.json 文件中
+Please add the followed config to `package.json` file.
 
 ```json
 {
@@ -43,18 +47,14 @@ pnpm add @vant/cli -D
     "release": "vant-cli release",
     "build-site": "vant-cli build-site"
   },
-  "lint-staged": {
+  "nano-staged": {
     "*.md": "prettier --write",
     "*.{ts,tsx,js,vue,less,scss}": "prettier --write",
-    "*.{ts,tsx,js,vue}": "eslint --fix",
-    "*.{vue,css,less,scss}": "stylelint --fix"
+    "*.{ts,tsx,js,vue}": "eslint --fix"
   },
   "eslintConfig": {
     "root": true,
     "extends": ["@vant"]
-  },
-  "stylelint": {
-    "extends": ["@vant/stylelint-config"]
   },
   "prettier": {
     "singleQuote": true
@@ -63,10 +63,9 @@ pnpm add @vant/cli -D
 }
 ```
 
-## 详细文档
+## More Details
 
-- [命令](https://github.com/youzan/vant/tree/dev/packages/vant-cli/docs/commands.md)
-- [配置指南](https://github.com/youzan/vant/tree/dev/packages/vant-cli/docs/config.md)
-- [目录结构](https://github.com/youzan/vant/tree/dev/packages/vant-cli/docs/directory.md)
-- [桌面端组件](https://github.com/youzan/vant/tree/dev/packages/vant-cli/docs/desktop.md)
-- [更新日志](https://github.com/youzan/vant/tree/dev/packages/vant-cli/changelog.md)
+- [cli](https://github.com/vant-ui/vant/tree/dev/packages/vant-cli/docs/commands.md)
+- [config](https://github.com/vant-ui/vant/tree/dev/packages/vant-cli/docs/config.md)
+- [directory structure](https://github.com/vant-ui/vant/tree/dev/packages/vant-cli/docs/directory.md)
+- [CHANGELOG](https://github.com/vant-ui/vant/tree/dev/packages/vant-cli/changelog.md)

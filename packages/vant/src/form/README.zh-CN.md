@@ -123,7 +123,7 @@ export default {
   setup() {
     const value1 = ref('');
     const value2 = ref('');
-    const value3 = ref('');
+    const value3 = ref('abc');
     const value4 = ref('');
     const pattern = /\d{6}/;
 
@@ -140,7 +140,7 @@ export default {
 
         setTimeout(() => {
           Toast.clear();
-          resolve(/\d{6}/.test(val));
+          resolve(val === '1234');
         }, 1000);
       });
 
@@ -332,7 +332,9 @@ import { ref } from 'vue';
 
 export default {
   setup() {
-    const value = ref([{ url: 'https://img.yzcdn.cn/vant/leaf.jpg' }]);
+    const value = ref([
+      { url: 'https://fastly.jsdelivr.net/npm/@vant/assets/leaf.jpeg' },
+    ]);
     return { value };
   },
 };
@@ -527,7 +529,7 @@ export default {
 | label-align | 表单项 label 对齐方式，可选值为 `center` `right` | _string_ | `left` |
 | input-align | 输入框对齐方式，可选值为 `center` `right` | _string_ | `left` |
 | error-message-align | 错误提示文案对齐方式，可选值为 `center` `right` | _string_ | `left` |
-| validate-trigger | 表单校验触发时机，可选值为 `onChange`、`onSubmit`，详见下表 | _string_ | `onBlur` |
+| validate-trigger | 表单校验触发时机，可选值为 `onChange`、`onSubmit`，支持通过数组同时设置多个值，具体用法见下方表格 | _string \| string[]_ | `onBlur` |
 | colon | 是否在 label 后面添加冒号 | _boolean_ | `false` |
 | disabled | 是否禁用表单中的所有输入框 | _boolean_ | `false` |
 | readonly | 是否将表单中的所有输入框设置为只读状态 | _boolean_ | `false` |
@@ -541,16 +543,17 @@ export default {
 
 ### Rule 数据结构
 
-使用 Field 的`rules`属性可以定义校验规则，可选属性如下:
+使用 Field 的 `rules` 属性可以定义校验规则，可选属性如下:
 
 | 键名 | 说明 | 类型 |
 | --- | --- | --- |
-| required | 是否为必选字段，当值为空字符串、空数组、`undefined`、`null` 时，校验不通过 | _boolean_ |
-| message | 错误提示文案 | _string \| (value, rule) => string_ |
-| validator | 通过函数进行校验 | _(value, rule) => boolean \| string \| Promise_ |
-| pattern | 通过正则表达式进行校验 | _RegExp_ |
-| trigger | 本项规则的触发时机，可选值为 `onChange`、`onBlur` | _string_ |
+| required | 是否为必选字段，当值为空值时（空字符串、空数组、`false`、`undefined`、`null` ），校验不通过 | _boolean_ |
+| message | 错误提示文案，可以设置为一个函数来返回动态的文案内容 | _string \| (value, rule) => string_ |
+| validator | 通过函数进行校验，可以返回一个 Promise 来进行异步校验 | _(value, rule) => boolean \| string \| Promise_ |
+| pattern | 通过正则表达式进行校验，正则无法匹配表示校验不通过 | _RegExp_ |
+| trigger | 设置本项规则的触发时机，优先级高于 Form 组件设置的 `validate-trigger` 属性，可选值为 `onChange`、`onBlur`、`onSubmit` | _string \| string[]_ |
 | formatter | 格式化函数，将表单项的值转换后进行校验 | _(value, rule) => any_ |
+| validateEmpty `v3.6.0` | 设置 `validator` 和 `pattern` 是否要对空值进行校验，默认值为 `true`，可以设置为 `false` 来禁用该行为 | _boolean_ |
 
 ### validate-trigger 可选值
 
@@ -576,8 +579,10 @@ export default {
 | 方法名 | 说明 | 参数 | 返回值 |
 | --- | --- | --- | --- |
 | submit | 提交表单，与点击提交按钮的效果等价 | - | - |
-| validate | 验证表单，支持传入 `name` 来验证单个或部分表单项 | _name?: string \| string[]_ | _Promise_ |
-| resetValidation | 重置表单项的验证提示，支持传入 `name` 来重置单个或部分表单项 | _name?: string \| string[]_ | - |
+| getValues `v3.4.8` | 获取所有表单项当前的值 | - | _Record<string, unknown>_ |
+| validate | 验证表单，支持传入一个或多个 `name` 来验证单个或部分表单项，不传入 `name` 时，会验证所有表单项 | _name?: string \| string[]_ | _Promise\<void\>_ |
+| resetValidation | 重置表单项的验证提示，支持传入一个或多个 `name` 来重置单个或部分表单项，不传入 `name` 时，会重置所有表单项 | _name?: string \| string[]_ | - |
+| getValidationStatus `v3.5.0` | 获取所有表单项的校验状态，状态包括 `passed`、`failed`、`unvalidated` | - | _Record\<string, FieldValidationStatus\>_ |
 | scrollToField | 滚动到对应表单项的位置，默认滚动到顶部，第二个参数传 false 可滚动至底部 | _name: string, alignToTop: boolean_ | - |
 
 ### 类型定义
