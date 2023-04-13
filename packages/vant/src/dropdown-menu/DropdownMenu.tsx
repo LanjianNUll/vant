@@ -35,7 +35,7 @@ import type { DropdownMenuProvide, DropdownMenuDirection } from './types';
 
 const [name, bem] = createNamespace('dropdown-menu');
 
-const dropdownMenuProps = {
+export const dropdownMenuProps = {
   overlay: truthProp,
   zIndex: numericProp,
   duration: makeNumericProp(0.2),
@@ -103,7 +103,6 @@ export default defineComponent({
     const toggleItem = (active: number) => {
       children.forEach((item, index) => {
         if (index === active) {
-          updateOffset();
           item.toggle();
         } else if (item.state.showPopup) {
           item.toggle(false, { immediate: true });
@@ -143,9 +142,12 @@ export default defineComponent({
       );
     };
 
-    linkChildren({ id, props, offset });
+    linkChildren({ id, props, offset, updateOffset });
     useClickAway(root, onClickAway);
-    useEventListener('scroll', onScroll, { target: scrollParent });
+    useEventListener('scroll', onScroll, {
+      target: scrollParent,
+      passive: true,
+    });
 
     return () => (
       <div ref={root} class={bem()}>

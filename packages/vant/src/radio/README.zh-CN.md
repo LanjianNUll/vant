@@ -140,6 +140,17 @@ export default {
 };
 ```
 
+### 左侧文本
+
+将 `label-position` 属性设置为 `'left'`，可以将文本位置调整到单选框左侧。
+
+```html
+<van-radio-group v-model="checked">
+  <van-radio name="1" label-position="left">单选框 1</van-radio>
+  <van-radio name="2" label-position="left">单选框 2</van-radio>
+</van-radio-group>
+```
+
 ### 禁用文本点击
 
 设置 `label-disabled` 属性后，点击图标以外的内容不会触发单选框切换。
@@ -235,14 +246,14 @@ import type {
 
 组件提供了下列 CSS 变量，可用于自定义样式，使用方法请参考 [ConfigProvider 组件](#/zh-CN/config-provider)。
 
-| 名称 | 默认值 | 描述 |
-| --- | --- | --- |
-| --van-radio-size | _20px_ | - |
-| --van-radio-border-color | _var(--van-gray-5)_ | - |
-| --van-radio-transition-duration | _var(--van-animation-duration-fast)_ | - |
-| --van-radio-label-margin | _var(--van-padding-xs)_ | - |
-| --van-radio-label-color | _var(--van-text-color)_ | - |
-| --van-radio-checked-icon-color | _var(--van-primary-color)_ | - |
-| --van-radio-disabled-icon-color | _var(--van-gray-5)_ | - |
-| --van-radio-disabled-label-color | _var(--van-text-color-3)_ | - |
-| --van-radio-disabled-background-color | _var(--van-border-color)_ | - |
+| 名称                             | 默认值                     | 描述 |
+| -------------------------------- | -------------------------- | ---- |
+| --van-radio-size                 | _20px_                     | -    |
+| --van-radio-border-color         | _var(--van-gray-5)_        | -    |
+| --van-radio-duration             | _var(--van-duration-fast)_ | -    |
+| --van-radio-label-margin         | _var(--van-padding-xs)_    | -    |
+| --van-radio-label-color          | _var(--van-text-color)_    | -    |
+| --van-radio-checked-icon-color   | _var(--van-primary-color)_ | -    |
+| --van-radio-disabled-icon-color  | _var(--van-gray-5)_        | -    |
+| --van-radio-disabled-label-color | _var(--van-text-color-3)_  | -    |
+| --van-radio-disabled-background  | _var(--van-border-color)_  | -    |

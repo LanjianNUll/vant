@@ -41,7 +41,7 @@ import { useExpose } from '../composables/use-expose';
 // Components
 import { Popup, PopupPosition } from '../popup';
 import { Button } from '../button';
-import { Toast } from '../toast';
+import { showToast } from '../toast';
 import CalendarMonth from './CalendarMonth';
 import CalendarHeader from './CalendarHeader';
 
@@ -53,7 +53,7 @@ import type {
   CalendarMonthInstance,
 } from './types';
 
-const calendarProps = {
+export const calendarProps = {
   show: Boolean,
   type: makeStringProp<CalendarType>('single'),
   title: String,
@@ -112,10 +112,10 @@ export default defineComponent({
     'select',
     'confirm',
     'unselect',
-    'month-show',
-    'over-range',
+    'monthShow',
+    'overRange',
     'update:show',
-    'click-subtitle',
+    'clickSubtitle',
   ],
 
   setup(props, { emit, slots }) {
@@ -134,7 +134,7 @@ export default defineComponent({
     };
 
     const getInitialDate = (defaultDate = props.defaultDate) => {
-      const { type, minDate, maxDate } = props;
+      const { type, minDate, maxDate, allowSameDay } = props;
 
       if (defaultDate === null) {
         return defaultDate;
@@ -149,9 +149,12 @@ export default defineComponent({
         const start = limitDateRange(
           defaultDate[0] || now,
           minDate,
-          getPrevDay(maxDate)
+          allowSameDay ? maxDate : getPrevDay(maxDate)
         );
-        const end = limitDateRange(defaultDate[1] || now, getNextDay(minDate));
+        const end = limitDateRange(
+          defaultDate[1] || now,
+          allowSameDay ? minDate : getNextDay(minDate)
+        );
         return [start, end];
       }
 
@@ -172,7 +175,10 @@ export default defineComponent({
 
     const bodyRef = ref<HTMLElement>();
 
-    const subtitle = ref('');
+    const subtitle = ref<{ text: string; date?: Date }>({
+      text: '',
+      date: undefined,
+    });
     const currentDate = ref(getInitialDate());
 
     const [monthRefs, setMonthRefs] = useRefs<CalendarMonthInstance>();
@@ -246,7 +252,7 @@ export default defineComponent({
 
           if (!monthRefs.value[i].showed) {
             monthRefs.value[i].showed = true;
-            emit('month-show', {
+            emit('monthShow', {
               date: month.date,
               title: month.getTitle(),
             });
@@ -264,7 +270,10 @@ export default defineComponent({
 
       /* istanbul ignore else */
       if (currentMonth) {
-        subtitle.value = currentMonth.getTitle();
+        subtitle.value = {
+          text: currentMonth.getTitle(),
+          date: currentMonth.date,
+        };
       }
     };
 
@@ -324,11 +333,11 @@ export default defineComponent({
     const checkRange = (date: [Date, Date]) => {
       const { maxRange, rangePrompt, showRangePrompt } = props;
 
-      if (maxRange && calcDateNum(date) > maxRange) {
+      if (maxRange && calcDateNum(date) > +maxRange) {
         if (showRangePrompt) {
-          Toast(rangePrompt || t('rangePrompt', maxRange));
+          showToast(rangePrompt || t('rangePrompt', maxRange));
         }
-        emit('over-range');
+        emit('overRange');
         return false;
       }
 
@@ -442,8 +451,8 @@ export default defineComponent({
         if (selectedIndex !== -1) {
           const [unselectedDate] = dates.splice(selectedIndex, 1);
           emit('unselect', cloneDate(unselectedDate));
-        } else if (props.maxRange && dates.length >= props.maxRange) {
-          Toast(props.rangePrompt || t('rangePrompt', props.maxRange));
+        } else if (props.maxRange && dates.length >= +props.maxRange) {
+          showToast(props.rangePrompt || t('rangePrompt', props.maxRange));
         } else {
           select([...dates, date]);
         }
@@ -458,7 +467,7 @@ export default defineComponent({
       const showMonthTitle = index !== 0 || !props.showSubtitle;
       return (
         <CalendarMonth
-          v-slots={pick(slots, ['top-info', 'bottom-info'])}
+          v-slots={pick(slots, ['top-info', 'bottom-info', 'month-title'])}
           ref={setMonthRefs(index)}
           date={date}
           currentDate={currentDate.value}
@@ -494,7 +503,7 @@ export default defineComponent({
           <Button
             round
             block
-            type="danger"
+            type="primary"
             color={props.color}
             class={bem('confirm')}
             disabled={disabled}
@@ -522,14 +531,13 @@ export default defineComponent({
       <div class={bem()}>
         <CalendarHeader
           v-slots={pick(slots, ['title', 'subtitle'])}
+          date={subtitle.value.date}
           title={props.title}
-          subtitle={subtitle.value}
+          subtitle={subtitle.value.text}
           showTitle={props.showTitle}
           showSubtitle={props.showSubtitle}
           firstDayOfWeek={dayOffset.value}
-          onClick-subtitle={(event: MouseEvent) =>
-            emit('click-subtitle', event)
-          }
+          onClickSubtitle={(event: MouseEvent) => emit('clickSubtitle', event)}
         />
         <div ref={bodyRef} class={bem('body')} onScroll={onScroll}>
           {months.value.map(renderMonth)}

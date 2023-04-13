@@ -3,6 +3,7 @@ import {
   watch,
   nextTick,
   onMounted,
+  watchEffect,
   onBeforeUnmount,
   defineComponent,
   type PropType,
@@ -16,6 +17,7 @@ import { Instance, createPopper, offsetModifier } from '@vant/popperjs';
 import {
   pick,
   extend,
+  inBrowser,
   truthProp,
   numericProp,
   unknownProp,
@@ -28,6 +30,7 @@ import {
 
 // Composables
 import { useClickAway } from '@vant/use';
+import { useSyncPropRef } from '../composables/use-sync-prop-ref';
 
 // Components
 import { Icon } from '../icon';
@@ -44,7 +47,6 @@ import {
 const [name, bem] = createNamespace('popover');
 
 const popupProps = [
-  'show',
   'overlay',
   'duration',
   'teleport',
@@ -53,7 +55,7 @@ const popupProps = [
   'closeOnClickOverlay',
 ] as const;
 
-const popoverProps = {
+export const popoverProps = {
   show: Boolean,
   theme: makeStringProp<PopoverTheme>('light'),
   overlay: Boolean,
@@ -90,8 +92,14 @@ export default defineComponent({
   setup(props, { emit, slots, attrs }) {
     let popper: Instance | null;
 
+    const popupRef = ref<HTMLElement>();
     const wrapperRef = ref<HTMLElement>();
     const popoverRef = ref<ComponentInstance>();
+
+    const show = useSyncPropRef(
+      () => props.show,
+      (value) => emit('update:show', value)
+    );
 
     const getPopoverOptions = () => ({
       placement: props.placement,
@@ -124,29 +132,30 @@ export default defineComponent({
 
     const updateLocation = () => {
       nextTick(() => {
-        if (!props.show) {
+        if (!show.value) {
           return;
         }
 
         if (!popper) {
           popper = createPopperInstance();
+          if (inBrowser) {
+            window.addEventListener('animationend', updateLocation);
+            window.addEventListener('transitionend', updateLocation);
+          }
         } else {
           popper.setOptions(getPopoverOptions());
         }
       });
     };
 
-    const updateShow = (value: boolean) => emit('update:show', value);
+    const updateShow = (value: boolean) => {
+      show.value = value;
+    };
 
     const onClickWrapper = () => {
       if (props.trigger === 'click') {
-        updateShow(!props.show);
+        show.value = !show.value;
       }
-    };
-
-    const onTouchstart = (event: TouchEvent) => {
-      event.stopPropagation();
-      emit('touchstart', event);
     };
 
     const onClickAction = (action: PopoverAction, index: number) => {
@@ -157,16 +166,17 @@ export default defineComponent({
       emit('select', action, index);
 
       if (props.closeOnClickAction) {
-        updateShow(false);
+        show.value = false;
       }
     };
 
     const onClickAway = () => {
       if (
+        show.value &&
         props.closeOnClickOutside &&
         (!props.overlay || props.closeOnClickOverlay)
       ) {
-        updateShow(false);
+        show.value = false;
       }
     };
 
@@ -203,17 +213,29 @@ export default defineComponent({
       );
     };
 
-    onMounted(updateLocation);
+    onMounted(() => {
+      updateLocation();
+      watchEffect(() => {
+        popupRef.value = popoverRef.value?.popupRef.value;
+      });
+    });
+
     onBeforeUnmount(() => {
       if (popper) {
+        if (inBrowser) {
+          window.removeEventListener('animationend', updateLocation);
+          window.removeEventListener('transitionend', updateLocation);
+        }
         popper.destroy();
         popper = null;
       }
     });
 
-    watch(() => [props.show, props.offset, props.placement], updateLocation);
+    watch(() => [show.value, props.offset, props.placement], updateLocation);
 
-    useClickAway(wrapperRef, onClickAway, { eventName: 'touchstart' });
+    useClickAway([wrapperRef, popupRef], onClickAway, {
+      eventName: 'touchstart',
+    });
 
     return () => (
       <>
@@ -222,11 +244,11 @@ export default defineComponent({
         </span>
         <Popup
           ref={popoverRef}
+          show={show.value}
           class={bem([props.theme])}
           position={''}
           transition="van-popover-zoom"
           lockScroll={false}
-          onTouchstart={onTouchstart}
           onUpdate:show={updateShow}
           {...attrs}
           {...pick(props, popupProps)}

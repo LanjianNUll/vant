@@ -1,6 +1,6 @@
 import fse from 'fs-extra';
-import execa from 'execa';
-import { join, relative } from 'path';
+import { execa } from 'execa';
+import { join, relative } from 'node:path';
 import { clean } from './clean.js';
 import { CSS_LANG } from '../common/css.js';
 import { createSpinner, consola } from '../common/logger.js';
@@ -12,7 +12,7 @@ import { compileBundles } from '../compiler/compile-bundles.js';
 import { genPackageEntry } from '../compiler/gen-package-entry.js';
 import { genStyleDepsMap } from '../compiler/gen-style-deps-map.js';
 import { genComponentStyle } from '../compiler/gen-component-style.js';
-import { SRC_DIR, LIB_DIR, ES_DIR } from '../common/constant.js';
+import { SRC_DIR, LIB_DIR, ES_DIR, getVantConfig } from '../common/constant.js';
 import { genPackageStyle } from '../compiler/gen-package-style.js';
 import { genWebStormTypes } from '../compiler/web-types/index.js';
 import {
@@ -104,7 +104,10 @@ async function buildTypeDeclarations() {
   const tsConfig = join(process.cwd(), 'tsconfig.declaration.json');
 
   if (existsSync(tsConfig)) {
-    await execa('tsc', ['-p', tsConfig]);
+    await execa('tsc', ['-p', tsConfig], {
+      stdout: 'inherit',
+      stderr: 'inherit',
+    });
   }
 }
 
@@ -135,9 +138,10 @@ async function buildPackageStyleEntry() {
 }
 
 async function buildBundledOutputs() {
+  const config = getVantConfig();
   setModuleEnv('esmodule');
   await compileBundles();
-  genWebStormTypes();
+  genWebStormTypes(config.build?.tagPrefix);
 }
 
 const tasks = [

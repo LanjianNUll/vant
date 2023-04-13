@@ -130,6 +130,17 @@ export default {
 };
 ```
 
+### Left Label
+
+Set `label-position` prop to `'left'` to adjust the label position to the left of the Radio.
+
+```html
+<van-radio-group v-model="checked">
+  <van-radio name="1" label-position="left">Radio 1</van-radio>
+  <van-radio name="2" label-position="left">Radio 2</van-radio>
+</van-radio-group>
+```
+
 ### Disable Label Click
 
 ```html
@@ -221,14 +232,14 @@ import type {
 
 The component provides the following CSS variables, which can be used to customize styles. Please refer to [ConfigProvider component](#/en-US/config-provider).
 
-| Name | Default Value | Description |
-| --- | --- | --- |
-| --van-radio-size | _20px_ | - |
-| --van-radio-border-color | _var(--van-gray-5)_ | - |
-| --van-radio-transition-duration | _var(--van-animation-duration-fast)_ | - |
-| --van-radio-label-margin | _var(--van-padding-xs)_ | - |
-| --van-radio-label-color | _var(--van-text-color)_ | - |
-| --van-radio-checked-icon-color | _var(--van-primary-color)_ | - |
-| --van-radio-disabled-icon-color | _var(--van-gray-5)_ | - |
-| --van-radio-disabled-label-color | _var(--van-text-color-3)_ | - |
-| --van-radio-disabled-background-color | _var(--van-border-color)_ | - |
+| Name                             | Default Value              | Description |
+| -------------------------------- | -------------------------- | ----------- |
+| --van-radio-size                 | _20px_                     | -           |
+| --van-radio-border-color         | _var(--van-gray-5)_        | -           |
+| --van-radio-duration             | _var(--van-duration-fast)_ | -           |
+| --van-radio-label-margin         | _var(--van-padding-xs)_    | -           |
+| --van-radio-label-color          | _var(--van-text-color)_    | -           |
+| --van-radio-checked-icon-color   | _var(--van-primary-color)_ | -           |
+| --van-radio-disabled-icon-color  | _var(--van-gray-5)_        | -           |
+| --van-radio-disabled-label-color | _var(--van-text-color-3)_  | -           |
+| --van-radio-disabled-background  | _var(--van-border-color)_  | -           |

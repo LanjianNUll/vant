@@ -2,30 +2,30 @@ import fs from 'fs-extra';
 import glob from 'fast-glob';
 import color from 'picocolors';
 import consola from 'consola';
-import { prompt } from 'inquirer';
-import { sep, join } from 'path';
+import { prompt } from 'enquirer';
+import { sep, join } from 'node:path';
 import { CWD, GENERATOR_DIR } from './constant';
 
 const PROMPTS = [
   {
     name: 'vueVersion',
     message: 'Select Vue version',
-    type: 'list',
+    type: 'select',
     choices: [
       {
-        name: 'Vue 2',
-        value: 'vue2',
+        name: 'vue2',
+        message: 'Vue 2',
       },
       {
-        name: 'Vue 3',
-        value: 'vue3',
+        name: 'vue3',
+        message: 'Vue 3',
       },
     ],
   },
   {
     name: 'preprocessor',
     message: 'Select css preprocessor',
-    type: 'list',
+    type: 'select',
     choices: ['Less', 'Sass'],
   },
 ];

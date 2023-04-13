@@ -106,6 +106,14 @@ export default {
 };
 ```
 
+### 左侧文本
+
+将 `label-position` 属性设置为 `'left'`，可以将文本位置调整到复选框左侧。
+
+```html
+<van-checkbox v-model="checked" label-position="left">复选框</van-checkbox>
+```
+
 ### 禁用文本点击
 
 设置 `label-disabled` 属性后，点击图标以外的内容不会触发复选框切换。
@@ -385,14 +393,14 @@ checkboxGroupRef.value?.toggleAll();
 
 组件提供了下列 CSS 变量，可用于自定义样式，使用方法请参考 [ConfigProvider 组件](#/zh-CN/config-provider)。
 
-| 名称 | 默认值 | 描述 |
-| --- | --- | --- |
-| --van-checkbox-size | _20px_ | - |
-| --van-checkbox-border-color | _var(--van-gray-5)_ | - |
-| --van-checkbox-transition-duration | _var(--van-animation-duration-fast)_ | - |
-| --van-checkbox-label-margin | _var(--van-padding-xs)_ | - |
-| --van-checkbox-label-color | _var(--van-text-color)_ | - |
-| --van-checkbox-checked-icon-color | _var(--van-primary-color)_ | - |
-| --van-checkbox-disabled-icon-color | _var(--van-gray-5)_ | - |
-| --van-checkbox-disabled-label-color | _var(--van-text-color-3)_ | - |
-| --van-checkbox-disabled-background-color | _var(--van-border-color)_ | - |
+| 名称                                | 默认值                     | 描述 |
+| ----------------------------------- | -------------------------- | ---- |
+| --van-checkbox-size                 | _20px_                     | -    |
+| --van-checkbox-border-color         | _var(--van-gray-5)_        | -    |
+| --van-checkbox-duration             | _var(--van-duration-fast)_ | -    |
+| --van-checkbox-label-margin         | _var(--van-padding-xs)_    | -    |
+| --van-checkbox-label-color          | _var(--van-text-color)_    | -    |
+| --van-checkbox-checked-icon-color   | _var(--van-primary-color)_ | -    |
+| --van-checkbox-disabled-icon-color  | _var(--van-gray-5)_        | -    |
+| --van-checkbox-disabled-label-color | _var(--van-text-color-3)_  | -    |
+| --van-checkbox-disabled-background  | _var(--van-border-color)_  | -    |

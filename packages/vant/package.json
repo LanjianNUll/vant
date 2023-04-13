@@ -1,7 +1,7 @@
 {
   "name": "vant",
-  "version": "3.5.4",
-  "description": "Lightweight Mobile UI Components built on Vue",
+  "version": "4.1.2",
+  "description": "Mobile UI Components built on Vue",
   "main": "lib/vant.cjs.js",
   "module": "es/index.mjs",
   "style": "lib/index.css",
@@ -20,6 +20,7 @@
     "build:site": "vant-cli build-site",
     "release": "cp ../../README.md ./ && vant-cli release && rm ./README.md",
     "release:site": "pnpm build:site && npx gh-pages -d site-dist --add",
+    "test:update": "vant-cli test --updateSnapshot",
     "test:watch": "vant-cli test --watch",
     "test:coverage": "open test/coverage/index.html"
   },
@@ -44,29 +45,34 @@
     "components"
   ],
   "dependencies": {
-    "@vant/icons": "^1.8.0",
-    "@vant/popperjs": "^1.2.1",
-    "@vant/use": "^1.4.1"
+    "@vant/popperjs": "^1.3.0",
+    "@vant/use": "^1.5.1"
   },
   "peerDependencies": {
     "vue": "^3.0.0"
   },
   "devDependencies": {
-    "@types/node": "^16",
+    "@types/node": "^18.11.18",
+    "@types/jest": "^29.1.1",
     "@vant/area-data": "workspace:*",
     "@vant/cli": "workspace:*",
     "@vant/eslint-config": "workspace:*",
-    "@vue/runtime-core": "^3.2.27",
-    "@vue/test-utils": "^2.0.1",
-    "typescript": "^4.7.4",
-    "vue": "^3.2.27",
-    "vue-router": "^4.0.12"
+    "@vant/icons": "workspace:*",
+    "@vue/runtime-core": "^3.2.47",
+    "@vue/test-utils": "^2.0.2",
+    "typescript": "^5.0.2",
+    "vue": "^3.2.47",
+    "vue-router": "^4.1.5"
   },
   "sideEffects": [
     "es/**/style/*",
     "lib/**/style/*",
-    "*.css",
-    "*.less"
+    "*.css"
   ],
+  "release-it": {
+    "git": {
+      "commitMessage": "release: vant v${version}"
+    }
+  },
   "web-types": "lib/web-types.json"
 }

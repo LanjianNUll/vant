@@ -16,7 +16,7 @@ import type { CheckboxExpose } from './types';
 
 const [name, bem] = createNamespace('checkbox');
 
-const checkboxProps = extend({}, checkerProps, {
+export const checkboxProps = extend({}, checkerProps, {
   bindGroup: truthProp,
 });
 
@@ -38,7 +38,7 @@ export default defineComponent({
       const value = modelValue.slice();
 
       if (checked) {
-        const overlimit = max && value.length >= max;
+        const overlimit = max && value.length >= +max;
 
         if (!overlimit && !value.includes(name)) {
           value.push(name);

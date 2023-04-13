@@ -4,14 +4,13 @@
 
 <h1 align="center">Vant</h1>
 
-<p align="center">Lightweight Mobile UI Components built on Vue</p>
+<p align="center">A lightweight, customizable Vue UI library for mobile web apps.</p>
 
 <p align="center">
     <img src="https://img.shields.io/npm/v/vant?style=flat-square" alt="npm version" />
-    <img src="https://img.shields.io/github/workflow/status/vant-ui/vant/CI/dev?style=flat-square" alt="CI Status" />
     <img src="https://img.shields.io/codecov/c/github/vant-ui/vant/dev.svg?style=flat-square&color=#4fc08d" alt="Coverage Status" />
     <img src="https://img.shields.io/npm/dm/vant.svg?style=flat-square&color=#4fc08d" alt="downloads" />
-    <img src="https://img.badgesize.io/https://unpkg.com/vant@3/lib/vant.min.js?compression=gzip&style=flat-square&label=gzip%20size&color=#4fc08d" alt="Gzip Size" />
+    <img src="https://img.badgesize.io/https://unpkg.com/vant/lib/vant.min.js?compression=gzip&style=flat-square&label=gzip%20size&color=#4fc08d" alt="Gzip Size" />
 </p>
 
 <p align="center">
@@ -34,12 +33,13 @@
 - 📖 Extensive documentation and demos
 - 📖 Provide Sketch and Axure design resources
 - 🍭 Support Vue 2 & Vue 3
+- 🍭 Support Nuxt 2 & Nuxt 3, provide [Vant Module](https://github.com/vant-ui/vant-nuxt) for Nuxt
 - 🍭 Support Tree Shaking
 - 🍭 Support Custom Theme
 - 🍭 Support Accessibility (still improving)
-- 🍭 Support Dark Mode (Requires upgrade to [Vant 4](https://vant-contrib.gitee.io/vant/v4/#/en-US/config-provider))
+- 🍭 Support Dark Mode
 - 🍭 Support SSR
-- 🌍 Support i18n, built-in 20+ languages
+- 🌍 Support i18n, built-in 30+ languages
 
 ## Install
 
@@ -67,10 +67,14 @@ pnpm add vant
 
 ```js
 import { createApp } from 'vue';
+// 1. Import the components you need
 import { Button } from 'vant';
+// 2. Import the components style
 import 'vant/lib/index.css';
 
 const app = createApp();
+
+// 3. Register the components you need
 app.use(Button);
 ```
 
@@ -88,16 +92,16 @@ Vant 3/4 supports modern browsers and Chrome >= 51、iOS >= 10.0 (same as Vue 3)
 | --- | --- |
 | [vant-weapp](https://github.com/vant-ui/vant-weapp) | WeChat MiniProgram UI |
 | [vant-demo](https://github.com/vant-ui/vant-demo) | Collection of Vant demos |
-| [vant-cli](https://github.com/vant-ui/vant/tree/dev/packages/vant-cli) | Scaffold for UI library |
-| [vant-icons](https://github.com/vant-ui/vant/tree/dev/packages/vant-icons) | Vant icons |
-| [vant-touch-emulator](https://github.com/vant-ui/vant/tree/dev/packages/vant-touch-emulator) | Using vant in desktop browsers |
+| [vant-cli](https://github.com/vant-ui/vant/tree/main/packages/vant-cli) | Scaffold for UI library |
+| [vant-icons](https://github.com/vant-ui/vant/tree/main/packages/vant-icons) | Vant icons |
+| [vant-touch-emulator](https://github.com/vant-ui/vant/tree/main/packages/vant-touch-emulator) | Using vant in desktop browsers |
+| [vant-nuxt](https://github.com/vant-ui/vant-nuxt) | Vant module for Nuxt |
 
 ## Community Ecosystem
 
 | Project | Description |
 | --- | --- |
 | [3lang3/react-vant](https://github.com/3lang3/react-vant) | React mobile UI Components based on Vant |
-| [rc-ui-lib](https://github.com/rancui/rc-ui-lib) | React mobile UI Components based on Vant |
 | [vant-aliapp](https://github.com/ant-move/Vant-Aliapp) | Alipay MiniProgram UI |
 | [taroify](https://gitee.com/mallfoundry/taroify) | Vant Taro |
 | [vant-theme](https://github.com/Aisen60/vant-theme) | Online theme preview built on Vant UI |
@@ -108,7 +112,7 @@ Vant 3/4 supports modern browsers and Chrome >= 51、iOS >= 10.0 (same as Vue 3)
 
 - [Documentation](https://vant-ui.github.io/vant)
 - [Changelog](https://vant-ui.github.io/vant#/en-US/changelog)
-- [Gitter](https://gitter.im/vant-contrib/discuss?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
+- [Discussions](https://github.com/vant-ui/vant/discussions)
 
 ## Preview
 
@@ -120,9 +124,13 @@ You can scan the following QR code to access the demo：
 
 Core contributors of Vant and Vant Weapp:
 
-| [![chenjiahan](https://avatars.githubusercontent.com/u/7237365?s=80&v=4)](https://github.com/chenjiahan/) | [![cookfront](https://avatars.githubusercontent.com/u/4829465?s=80&v=4)](https://github.com/cookfront/) | [![w91](https://avatars.githubusercontent.com/u/2599455?s=80&v=4)](https://github.com/w91/) | [![pangxie1991](https://avatars.githubusercontent.com/u/5961240?s=80&v=4)](https://github.com/pangxie1991/) | [![rex-zsd](https://avatars.githubusercontent.com/u/8767877?s=80&v=4)](https://github.com/rex-zsd/) | [![nemo-shen](https://avatars.githubusercontent.com/u/13480805?s=80&v=4)](https://github.com/nemo-shen/) | [![Lindysen](https://avatars.githubusercontent.com/u/33708359?s=80&v=4)](https://github.com/Lindysen/) | [![nemo-shen](https://avatars.githubusercontent.com/u/16181940?s=80&v=4)](https://github.com/JakeLaoyu/) |
-| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| [chenjiahan](https://github.com/chenjiahan/) | [cookfront](https://github.com/cookfront/) | [wangnaiyi](https://github.com/w91/) | [pangxie](https://github.com/pangxie1991/) | [rex-zsd](https://github.com/rex-zsd/) | [nemo-shen](https://github.com/nemo-shen/) | [Lindysen](https://github.com/Lindysen/) | [JakeLaoyu](https://github.com/JakeLaoyu/) |
+| [![chenjiahan](https://avatars.githubusercontent.com/u/7237365?s=80&v=4)](https://github.com/chenjiahan/) | [![cookfront](https://avatars.githubusercontent.com/u/4829465?s=80&v=4)](https://github.com/cookfront/) | [![w91](https://avatars.githubusercontent.com/u/2599455?s=80&v=4)](https://github.com/w91/) | [![pangxie1991](https://avatars.githubusercontent.com/u/5961240?s=80&v=4)](https://github.com/pangxie1991/) | [![rex-zsd](https://avatars.githubusercontent.com/u/8767877?s=80&v=4)](https://github.com/rex-zsd/) |
+| :-: | :-: | :-: | :-: | :-: |
+| [chenjiahan](https://github.com/chenjiahan/) | [cookfront](https://github.com/cookfront/) | [wangnaiyi](https://github.com/w91/) | [pangxie](https://github.com/pangxie1991/) | [rex-zsd](https://github.com/rex-zsd/) |
+
+| [![nemo-shen](https://avatars.githubusercontent.com/u/13480805?s=80&v=4)](https://github.com/nemo-shen/) | [![Lindysen](https://avatars.githubusercontent.com/u/33708359?s=80&v=4)](https://github.com/Lindysen/) | [![JakeLaoyu](https://avatars.githubusercontent.com/u/16181940?s=80&v=4)](https://github.com/JakeLaoyu/) | [![landluck](https://avatars.githubusercontent.com/u/27060081?s=80&v=4)](https://github.com/landluck/) | [![wjw-gavin](https://avatars.githubusercontent.com/u/19986739?s=80&v=4)](https://github.com/wjw-gavin/) |
+| :-: | :-: | :-: | :-: | :-: |
+| [nemo-shen](https://github.com/nemo-shen/) | [Lindysen](https://github.com/Lindysen/) | [JakeLaoyu](https://github.com/JakeLaoyu/) | [landluck](https://github.com/landluck/) | [wjw-gavin](https://github.com/wjw-gavin/) |
 
 ## All Contributors
 
@@ -136,6 +144,10 @@ Thanks to the following friends for their contributions to Vant:
 
 Please make sure to read the [Contributing Guide](./.github/CONTRIBUTING.md) before making a pull request.
 
+## Start On Web IDE
+
+[https://github.dev/youzan/vant](https://github.dev/youzan/vant)
+
 ## LICENSE
 
-[MIT](https://en.wikipedia.org/wiki/MIT_License)
+Vant is [MIT](https://github.com/youzan/vant/blob/main/LICENSE) licensed.

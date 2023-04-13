@@ -26,6 +26,7 @@ import {
   makeStringProp,
   makeNumericProp,
   createNamespace,
+  type ComponentInstance,
 } from '../utils';
 import {
   cutString,
@@ -42,7 +43,11 @@ import {
 import { cellSharedProps } from '../cell/Cell';
 
 // Composables
-import { CUSTOM_FIELD_INJECTION_KEY, useParent } from '@vant/use';
+import {
+  useParent,
+  useEventListener,
+  CUSTOM_FIELD_INJECTION_KEY,
+} from '@vant/use';
 import { useId } from '../composables/use-id';
 import { useExpose } from '../composables/use-expose';
 
@@ -100,7 +105,7 @@ export const fieldSharedProps = {
   },
 };
 
-const fieldProps = extend({}, cellSharedProps, fieldSharedProps, {
+export const fieldProps = extend({}, cellSharedProps, fieldSharedProps, {
   rows: numericProp,
   type: makeStringProp<FieldType>('text'),
   rules: Array as PropType<FieldRule[]>,
@@ -128,11 +133,11 @@ export default defineComponent({
     'focus',
     'clear',
     'keypress',
-    'click-input',
-    'end-validate',
-    'start-validate',
-    'click-left-icon',
-    'click-right-icon',
+    'clickInput',
+    'endValidate',
+    'startValidate',
+    'clickLeftIcon',
+    'clickRightIcon',
     'update:modelValue',
   ],
 
@@ -145,6 +150,7 @@ export default defineComponent({
     });
 
     const inputRef = ref<HTMLInputElement>();
+    const clearIconRef = ref<ComponentInstance>();
     const customValue = ref<() => unknown>();
 
     const { parent: form } = useParent(FORM_KEY);
@@ -225,13 +231,17 @@ export default defineComponent({
       state.validateMessage = '';
     };
 
-    const endValidate = () => emit('end-validate', { status: state.status });
+    const endValidate = () =>
+      emit('endValidate', {
+        status: state.status,
+        message: state.validateMessage,
+      });
 
     const validate = (rules = props.rules) =>
       new Promise<FieldValidateError | void>((resolve) => {
         resetValidation();
         if (rules) {
-          emit('start-validate');
+          emit('startValidate');
           runRules(rules).then(() => {
             if (state.status === 'failed') {
               resolve({
@@ -271,10 +281,19 @@ export default defineComponent({
     // see: https://github.com/vant-ui/vant/issues/5033
     const limitValueLength = (value: string) => {
       const { maxlength } = props;
-      if (isDef(maxlength) && getStringLength(value) > maxlength) {
+      if (isDef(maxlength) && getStringLength(value) > +maxlength) {
         const modelValue = getModelValue();
         if (modelValue && getStringLength(modelValue) === +maxlength) {
           return modelValue;
+        }
+        // Remove redundant interpolated values,
+        // make it consistent with the native input maxlength behavior.
+        const selectionEnd = inputRef.value?.selectionEnd;
+        if (state.focused && selectionEnd) {
+          const valueArr = [...value];
+          const exceededLength = valueArr.length - +maxlength;
+          valueArr.splice(selectionEnd - exceededLength, exceededLength);
+          return valueArr.join('');
         }
         return cutString(value, +maxlength);
       }
@@ -285,19 +304,63 @@ export default defineComponent({
       value: string,
       trigger: FieldFormatTrigger = 'onChange'
     ) => {
+      const originalValue = value;
       value = limitValueLength(value);
+      // When the value length exceeds maxlength,
+      // record the excess length for correcting the cursor position.
+      // https://github.com/youzan/vant/issues/11289
+      const limitDiffLen =
+        getStringLength(originalValue) - getStringLength(value);
 
       if (props.type === 'number' || props.type === 'digit') {
         const isNumber = props.type === 'number';
         value = formatNumber(value, isNumber, isNumber);
       }
 
+      let formatterDiffLen = 0;
       if (props.formatter && trigger === props.formatTrigger) {
-        value = props.formatter(value);
+        const { formatter, maxlength } = props;
+        value = formatter(value);
+        // The length of the formatted value may exceed maxlength.
+        if (isDef(maxlength) && getStringLength(value) > +maxlength) {
+          value = cutString(value, +maxlength);
+        }
+        if (inputRef.value && state.focused) {
+          const { selectionEnd } = inputRef.value;
+          // The value before the cursor of the original value.
+          const bcoVal = cutString(originalValue, selectionEnd!);
+          // Record the length change of `bcoVal` after formatting,
+          // which is used to correct the cursor position.
+          formatterDiffLen =
+            getStringLength(formatter(bcoVal)) - getStringLength(bcoVal);
+        }
       }
 
       if (inputRef.value && inputRef.value.value !== value) {
-        inputRef.value.value = value;
+        // When the input is focused, correct the cursor position.
+        if (state.focused) {
+          let { selectionStart, selectionEnd } = inputRef.value;
+          inputRef.value.value = value;
+
+          if (isDef(selectionStart) && isDef(selectionEnd)) {
+            const valueLen = getStringLength(value);
+
+            if (limitDiffLen) {
+              selectionStart -= limitDiffLen;
+              selectionEnd -= limitDiffLen;
+            } else if (formatterDiffLen) {
+              selectionStart += formatterDiffLen;
+              selectionEnd += formatterDiffLen;
+            }
+
+            inputRef.value.setSelectionRange(
+              Math.min(selectionStart, valueLen),
+              Math.min(selectionEnd, valueLen)
+            );
+          }
+        } else {
+          inputRef.value.value = value;
+        }
       }
 
       if (value !== props.modelValue) {
@@ -334,27 +397,27 @@ export default defineComponent({
     };
 
     const onBlur = (event: Event) => {
+      state.focused = false;
+      updateValue(getModelValue(), 'onBlur');
+      emit('blur', event);
+
       if (getProp('readonly')) {
         return;
       }
 
-      state.focused = false;
-      updateValue(getModelValue(), 'onBlur');
-      emit('blur', event);
       validateWithTrigger('onBlur');
       nextTick(adjustTextareaSize);
       resetScroll();
     };
 
-    const onClickInput = (event: MouseEvent) => emit('click-input', event);
+    const onClickInput = (event: MouseEvent) => emit('clickInput', event);
 
-    const onClickLeftIcon = (event: MouseEvent) =>
-      emit('click-left-icon', event);
+    const onClickLeftIcon = (event: MouseEvent) => emit('clickLeftIcon', event);
 
     const onClickRightIcon = (event: MouseEvent) =>
-      emit('click-right-icon', event);
+      emit('clickRightIcon', event);
 
-    const onClear = (event: MouseEvent) => {
+    const onClear = (event: TouchEvent) => {
       preventDefault(event);
       emit('update:modelValue', '');
       emit('clear', event);
@@ -371,7 +434,8 @@ export default defineComponent({
 
     const labelStyle = computed(() => {
       const labelWidth = getProp('labelWidth');
-      if (labelWidth) {
+      const labelAlign = getProp('labelAlign');
+      if (labelWidth && labelAlign !== 'top') {
         return { width: addUnit(labelWidth) };
       }
     });
@@ -508,6 +572,8 @@ export default defineComponent({
     };
 
     const renderLabel = () => {
+      const labelWidth = getProp('labelWidth');
+      const labelAlign = getProp('labelAlign');
       const colon = getProp('colon') ? ':' : '';
 
       if (slots.label) {
@@ -515,7 +581,15 @@ export default defineComponent({
       }
       if (props.label) {
         return (
-          <label id={`${id}-label`} for={getInputId()}>
+          <label
+            id={`${id}-label`}
+            for={getInputId()}
+            style={
+              labelAlign === 'top' && labelWidth
+                ? { width: addUnit(labelWidth) }
+                : undefined
+            }
+          >
             {props.label + colon}
           </label>
         );
@@ -527,9 +601,9 @@ export default defineComponent({
         {renderInput()}
         {showClear.value && (
           <Icon
+            ref={clearIconRef}
             name={props.clearIcon}
             class={bem('clear')}
-            onTouchstart={onClear}
           />
         )}
         {renderRightIcon()}
@@ -569,22 +643,33 @@ export default defineComponent({
       nextTick(adjustTextareaSize);
     });
 
+    // useEventListener will set passive to `false` to eliminate the warning of Chrome
+    useEventListener('touchstart', onClear, {
+      target: computed(() => clearIconRef.value?.$el),
+    });
+
     return () => {
       const disabled = getProp('disabled');
       const labelAlign = getProp('labelAlign');
-      const Label = renderLabel();
       const LeftIcon = renderLeftIcon();
+
+      const renderTitle = () => {
+        const Label = renderLabel();
+        if (labelAlign === 'top') {
+          return [LeftIcon, Label].filter(Boolean);
+        }
+        return Label || [];
+      };
 
       return (
         <Cell
           v-slots={{
-            icon: LeftIcon ? () => LeftIcon : null,
-            title: Label ? () => Label : null,
+            icon: LeftIcon && labelAlign !== 'top' ? () => LeftIcon : null,
+            title: renderTitle,
             value: renderFieldBody,
             extra: slots.extra,
           }}
           size={props.size}
-          icon={props.leftIcon}
           class={bem({
             error: showError.value,
             disabled,

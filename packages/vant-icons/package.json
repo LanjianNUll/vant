@@ -1,6 +1,6 @@
 {
   "name": "@vant/icons",
-  "version": "1.8.0",
+  "version": "2.0.1",
   "description": "vant icons",
   "main": "./src/config.js",
   "types": "./src/config.d.ts",
@@ -23,12 +23,12 @@
   "author": "chenjiahan",
   "license": "MIT",
   "devDependencies": {
-    "release-it": "^15.1.1"
+    "release-it": "^15.4.1"
   },
   "release-it": {
     "git": {
       "tag": false,
-      "commitMessage": "release: @vant/icons ${version}",
+      "commitMessage": "release: @vant/icons v${version}",
       "addUntrackedFiles": true,
       "requireCleanWorkingDir": false
     }

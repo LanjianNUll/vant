@@ -34,7 +34,7 @@ app.use(AddressList);
 
 ```js
 import { ref } from 'vue';
-import { Toast } from 'vant';
+import { showToast } from 'vant';
 
 export default {
   setup() {
@@ -63,8 +63,8 @@ export default {
       },
     ];
 
-    const onAdd = () => Toast('新增地址');
-    const onEdit = (item, index) => Toast('编辑地址:' + index);
+    const onAdd = () => showToast('新增地址');
+    const onEdit = (item, index) => showToast('编辑地址:' + index);
 
     return {
       list,
@@ -114,12 +114,12 @@ export default {
 
 ### Slots
 
-| 名称         | 说明                 | 参数                       |
-| ------------ | -------------------- | -------------------------- |
-| default      | 在列表下方插入内容   | -                          |
-| top          | 在顶部插入内容       | -                          |
-| item-bottom  | 在列表项底部插入内容 | _item: AddressListAddress_ |
-| tag `v3.0.9` | 自定义列表项标签内容 | _item: AddressListAddress_ |
+| 名称        | 说明                 | 参数                       |
+| ----------- | -------------------- | -------------------------- |
+| default     | 在列表下方插入内容   | -                          |
+| top         | 在顶部插入内容       | -                          |
+| item-bottom | 在列表项底部插入内容 | _item: AddressListAddress_ |
+| tag         | 自定义列表项标签内容 | _item: AddressListAddress_ |
 
 ### 类型定义
 
@@ -148,5 +148,5 @@ import type { AddressListProps, AddressListAddress } from 'vant';
 | --van-address-list-item-disabled-text-color | _var(--van-text-color-3)_ | - |
 | --van-address-list-item-font-size | _13px_ | - |
 | --van-address-list-item-line-height | _var(--van-line-height-sm)_ | - |
-| --van-address-list-item-radio-icon-color | _var(--van-danger-color)_ | - |
+| --van-address-list-radio-color | _var(--van-primary-color)_ | - |
 | --van-address-list-edit-icon-size | _20px_ | - |

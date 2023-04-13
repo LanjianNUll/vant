@@ -98,6 +98,14 @@ export default {
 };
 ```
 
+### Left Label
+
+Set `label-position` prop to `'left'` to adjust the label position to the left of the Checkbox.
+
+```html
+<van-checkbox v-model="checked" label-position="left">Checkbox</van-checkbox>
+```
+
 ### Disable Label Click
 
 ```html
@@ -372,10 +380,10 @@ The component provides the following CSS variables, which can be used to customi
 | --- | --- | --- |
 | --van-checkbox-size | _20px_ | - |
 | --van-checkbox-border-color | _var(--van-gray-5)_ | - |
-| --van-checkbox-transition-duration | _var(--van-animation-duration-fast)_ | - |
+| --van-checkbox-duration | _var(--van-duration-fast)_ | - |
 | --van-checkbox-label-margin | _var(--van-padding-xs)_ | - |
 | --van-checkbox-label-color | _var(--van-text-color)_ | - |
 | --van-checkbox-checked-icon-color | _var(--van-primary-color)_ | - |
 | --van-checkbox-disabled-icon-color | _var(--van-gray-5)_ | - |
 | --van-checkbox-disabled-label-color | _var(--van-text-color-3)_ | - |
-| --van-checkbox-disabled-background-color | _var(--van-border-color)_ | - |
+| --van-checkbox-disabled-background | _var(--van-border-color)_ | - |

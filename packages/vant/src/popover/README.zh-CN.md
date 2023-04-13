@@ -32,7 +32,7 @@ app.use(Popover);
 
 ```js
 import { ref } from 'vue';
-import { Toast } from 'vant';
+import { showToast } from 'vant';
 
 export default {
   setup() {
@@ -44,7 +44,7 @@ export default {
       { text: '选项二' },
       { text: '选项三' },
     ];
-    const onSelect = (action) => Toast(action.text);
+    const onSelect = (action) => showToast(action.text);
 
     return {
       actions,
@@ -214,6 +214,41 @@ export default {
 };
 ```
 
+### 非受控模式
+
+你可以把 Popover 当做受控组件或非受控组件使用：
+
+- 当绑定 `v-model:show` 时，Popover 为受控组件，此时组件的显示完全由 `v-model:show` 的值决定。
+- 当未绑定 `v-model:show` 时，Popover 为非受控组件，此时你可以通过 `show` 属性传入一个默认值，组件值的显示由组件自身控制。
+
+```html
+<van-popover :actions="actions" position="top-start" @select="onSelect">
+  <template #reference>
+    <van-button type="primary">非受控模式</van-button>
+  </template>
+</van-popover>
+```
+
+```js
+import { ref } from 'vue';
+import { showToast } from 'vant';
+
+export default {
+  setup() {
+    const actions = [
+      { text: '选项一' },
+      { text: '选项二' },
+      { text: '选项三' },
+    ];
+    const onSelect = (action) => showToast(action.text);
+    return {
+      actions,
+      onSelect,
+    };
+  },
+};
+```
+
 ## API
 
 ### Props
@@ -228,14 +263,14 @@ export default {
 | duration | 动画时长，单位秒，设置为 0 可以禁用动画 | _number \| string_ | `0.3` |
 | offset | 出现位置的偏移量 | _[number, number]_ | `[0, 8]` |
 | overlay | 是否显示遮罩层 | _boolean_ | `false` |
-| overlay-class `v3.0.10` | 自定义遮罩层类名 | _string \| Array \| object_ | - |
-| overlay-style `v3.0.10` | 自定义遮罩层样式 | _object_ | - |
-| show-arrow `v3.2.2` | 是否展示小箭头 | _boolean_ | `true` |
+| overlay-class | 自定义遮罩层类名 | _string \| Array \| object_ | - |
+| overlay-style | 自定义遮罩层样式 | _object_ | - |
+| show-arrow | 是否展示小箭头 | _boolean_ | `true` |
 | close-on-click-action | 是否在点击选项后关闭 | _boolean_ | `true` |
 | close-on-click-outside | 是否在点击外部元素后关闭菜单 | _boolean_ | `true` |
-| close-on-click-overlay `v3.0.10` | 是否在点击遮罩层后关闭菜单 | _boolean_ | `true` |
+| close-on-click-overlay | 是否在点击遮罩层后关闭菜单 | _boolean_ | `true` |
 | teleport | 指定挂载的节点，等同于 Teleport 组件的 [to 属性](https://v3.cn.vuejs.org/api/built-in-components.html#teleport) | _string \| Element_ | `body` |
-| icon-prefix `v3.0.17` | 图标类名前缀，等同于 Icon 组件的 [class-prefix 属性](#/zh-CN/icon#props) | _string_ | `van-icon` |
+| icon-prefix | 图标类名前缀，等同于 Icon 组件的 [class-prefix 属性](#/zh-CN/icon#props) | _string_ | `van-icon` |
 
 ### PopoverAction 数据结构
 
@@ -266,7 +301,7 @@ export default {
 | --- | --- | --- |
 | default | 自定义菜单内容 | - |
 | reference | 触发 Popover 显示的元素内容 | - |
-| action `v3.4.0` | 自定义选项内容 | _{ action: PopoverAction, index: number }_ |
+| action | 自定义选项内容 | _{ action: PopoverAction, index: number }_ |
 
 ### 类型定义
 
@@ -291,17 +326,17 @@ import type {
 | 名称 | 默认值 | 描述 |
 | --- | --- | --- |
 | --van-popover-arrow-size | _6px_ | - |
-| --van-popover-border-radius | _var(--van-border-radius-lg)_ | - |
+| --van-popover-radius | _var(--van-radius-lg)_ | - |
 | --van-popover-action-width | _128px_ | - |
 | --van-popover-action-height | _44px_ | - |
 | --van-popover-action-font-size | _var(--van-font-size-md)_ | - |
 | --van-popover-action-line-height | _var(--van-line-height-md)_ | - |
 | --van-popover-action-icon-size | _20px_ | - |
 | --van-popover-light-text-color | _var(--van-text-color)_ | - |
-| --van-popover-light-background-color | _var(--van-background-color-light)_ | - |
+| --van-popover-light-background | _var(--van-background-2)_ | - |
 | --van-popover-light-action-disabled-text-color | _var(--van-text-color-3)_ | - |
 | --van-popover-dark-text-color | _var(--van-white)_ | - |
-| --van-popover-dark-background-color | _#4a4a4a_ | - |
+| --van-popover-dark-background | _#4a4a4a_ | - |
 | --van-popover-dark-action-disabled-text-color | _var(--van-text-color-2)_ | - |
 
 ## 常见问题

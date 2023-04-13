@@ -41,7 +41,7 @@ type KeyConfig = {
   wider?: boolean;
 };
 
-const numberKeyboardProps = {
+export const numberKeyboardProps = {
   show: Boolean,
   title: String,
   theme: makeStringProp<NumberKeyboardTheme>('default'),
@@ -79,6 +79,8 @@ function shuffle(array: unknown[]) {
 export default defineComponent({
   name,
 
+  inheritAttrs: false,
+
   props: numberKeyboardProps,
 
   emits: [
@@ -91,7 +93,7 @@ export default defineComponent({
     'update:modelValue',
   ],
 
-  setup(props, { emit, slots }) {
+  setup(props, { emit, slots, attrs }) {
     const root = ref<HTMLElement>();
 
     const genBasicKeys = () => {
@@ -172,7 +174,7 @@ export default defineComponent({
         emit('update:modelValue', value.slice(0, value.length - 1));
       } else if (type === 'close') {
         onClose();
-      } else if (value.length < props.maxlength) {
+      } else if (value.length < +props.maxlength) {
         emit('input', text);
         emit('update:modelValue', value + text);
       }
@@ -280,10 +282,9 @@ export default defineComponent({
               unfit: !props.safeAreaInsetBottom,
               'with-title': !!Title,
             })}
-            onTouchstart={stopPropagation}
             onAnimationend={onAnimationEnd}
-            // @ts-ignore
-            onWebkitAnimationEnd={onAnimationEnd}
+            onTouchstartPassive={stopPropagation}
+            {...attrs}
           >
             {Title}
             <div class={bem('body')}>
