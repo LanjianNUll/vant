@@ -317,6 +317,26 @@ export default {
 };
 ```
 
+### 开启覆盖上传
+
+```html
+<van-uploader v-model="fileList" reupload max-count="2" />
+```
+
+```ts
+import { ref } from 'vue';
+
+export default {
+  setup() {
+    const fileList = ref([
+      { url: 'https://fastly.jsdelivr.net/npm/@vant/assets/leaf.jpeg' },
+    ]);
+
+    return { fileList };
+  },
+};
+```
+
 ## API
 
 ### Props
@@ -334,12 +354,13 @@ export default {
 | disabled | 是否禁用文件上传 | _boolean_ | `false` |
 | readonly | 是否将上传区域设置为只读状态 | _boolean_ | `false` |
 | deletable | 是否展示删除按钮 | _boolean_ | `true` |
+| reupload `v4.4.0` | 是否开启覆盖上传，开启后会关闭图片预览 | _boolean_ | `false` |
 | show-upload | 是否展示上传区域 | _boolean_ | `true` |
 | lazy-load | 是否开启图片懒加载，须配合 [Lazyload](#/zh-CN/lazyload) 组件使用 | _boolean_ | `false` |
 | capture | 图片选取模式，可选值为 `camera` (直接调起摄像头) | _string_ | - |
 | after-read | 文件读取完成后的回调函数 | _Function_ | - |
 | before-read | 文件读取前的回调函数，返回 `false` 可终止文件读取，<br>支持返回 `Promise` | _Function_ | - |
-| before-delete | 文件删除前的回调函数，返回 `false` 可终止文件读取，<br>支持返回 `Promise` | _Function_ | - |
+| before-delete | 文件删除前的回调函数，返回 `false` 可终止文件删除，支持返回 `Promise` | _Function_ | - |
 | max-size | 文件大小限制，单位为 `byte` | _number \| string \| (file: File) => boolean_ | `Infinity` |
 | max-count | 文件上传数量限制 | _number \| string_ | `Infinity` |
 | result-type | 文件读取结果类型，可选值为 `file` `text` | _string_ | `dataUrl` |
@@ -351,13 +372,14 @@ export default {
 
 ### Events
 
-| 事件名        | 说明                   | 回调参数            |
-| ------------- | ---------------------- | ------------------- |
-| oversize      | 文件大小超过限制时触发 | 同 `after-read`     |
-| click-upload  | 点击上传区域时触发     | _event: MouseEvent_ |
-| click-preview | 点击预览图时触发       | 同 `after-read`     |
-| close-preview | 关闭全屏图片预览时触发 | -                   |
-| delete        | 删除文件预览时触发     | 同 `after-read`     |
+| 事件名         | 说明                   | 回调参数            |
+| -------------- | ---------------------- | ------------------- |
+| oversize       | 文件大小超过限制时触发 | 同 `after-read`     |
+| click-upload   | 点击上传区域时触发     | _event: MouseEvent_ |
+| click-preview  | 点击预览图时触发       | 同 `after-read`     |
+| click-reupload | 点击覆盖上传时触发     | 同 `after-read`     |
+| close-preview  | 关闭全屏图片预览时触发 | -                   |
+| delete         | 删除文件预览时触发     | 同 `after-read`     |
 
 ### Slots
 
@@ -369,11 +391,20 @@ export default {
 
 ### 回调参数
 
-before-read、after-read、before-delete 执行时会传递以下回调参数：
+before-read、before-delete 执行时会传递以下回调参数：
 
 | 参数名 | 说明                              | 类型     |
 | ------ | --------------------------------- | -------- |
 | file   | file 对象                         | _object_ |
+| detail | 额外信息，包含 name 和 index 字段 | _object_ |
+
+### after-read 回调参数
+
+after-read 执行时会传递以下回调参数：
+
+| 参数名 | 说明 | 类型 |
+| --- | --- | --- |
+| file | 包含 file 对象 | _UploaderFileListItem \| UploaderFileListItem[]_ |
 | detail | 额外信息，包含 name 和 index 字段 | _object_ |
 
 ### ResultType 可选值
@@ -394,6 +425,7 @@ before-read、after-read、before-delete 执行时会传递以下回调参数：
 | --- | --- | --- | --- |
 | closeImagePreview | 关闭全屏的图片预览 | - | - |
 | chooseFile | 主动调起文件选择，由于浏览器安全限制，只有在用户触发操作的上下文中调用才有效 | - | - |
+| reuploadFile `4.9.3` | 主动调起文件选择，选择新文件后将覆盖原先上传的文件，由于浏览器安全限制，只有在用户触发操作的上下文中调用才有效 | _index: number_ | - |
 
 ### 类型定义
 
@@ -405,6 +437,8 @@ import type {
   UploaderInstance,
   UploaderResultType,
   UploaderFileListItem,
+  UploaderBeforeRead,
+  UploaderAfterRead,
 } from 'vant';
 ```
 
@@ -452,12 +486,13 @@ uploaderRef.value?.chooseFile();
 | --van-uploader-loading-icon-size | _22px_ | - |
 | --van-uploader-loading-icon-color | _var(--van-white)_ | - |
 | --van-uploader-disabled-opacity | _var(--van-disabled-opacity)_ | - |
+| --van-uploader-border-radius | _0px_ | - |
 
 ## 常见问题
 
 ### Uploader 在部分安卓机型上无法上传图片？
 
-Uploader 采用了 HTML 原生的 `<input type="file />` 标签进行上传，能否上传取决于当前系统和浏览器的兼容性。当遇到无法上传的问题时，一般有以下几种情况：
+Uploader 采用了 HTML 原生的 `<input type="file" />` 标签进行上传，能否上传取决于当前系统和浏览器的兼容性。当遇到无法上传的问题时，一般有以下几种情况：
 
 1. 遇到了安卓 App WebView 的兼容性问题，需要在安卓原生代码中进行兼容，可以参考此[文章](https://blog.csdn.net/qq_32756581/article/details/112861088)。
 2. 图片格式不正确，在当前系统/浏览器中无法识别，比如 `webp` 或 `heic` 格式。
@@ -512,3 +547,22 @@ export default {
 目前 Chrome、Safari 等浏览器不支持展示 HEIC/HEIF 格式的图片，因此上传后无法在 Uploader 组件中进行预览。
 
 [HEIF] 格式的兼容性请参考 [caniuse](https://caniuse.com/?search=heic)。
+
+### 如何判断用户授予了摄像头权限？
+
+在上传图片时，如果用户没有授予当前 App 摄像头权限，会导致 Uploader 组件无法使用。
+
+你可以通过浏览器提供的 [getUserMedia](https://developer.mozilla.org/zh-CN/docs/Web/API/MediaDevices/getUserMedia) 方法来判断是否被授予了摄像头权限（请留意 `getUserMedia` 方法无法在 iOS 10 中使用）。
+
+以下是一个简化的示例：
+
+```ts
+navigator.mediaDevices
+  .getUserMedia({ video: true })
+  .then((stream) => {
+    console.log(stream);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+```

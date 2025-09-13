@@ -51,7 +51,21 @@ export default {
 将 `shape` 属性设置为 `square`，复选框的形状会变成方形。
 
 ```html
-<van-checkbox v-model="checked" shape="square">复选框</van-checkbox>
+<van-checkbox-group v-model="checked" shape="square">
+  <van-checkbox name="a">复选框 a</van-checkbox>
+  <van-checkbox name="b">复选框 b</van-checkbox>
+</van-checkbox-group>
+```
+
+```js
+import { ref } from 'vue';
+
+export default {
+  setup() {
+    const checked = ref(['a', 'b']);
+    return { checked };
+  },
+};
 ```
 
 ### 自定义颜色
@@ -268,6 +282,60 @@ export default {
 };
 ```
 
+### 不确定状态
+
+通过 `indeterminate` 设置复选框是否为不确定状态。
+
+```html
+<van-checkbox
+  v-model="isCheckAll"
+  :indeterminate="isIndeterminate"
+  @change="checkAllChange"
+>
+  全选
+</van-checkbox>
+
+<van-checkbox-group v-model="checkedResult" @change="checkedResultChange">
+  <van-checkbox v-for="item in list" :key="item" :name="item">
+    复选框 {{ item }}
+  </van-checkbox>
+</van-checkbox-group>
+```
+
+```js
+import { ref } from 'vue';
+
+export default {
+  setup() {
+    const list = ['a', 'b', 'c', 'd']
+
+    const isCheckAll = ref(false);
+    const checkedResult = ref(['a', 'b', 'd']);
+    const isIndeterminate = ref(true);
+
+    const checkAllChange = (val: boolean) => {
+      checkedResult.value = val ? list : []
+      isIndeterminate.value = false
+    }
+
+    const checkedResultChange = (value: string[]) => {
+      const checkedCount = value.length
+      isCheckAll.value = checkedCount === list.length
+      isIndeterminate.value = checkedCount > 0 && checkedCount < list.length
+    }
+
+    return {
+      list,
+      isCheckAll,
+      checkedResult,
+      checkAllChange,
+      isIndeterminate,
+      checkedResultChange
+    };
+  },
+};
+```
+
 ## API
 
 ### Checkbox Props
@@ -283,6 +351,7 @@ export default {
 | icon-size | 图标大小，默认单位为 `px` | _number \| string_ | `20px` |
 | checked-color | 选中状态颜色 | _string_ | `#1989fa` |
 | bind-group | 是否与复选框组绑定 | _boolean_ | `true` |
+| indeterminate | 是否为不确定状态 | _boolean_ | `false` |
 
 ### CheckboxGroup Props
 
@@ -294,6 +363,7 @@ export default {
 | direction | 排列方向，可选值为 `horizontal` | _string_ | `vertical` |
 | icon-size | 所有复选框的图标大小，默认单位为 `px` | _number \| string_ | `20px` |
 | checked-color | 所有复选框的选中状态颜色 | _string_ | `#1989fa` |
+| shape `v4.6.3` | 形状，可选值为 `square` | _string_ | `round` |
 
 ### Checkbox Events
 
@@ -312,7 +382,7 @@ export default {
 
 | 名称    | 说明       | 参数                                      |
 | ------- | ---------- | ----------------------------------------- |
-| default | 自定义文本 | -                                         |
+| default | 自定义文本 | _{ checked: boolean, disabled: boolean }_ |
 | icon    | 自定义图标 | _{ checked: boolean, disabled: boolean }_ |
 
 ### CheckboxGroup 方法

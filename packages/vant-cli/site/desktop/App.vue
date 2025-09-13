@@ -11,6 +11,11 @@
       :dark-mode-class="darkModeClass"
     >
       <router-view />
+      <div class="van-doc-icp" v-if="icpLicense">
+        <a :href="icpLicense.link" target="_black">
+          {{ icpLicense.text }}
+        </a>
+      </div>
     </van-doc>
   </div>
 </template>
@@ -64,6 +69,13 @@ export default {
       return config.site;
     },
 
+    icpLicense() {
+      if (this.lang === 'zh-CN') {
+        return config.site.icpLicense;
+      }
+      return null;
+    },
+
     versions() {
       return config.site.versions || null;
     },
@@ -107,11 +119,11 @@ export default {
 
       const navItems = this.config.nav.reduce(
         (result, nav) => [...result, ...nav.items],
-        []
+        [],
       );
 
       const current = navItems.find(
-        (item) => item.path === this.$route.meta.name
+        (item) => item.path === this.$route.meta.name,
       );
 
       if (current && current.title) {
@@ -142,6 +154,15 @@ export default {
 
   p {
     margin-bottom: 20px;
+  }
+}
+
+.van-doc-icp {
+  font-size: 14px;
+  text-align: center;
+
+  a {
+    color: #bbb;
   }
 }
 </style>

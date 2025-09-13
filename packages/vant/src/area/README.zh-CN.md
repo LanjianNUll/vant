@@ -65,6 +65,9 @@ yarn add @vant/area-data
 
 # 通过 pnpm
 pnpm add @vant/area-data
+
+# 通过 Bun
+bun add @vant/area-data
 ```
 
 ```ts
@@ -77,7 +80,7 @@ export default {
 };
 ```
 
-> Tips: 中国的行政区划每年都会有变动，如果发现省市区数据未及时更新，欢迎提 Pull Request 帮助我们更新。你可以在[「国家统计局 - 全国区划代码」](http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/) 和[「民政部 - 行政区划代码」](https://www.mca.gov.cn/article/sj/xzqh/1980/)上查询到最新数据，请根据官方数据进行核实。
+> Tips: 中国的行政区划每年都会有变动，如果发现省市区数据未及时更新，欢迎提 Pull Request 帮助我们更新。你可以在[「国家统计局 - 全国区划代码」](https://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2023/) 和[「民政部 - 行政区划代码」](https://www.mca.gov.cn/n156/n186/index.html)上查询到最新数据，请根据官方数据进行核实。
 
 ### 控制选中项
 
@@ -114,7 +117,7 @@ export default {
 <van-area
   title="标题"
   :area-list="areaList"
-  :columns-placeholder="['请选择', '请选择', '请选择']"
+  :columns-placeholder="['省份', '城市', '区县']"
 />
 ```
 
@@ -139,11 +142,11 @@ export default {
 
 ### Events
 
-| 事件 | 说明 | 回调参数 |
+| 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
-| confirm | 点击完成按钮时触发 | _{ selectedValues, selectedOptions }_ |
-| cancel | 点击取消按钮时触发 | _{ selectedValues, selectedOptions }_ |
-| change | 选项改变时触发 | _{ selectedValues, selectedOptions, columnIndex }_ |
+| confirm | 点击完成按钮时触发 | _{ selectedValues, selectedOptions, selectedIndexes }_ |
+| cancel | 点击取消按钮时触发 | _{ selectedValues, selectedOptions, selectedIndexes }_ |
+| change | 选项改变时触发 | _{ selectedValues, selectedOptions, selectedIndexes, columnIndex }_ |
 
 ### Slots
 

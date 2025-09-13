@@ -123,16 +123,18 @@ export default defineComponent({
       const { extraKey } = props;
       const extraKeys = Array.isArray(extraKey) ? extraKey : [extraKey];
 
-      if (extraKeys.length === 1) {
+      if (extraKeys.length === 0) {
+        keys.push({ text: 0, wider: true });
+      } else if (extraKeys.length === 1) {
         keys.push(
           { text: 0, wider: true },
-          { text: extraKeys[0], type: 'extra' }
+          { text: extraKeys[0], type: 'extra' },
         );
       } else if (extraKeys.length === 2) {
         keys.push(
           { text: extraKeys[0], type: 'extra' },
           { text: 0 },
-          { text: extraKeys[1], type: 'extra' }
+          { text: extraKeys[1], type: 'extra' },
         );
       }
 
@@ -140,7 +142,7 @@ export default defineComponent({
     };
 
     const keys = computed(() =>
-      props.theme === 'custom' ? genCustomKeys() : genDefaultKeys()
+      props.theme === 'custom' ? genCustomKeys() : genDefaultKeys(),
     );
 
     const onBlur = () => {
@@ -237,7 +239,7 @@ export default defineComponent({
           <div class={bem('sidebar')}>
             {props.showDeleteKey && (
               <NumberKeyboardKey
-                v-slots={{ delete: slots.delete }}
+                v-slots={{ default: slots.delete }}
                 large
                 text={props.deleteButtonText}
                 type="delete"
@@ -263,7 +265,7 @@ export default defineComponent({
         if (!props.transition) {
           emit(value ? 'show' : 'hide');
         }
-      }
+      },
     );
 
     if (props.hideOnClickOutside) {

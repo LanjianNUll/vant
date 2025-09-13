@@ -2,10 +2,13 @@ import type { DropdownItemProps } from './DropdownItem';
 import type { VNode, ComponentPublicInstance } from 'vue';
 import type { Numeric } from '../utils';
 
+export type DropdownItemOptionValue = Numeric | boolean;
+
 export type DropdownItemOption = {
+  disabled?: boolean;
   text: string;
   icon?: string;
-  value: Numeric;
+  value: DropdownItemOptionValue;
 };
 
 export type DropdownItemExpose = {
@@ -13,7 +16,7 @@ export type DropdownItemExpose = {
     show?: boolean,
     options?: {
       immediate?: boolean;
-    }
+    },
   ) => void;
   /** @private */
   state: {

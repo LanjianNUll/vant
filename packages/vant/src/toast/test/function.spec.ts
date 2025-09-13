@@ -10,15 +10,17 @@ import {
 } from '../function-call';
 
 test('toast disappeared after duration', async () => {
-  const onClose = jest.fn();
+  vi.useFakeTimers();
+  const onClose = vi.fn();
   showToast({
     duration: 10,
     onClose,
   });
 
-  expect(onClose).toHaveBeenCalledTimes(0);
-  await later(50);
+  expect(onClose).not.toHaveBeenCalled();
+  await vi.advanceTimersByTimeAsync(100);
   expect(onClose).toHaveBeenCalledTimes(1);
+  vi.useRealTimers();
 });
 
 test('show loading toast', async () => {
@@ -26,22 +28,24 @@ test('show loading toast', async () => {
 
   await later();
   expect(
-    document.querySelector('.van-toast.van-toast--loading.loading-toast')
+    document.querySelector('.van-toast.van-toast--loading.loading-toast'),
   ).toBeTruthy();
 });
 
 test('show html toast', async () => {
+  vi.useFakeTimers();
   showToast({
     type: 'html',
     className: 'html-toast',
     message: '<div>Message</div>',
   });
+  await vi.runAllTimersAsync();
 
-  await later(1000);
   const toastText = document.querySelector(
-    '.html-toast .van-toast__text'
+    '.html-toast .van-toast__text',
   ) as HTMLDivElement;
   expect(toastText.innerHTML).toEqual('<div>Message</div>');
+  vi.useRealTimers();
 });
 
 test('icon prop', async () => {
@@ -62,9 +66,9 @@ test('icon-prefix prop', async () => {
 });
 
 test('clear toast', async () => {
-  const onClose1 = jest.fn();
-  const onClose2 = jest.fn();
-  const onClose3 = jest.fn();
+  const onClose1 = vi.fn();
+  const onClose2 = vi.fn();
+  const onClose3 = vi.fn();
 
   showToast({ onClose: onClose1 });
 
@@ -92,8 +96,8 @@ test('clear multiple toast', async () => {
   allowMultipleToast();
   closeToast(true);
 
-  const onClose1 = jest.fn();
-  const onClose2 = jest.fn();
+  const onClose1 = vi.fn();
+  const onClose2 = vi.fn();
 
   showSuccessToast({ onClose: onClose1 });
   await later();
@@ -108,15 +112,15 @@ test('clear multiple toast', async () => {
 });
 
 test('remove toast DOM when cleared in multiple mode', async () => {
+  vi.useFakeTimers();
   allowMultipleToast();
   closeToast(true);
   const toast = showToast({ className: 'remove-toast' });
-  await later();
-
-  await toast.close();
-  await later(100);
+  toast.close();
+  await vi.advanceTimersByTimeAsync(100);
   expect(document.querySelector('.remove-toast')).toBeNull();
   allowMultipleToast(false);
+  vi.useRealTimers();
 });
 
 test('set default options', async () => {
@@ -151,18 +155,20 @@ test('set default options by type', async () => {
 });
 
 test('toast duration 0', async () => {
+  vi.useFakeTimers();
   allowMultipleToast();
-  const onClose = jest.fn();
+  const onClose = vi.fn();
   showToast({ duration: 0, onClose });
 
-  await later(2100);
-  expect(onClose).toHaveBeenCalledTimes(0);
+  await vi.advanceTimersByTimeAsync(100);
+  expect(onClose).not.toHaveBeenCalled();
   allowMultipleToast(false);
+  vi.useRealTimers();
 });
 
 test('should trigger onClose callback after closed', async () => {
   allowMultipleToast();
-  const onClose = jest.fn();
+  const onClose = vi.fn();
   const toast = showToast({ onClose });
 
   await later();

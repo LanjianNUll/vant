@@ -1,4 +1,5 @@
-:root {
+:root,
+:host {
   --van-swipe-indicator-size: 6px;
   --van-swipe-indicator-margin: var(--van-padding-sm);
   --van-swipe-indicator-active-opacity: 1;
@@ -18,6 +19,8 @@
   &__track {
     display: flex;
     height: 100%;
+    // improve transition perf
+    transition-property: transform;
 
     &--vertical {
       flex-direction: column;
@@ -50,7 +53,8 @@
     background-color: var(--van-swipe-indicator-inactive-background);
     border-radius: 100%;
     opacity: var(--van-swipe-indicator-inactive-opacity);
-    transition: opacity var(--van-duration-fast),
+    transition:
+      opacity var(--van-duration-fast),
       background-color var(--van-duration-fast);
 
     &:not(:last-child) {

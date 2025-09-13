@@ -25,7 +25,7 @@ export const INHERIT_PROPS = [
 const makeOption = (
   text = '',
   value = AREA_EMPTY_CODE,
-  children: PickerOption[] | undefined = undefined
+  children: PickerOption[] | undefined = undefined,
 ): PickerOption => ({
   text,
   value,
@@ -47,12 +47,12 @@ export function formatDataForCascade({
 
   const getProvinceChildren = () => {
     if (showCity) {
-      return placeholder.length
+      return placeholder.length > 1
         ? [
             makeOption(
-              placeholder[0],
+              placeholder[1],
               AREA_EMPTY_CODE,
-              showCounty ? [] : undefined
+              showCounty ? [] : undefined,
             ),
           ]
         : [];
@@ -63,7 +63,7 @@ export function formatDataForCascade({
   Object.keys(province).forEach((code) => {
     provinceMap.set(
       code.slice(0, 2),
-      makeOption(province[code], code, getProvinceChildren())
+      makeOption(province[code], code, getProvinceChildren()),
     );
   });
 
@@ -71,7 +71,7 @@ export function formatDataForCascade({
   if (showCity) {
     const getCityChildren = () => {
       if (showCounty) {
-        return placeholder.length ? [makeOption(placeholder[1])] : [];
+        return placeholder.length > 2 ? [makeOption(placeholder[2])] : [];
       }
     };
 

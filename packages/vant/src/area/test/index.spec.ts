@@ -7,6 +7,24 @@ import {
   PickerConfirmEventParams,
 } from '../../picker';
 
+test('should columns placeholder displayed normally', async () => {
+  const columnsPlaceholder = ['Province', 'City', 'County'];
+
+  const wrapper = mount(Area, {
+    props: {
+      areaList,
+      columnsPlaceholder,
+    },
+  });
+
+  const columns = await wrapper.findAll('.van-picker-column');
+  await columns[0].findAll('li')?.[1].trigger('click');
+  expect(columns[1].find('li').text()).toBe(columnsPlaceholder[1]);
+
+  await columns[1].findAll('li')?.[1].trigger('click');
+  expect(columns[2].find('li').text()).toBe(columnsPlaceholder[2]);
+});
+
 test('should emit confirm event after click the confirm button', async () => {
   const wrapper = mount(Area, {
     props: {
@@ -40,17 +58,17 @@ test('should watch modelValue prop and render correctly', async () => {
 
   await later();
   expect(
-    wrapper.find('.van-picker-column__item--selected').html()
+    wrapper.find('.van-picker-column__item--selected').html(),
   ).toMatchSnapshot();
 
   await wrapper.setProps({ modelValue: '120225' });
   expect(
-    wrapper.find('.van-picker-column__item--selected').html()
+    wrapper.find('.van-picker-column__item--selected').html(),
   ).toMatchSnapshot();
 
   await wrapper.setProps({ modelValue: '' });
   expect(
-    wrapper.find('.van-picker-column__item--selected').html()
+    wrapper.find('.van-picker-column__item--selected').html(),
   ).toMatchSnapshot();
 });
 

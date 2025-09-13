@@ -1,4 +1,5 @@
-:root {
+:root,
+:host {
   --van-watermark-z-index: 100;
 }
 
@@ -11,6 +12,10 @@
   z-index: var(--van-watermark-z-index);
   background-repeat: repeat;
   pointer-events: none;
+
+  &__wrapper {
+    display: none;
+  }
 
   &--full {
     position: fixed;

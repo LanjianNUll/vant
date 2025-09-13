@@ -1,6 +1,6 @@
 {
   "name": "vant",
-  "version": "4.1.2",
+  "version": "4.9.21",
   "description": "Mobile UI Components built on Vue",
   "main": "lib/vant.cjs.js",
   "module": "es/index.mjs",
@@ -15,14 +15,15 @@
   "scripts": {
     "dev": "vant-cli dev",
     "lint": "vant-cli lint",
-    "test": "vant-cli test",
+    "test": "vitest run",
     "build": "vant-cli build",
     "build:site": "vant-cli build-site",
-    "release": "cp ../../README.md ./ && vant-cli release && rm ./README.md",
+    "release": "cp ../../README.md ./ && vant-cli release --gitTag && rm ./README.md",
     "release:site": "pnpm build:site && npx gh-pages -d site-dist --add",
-    "test:update": "vant-cli test --updateSnapshot",
-    "test:watch": "vant-cli test --watch",
-    "test:coverage": "open test/coverage/index.html"
+    "test:update": "vitest run -u",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "open:coverage": "open test/coverage/lcov-report/index.html"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -45,34 +46,38 @@
     "components"
   ],
   "dependencies": {
-    "@vant/popperjs": "^1.3.0",
-    "@vant/use": "^1.5.1"
+    "@vant/popperjs": "workspace:^",
+    "@vant/use": "workspace:^",
+    "@vue/shared": "^3.5.21"
   },
   "peerDependencies": {
     "vue": "^3.0.0"
   },
   "devDependencies": {
-    "@types/node": "^18.11.18",
-    "@types/jest": "^29.1.1",
+    "@types/node": "^22.17.2",
     "@vant/area-data": "workspace:*",
     "@vant/cli": "workspace:*",
     "@vant/eslint-config": "workspace:*",
     "@vant/icons": "workspace:*",
-    "@vue/runtime-core": "^3.2.47",
-    "@vue/test-utils": "^2.0.2",
-    "typescript": "^5.0.2",
-    "vue": "^3.2.47",
-    "vue-router": "^4.1.5"
+    "@vitejs/plugin-vue": "^5.2.4",
+    "@vitejs/plugin-vue-jsx": "^4.2.0",
+    "@vitest/coverage-istanbul": "^3.2.4",
+    "@vue/runtime-core": "^3.5.21",
+    "@vue/test-utils": "^2.4.6",
+    "csstype": "^3.1.3",
+    "diffable-html": "^6.0.1",
+    "jsdom": "^25.0.1",
+    "typescript": "^5.9.2",
+    "vite": "^5.4.19",
+    "vitest": "^3.2.4",
+    "vitest-canvas-mock": "^0.3.3",
+    "vue": "^3.5.21",
+    "vue-router": "^4.5.1"
   },
   "sideEffects": [
     "es/**/style/*",
     "lib/**/style/*",
     "*.css"
   ],
-  "release-it": {
-    "git": {
-      "commitMessage": "release: vant v${version}"
-    }
-  },
   "web-types": "lib/web-types.json"
 }

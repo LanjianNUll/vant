@@ -283,7 +283,7 @@ export default {
         deletable: true,
         beforeDelete: () => {
           showToast(
-            'Customize the events and styles of a single preview image'
+            'Customize the events and styles of a single preview image',
           );
         },
       },
@@ -291,6 +291,26 @@ export default {
         url: 'https://fastly.jsdelivr.net/npm/@vant/assets/tree.jpeg',
         imageFit: 'contain',
       },
+    ]);
+
+    return { fileList };
+  },
+};
+```
+
+### Enable Reupload
+
+```html
+<van-uploader v-model="fileList" reupload max-count="2" />
+```
+
+```ts
+import { ref } from 'vue';
+
+export default {
+  setup() {
+    const fileList = ref([
+      { url: 'https://fastly.jsdelivr.net/npm/@vant/assets/leaf.jpeg' },
     ]);
 
     return { fileList };
@@ -315,12 +335,13 @@ export default {
 | disabled | Whether to disabled the upload | _boolean_ | `false` |
 | readonly | Whether to make upload area readonly | _boolean_ | `false` |
 | deletable | Whether to show delete icon | _boolean_ | `true` |
+| reupload `v4.4.0` | Whether to enable reupload, if enabled, the image preview will be disabled | _boolean_ | `false` |
 | show-upload | Whether to show upload area | _boolean_ | `true` |
 | lazy-load | Whether to enable lazy load, should register [Lazyload](#/en-US/lazyload) component | _boolean_ | `false` |
 | capture | Capture, can be set to `camera` | _string_ | - |
 | after-read | Hook after reading the file | _Function_ | - |
 | before-read | Hook before reading the file, return false to stop reading the file, can return Promise | _Function_ | - |
-| before-delete | Hook before delete the file, return false to stop reading the file, can return Promise | _Function_ | - |
+| before-delete | Hook before delete the file, return false to stop deleting the file, can return Promise | _Function_ | - |
 | max-size | Max size of file | _number \| string \| (file: File) => boolean_ | `Infinity` |
 | max-count | Max count of image | _number \| string_ | `Infinity` |
 | result-type | Type of file read result, can be set to `file` `text` | _string_ | `dataUrl` |
@@ -337,6 +358,7 @@ export default {
 | oversize | Emitted when file size over limit | Same as after-read |
 | click-upload | Emitted when click upload area | _event: MouseEvent_ |
 | click-preview | Emitted when preview image is clicked | Same as after-read |
+| click-reupload | Emitted when reupload image is clicked | Same as after-read |
 | close-preview | Emitted when the full screen image preview is closed | - |
 | delete | Emitted when preview file is deleted | Same as after-read |
 
@@ -345,15 +367,22 @@ export default {
 | Name | Description | SlotProps |
 | --- | --- | --- |
 | default | Custom upload area | - |
-| preview-delete `v.3.5.0` | Custom delete icon | `item: FileListItem` |
-| preview-cover | Custom content that covers the image preview | `item: FileListItem` |
+| preview-delete | Custom delete icon | - |
+| preview-cover | Custom content that covers the image preview | _item: FileListItem_ |
 
-### Parameters of before-read、after-read、before-delete
+### Parameters of before-read、before-delete
 
 | Attribute | Description                          | Type     |
 | --------- | ------------------------------------ | -------- |
 | file      | File object                          | _object_ |
 | detail    | Detail info, contains name and index | _object_ |
+
+### Parameters of after-read
+
+| Attribute | Description | Type |
+| --- | --- | --- |
+| file | Contains File object | _UploaderFileListItem \| UploaderFileListItem[]_ |
+| detail | Detail info, contains name and index | _object_ |
 
 ### ResultType
 
@@ -365,12 +394,13 @@ export default {
 
 ### Methods
 
-Use [ref](https://v3.vuejs.org/guide/component-template-refs.html) to get Uploader instance and call instance methods.
+Use [ref](https://vuejs.org/guide/essentials/template-refs.html) to get Uploader instance and call instance methods.
 
 | Name | Description | Attribute | Return value |
 | --- | --- | --- | --- |
 | closeImagePreview | Close full screen image preview | - | - |
 | chooseFile | Trigger choosing files, works with the user action context only because of browser security | - | - |
+| reuploadFile `4.9.3` | Trigger choosing files, choosing a new file will overwrite the previously uploaded file, works with the user action context only because of browser security | _index: number_ | - |
 
 ### Types
 
@@ -382,6 +412,8 @@ import type {
   UploaderInstance,
   UploaderResultType,
   UploaderFileListItem,
+  UploaderBeforeRead,
+  UploaderAfterRead,
 } from 'vant';
 ```
 
@@ -429,3 +461,25 @@ The component provides the following CSS variables, which can be used to customi
 | --van-uploader-loading-icon-size | _22px_ | - |
 | --van-uploader-loading-icon-color | _var(--van-white)_ | - |
 | --van-uploader-disabled-opacity | _var(--van-disabled-opacity)_ | - |
+| --van-uploader-border-radius | _0px_ | - |
+
+## FAQ
+
+### How do I know if the user has granted camera permission?
+
+When uploading an image, if the user has not granted camera permission to the current app, the Uploader component will not work.
+
+You can determine if camera permission has been granted by using the [getUserMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia) method provided by the browser (please note that the `getUserMedia` method cannot be used in iOS 10).
+
+Here is a simplified example:
+
+```ts
+navigator.mediaDevices
+  .getUserMedia({ video: true })
+  .then((stream) => {
+    console.log(stream);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+```

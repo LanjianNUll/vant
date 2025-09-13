@@ -62,7 +62,7 @@ test('should render default slot correctly', () => {
 });
 
 test('should allow to touchmove when lock-scroll is false', async () => {
-  const onTouchMove = jest.fn();
+  const onTouchMove = vi.fn();
   const wrapper = mount({
     render() {
       return (
@@ -79,7 +79,7 @@ test('should allow to touchmove when lock-scroll is false', async () => {
 });
 
 test('should not allow to touchmove when lock-scroll is true', async () => {
-  const onTouchMove = jest.fn();
+  const onTouchMove = vi.fn();
   const wrapper = mount({
     render() {
       return (
@@ -103,4 +103,32 @@ test('should allow to disable lazy-render', async () => {
   });
 
   expect(wrapper.html()).toMatchSnapshot();
+});
+
+test('should allow to use the teleport prop', () => {
+  const root = document.createElement('div');
+  mount(Overlay, {
+    props: {
+      show: true,
+      teleport: root,
+    },
+  });
+
+  expect(root.querySelector('.van-overlay')).toBeTruthy();
+});
+
+test('should inherit attrs when using teleport prop', async () => {
+  const root = document.createElement('div');
+  mount(Overlay, {
+    props: {
+      show: true,
+      teleport: root,
+    },
+    attrs: {
+      class: 'foo',
+    },
+  });
+
+  const overlay = root.querySelector('.van-overlay');
+  expect(overlay?.classList.contains('foo')).toBeTruthy();
 });

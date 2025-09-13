@@ -89,6 +89,9 @@ function getInstance() {
   return queue[queue.length - 1];
 }
 
+/**
+ * Display a text toast
+ */
 export function showToast(options: string | ToastOptions = {}) {
   if (!inBrowser) {
     return {} as ToastWrapperInstance;
@@ -102,8 +105,8 @@ export function showToast(options: string | ToastOptions = {}) {
       {},
       currentOptions,
       defaultOptionsMap.get(parsedOptions.type || currentOptions.type!),
-      parsedOptions
-    )
+      parsedOptions,
+    ),
   );
 
   return toast;
@@ -112,10 +115,24 @@ export function showToast(options: string | ToastOptions = {}) {
 const createMethod = (type: ToastType) => (options: string | ToastOptions) =>
   showToast(extend({ type }, parseOptions(options)));
 
+/**
+ * Display a loading toast
+ */
 export const showLoadingToast = createMethod('loading');
+
+/**
+ * Display a success toast
+ */
 export const showSuccessToast = createMethod('success');
+
+/**
+ * Display a fail toast
+ */
 export const showFailToast = createMethod('fail');
 
+/**
+ * Close the currently displayed toast
+ */
 export const closeToast = (all?: boolean) => {
   if (queue.length) {
     if (all) {
@@ -131,14 +148,18 @@ export const closeToast = (all?: boolean) => {
   }
 };
 
+/**
+ * Modify the default configuration that affects all `showToast` calls.
+ * Specify the `type` parameter to modify the default configuration of a specific type of toast
+ */
 export function setToastDefaultOptions(options: ToastOptions): void;
 export function setToastDefaultOptions(
   type: ToastType,
-  options: ToastOptions
+  options: ToastOptions,
 ): void;
 export function setToastDefaultOptions(
   type: ToastType | ToastOptions,
-  options?: ToastOptions
+  options?: ToastOptions,
 ) {
   if (typeof type === 'string') {
     defaultOptionsMap.set(type, options!);
@@ -147,6 +168,10 @@ export function setToastDefaultOptions(
   }
 }
 
+/**
+ * Reset the default configuration that affects all `showToast` calls.
+ * Specify the `type` parameter to reset the default configuration of a specific type of toast
+ */
 export const resetToastDefaultOptions = (type?: ToastType) => {
   if (typeof type === 'string') {
     defaultOptionsMap.delete(type);
@@ -156,6 +181,9 @@ export const resetToastDefaultOptions = (type?: ToastType) => {
   }
 };
 
+/**
+ * Allow multiple toasts to be displayed as the same time
+ */
 export const allowMultipleToast = (value = true) => {
   allowMultiple = value;
 };

@@ -105,7 +105,7 @@ test('should emit clickOverlay event when overlay is clicked', async () => {
 });
 
 test('should emit open event when show prop is set to true', async () => {
-  const onOpen = jest.fn();
+  const onOpen = vi.fn();
   wrapper = mount(Popup, {
     props: {
       onOpen,
@@ -117,7 +117,7 @@ test('should emit open event when show prop is set to true', async () => {
 });
 
 test('should emit close event when show prop is set to false', async () => {
-  const onClose = jest.fn();
+  const onClose = vi.fn();
   wrapper = mount(Popup, {
     props: {
       show: true,
@@ -130,7 +130,7 @@ test('should emit close event when show prop is set to false', async () => {
 });
 
 test('should emit close event after clicking the overlay', async () => {
-  const onClose = jest.fn();
+  const onClose = vi.fn();
   wrapper = mount(Popup, {
     props: {
       show: true,
@@ -248,7 +248,7 @@ test('should allow to prevent close with before-close prop', async () => {
 });
 
 test('should not call before-close when show prop becomes false', async () => {
-  const beforeClose = jest.fn();
+  const beforeClose = vi.fn();
   const wrapper = mount(Popup, {
     props: {
       show: true,
@@ -280,6 +280,26 @@ test('should have safe-area-inset-bottom class when using safe-area-inset-bottom
   });
 
   expect(wrapper.find('.van-popup').classes()).toContain(
-    'van-safe-area-bottom'
+    'van-safe-area-bottom',
   );
+});
+
+test('should destroy content when using destroyOnClose prop', async () => {
+  const wrapper = mount(Popup, {
+    props: {
+      show: false,
+      destroyOnClose: true,
+    },
+    slots: {
+      default: () => <div class="foo" />,
+    },
+  });
+
+  expect(wrapper.find('.foo').exists()).toBeFalsy();
+
+  await wrapper.setProps({ show: true });
+  expect(wrapper.find('.foo').exists()).toBeTruthy();
+
+  await wrapper.setProps({ show: false });
+  expect(wrapper.find('.foo').exists()).toBeFalsy();
 });

@@ -1,5 +1,6 @@
 import {
   ref,
+  computed,
   watchEffect,
   defineComponent,
   type PropType,
@@ -56,7 +57,7 @@ export default defineComponent({
     visibleOptionNum: makeRequiredProp(numericProp),
   },
 
-  emits: ['change', 'clickOption'],
+  emits: ['change', 'clickOption', 'scrollInto'],
 
   setup(props, { emit, slots }) {
     let moving: boolean;
@@ -77,10 +78,14 @@ export default defineComponent({
       (props.optionHeight * (+props.visibleOptionNum - 1)) / 2;
 
     const updateValueByIndex = (index: number) => {
-      const enabledIndex = findIndexOfEnabledOption(props.options, index);
+      let enabledIndex = findIndexOfEnabledOption(props.options, index);
       const offset = -enabledIndex * props.optionHeight;
 
       const trigger = () => {
+        if (enabledIndex > count() - 1) {
+          enabledIndex = findIndexOfEnabledOption(props.options, index);
+        }
+
         const value = props.options[enabledIndex][props.fields.value];
         if (value !== props.value) {
           emit('change', value);
@@ -112,6 +117,8 @@ export default defineComponent({
 
     const getIndexByOffset = (offset: number) =>
       clamp(Math.round(-offset / props.optionHeight), 0, count() - 1);
+
+    const currentIndex = computed(() => getIndexByOffset(currentOffset.value));
 
     const momentum = (distance: number, duration: number) => {
       const speed = Math.abs(distance / duration);
@@ -166,16 +173,23 @@ export default defineComponent({
         preventDefault(event, true);
       }
 
-      currentOffset.value = clamp(
+      const newOffset = clamp(
         startOffset + touch.deltaY.value,
         -(count() * props.optionHeight),
-        props.optionHeight
+        props.optionHeight,
       );
+
+      const newIndex = getIndexByOffset(newOffset);
+      if (newIndex !== currentIndex.value) {
+        emit('scrollInto', props.options[newIndex]);
+      }
+
+      currentOffset.value = newOffset;
 
       const now = Date.now();
       if (now - touchStartTime > MOMENTUM_TIME) {
         touchStartTime = now;
-        momentumOffset = currentOffset.value;
+        momentumOffset = newOffset;
       }
     };
 
@@ -249,11 +263,14 @@ export default defineComponent({
     useExpose({ stopMomentum });
 
     watchEffect(() => {
-      const index = props.options.findIndex(
-        (option) => option[props.fields.value] === props.value
-      );
+      const index = moving
+        ? Math.floor(-currentOffset.value / props.optionHeight)
+        : props.options.findIndex(
+            (option) => option[props.fields.value] === props.value,
+          );
       const enabledIndex = findIndexOfEnabledOption(props.options, index);
       const offset = -enabledIndex * props.optionHeight;
+      if (moving && enabledIndex < index) stopMomentum();
       currentOffset.value = offset;
     });
 

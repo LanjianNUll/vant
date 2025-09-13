@@ -148,7 +148,7 @@ test('should close popover when touch outside content', async () => {
 });
 
 test('should emit clickOverlay event when overlay is clicked', () => {
-  const onClickOverlay = jest.fn();
+  const onClickOverlay = vi.fn();
   const wrapper = mount(Popover, {
     props: {
       show: true,
@@ -226,4 +226,19 @@ test('should render action slot correctly', () => {
   });
 
   expect(wrapper.find('.van-popover__action').html()).toMatchSnapshot();
+});
+
+test('should add "van-popover__content--horizontal" class when actions-direction prop is horizontal', () => {
+  const wrapper = mount(Popover, {
+    props: {
+      show: true,
+      actions: baseActions,
+      actionsDirection: 'horizontal',
+      teleport: null,
+    },
+  });
+
+  expect(wrapper.find('.van-popover__content').classes()).toContain(
+    'van-popover__content--horizontal',
+  );
 });

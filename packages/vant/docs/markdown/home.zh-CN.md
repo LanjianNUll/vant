@@ -10,12 +10,12 @@
 
 Vant 是一个**轻量、可定制的移动端组件库**，于 2017 年开源。
 
-目前 Vant 官方提供了 [Vue 2 版本](https://vant-contrib.gitee.io/vant/v2)、[Vue 3 版本](https://vant-contrib.gitee.io/vant)和[微信小程序版本](http://vant-contrib.gitee.io/vant-weapp)，并由社区团队维护 [React 版本](https://github.com/3lang3/react-vant)和[支付宝小程序版本](https://github.com/ant-move/Vant-Aliapp)。
+目前 Vant 官方提供了 [Vue 2 版本](/vant/v2/)、[Vue 3 版本](/vant/)和[微信小程序版本](/vant-weapp/)，并由社区团队维护 [React 版本](https://github.com/3lang3/react-vant)和[支付宝小程序版本](https://github.com/ant-move/Vant-Aliapp)。
 
 ### 特性
 
 - 🚀 性能极佳，组件平均体积小于 1KB（min+gzip）
-- 🚀 70+ 个高质量组件，覆盖移动端主流场景
+- 🚀 80+ 个高质量组件，覆盖移动端主流场景
 - 🚀 零外部依赖，不依赖三方 npm 包
 - 💪 使用 TypeScript 编写，提供完整的类型定义
 - 💪 单元测试覆盖率超过 90%，提供稳定性保障
@@ -32,7 +32,21 @@ Vant 是一个**轻量、可定制的移动端组件库**，于 2017 年开源�
 
 ### 版本提示
 
-你当前浏览的是 **Vant 4.x 版本** 的文档，适用于 Vue 3 开发。如果你在使用 Vue 2，请浏览 [Vant 2 文档](https://vant-contrib.gitee.io/vant/v2)。
+你当前浏览的是 **Vant 4.x 版本** 的文档，适用于 Vue 3 开发。如果你在使用 Vue 2，请浏览 [Vant 2 文档](/vant/v2/)。
+
+### 脚手架
+
+推荐使用 [Rsbuild](https://github.com/web-infra-dev/rsbuild) 来创建一个脚手架项目。
+
+Rsbuild 是基于 Rspack 的构建工具，由 Vant 作者开发，具备一流的构建速度和开发体验，对 Vant 提供第一优先级支持。
+
+你可以通过以下命令创建一个 Rsbuild 项目：
+
+```bash
+npm create rsbuild@latest
+```
+
+请访问 [Rsbuild 仓库](https://github.com/web-infra-dev/rsbuild) 了解更多信息。
 
 ### 快速上手
 
@@ -50,10 +64,10 @@ Vant 3/4 支持现代浏览器以及 Chrome >= 51、iOS >= 10.0（与 Vue 3 一�
 
 | 名称 | 框架 | 发布时间 | 最新版 | 维护状态 |
 | --- | --- | --- | --- | --- |
-| Vant 4 | Vue 3 | `2022.12` | ![](https://img.shields.io/npm/v/vant/latest?style=flat-square) | 持续迭代新功能 |
-| Vant 3 | Vue 3 | `2020.12` | ![](https://img.shields.io/npm/v/vant/latest-v3?style=flat-square) | 停止迭代新功能，bug 会被处理和修复 |
-| Vant 2 | Vue 2 | `2019.06` | ![](https://img.shields.io/npm/v/vant/latest-v2?style=flat-square) | 停止迭代新功能，重要 bug 会被处理和修复 |
-| Vant 1 | Vue 2 | `2018.03` | ![](https://img.shields.io/npm/v/vant/latest-v1?style=flat-square) | 停止维护，不再接受 PR |
+| Vant 4 | Vue 3 | `2022.12` | ![](https://img.shields.io/npm/v/vant/latest?style=flat-square) | 长期支持 |
+| Vant 3 | Vue 3 | `2020.12` | ![](https://img.shields.io/npm/v/vant/latest-v3?style=flat-square) | 终止支持，不再接受 PR |
+| Vant 2 | Vue 2 | `2019.06` | ![](https://img.shields.io/npm/v/vant/latest-v2?style=flat-square) | 终止支持，不再接受 PR |
+| Vant 1 | Vue 2 | `2018.03` | ![](https://img.shields.io/npm/v/vant/latest-v1?style=flat-square) | 终止支持，不再接受 PR |
 
 ## 链接
 
@@ -78,16 +92,21 @@ Vant 3/4 支持现代浏览器以及 Chrome >= 51、iOS >= 10.0（与 Vue 3 一�
 | --- | --- |
 | [3lang3/react-vant](https://github.com/3lang3/react-vant) | 参照 Vant 打造的 React 移动端组件库 |
 | [vant-aliapp](https://github.com/ant-move/Vant-Aliapp) | Vant 支付宝小程序版 |
-| [taroify](https://gitee.com/mallfoundry/taroify) | Vant Taro 版 |
 | [vant-theme](https://github.com/Aisen60/vant-theme) | Vant 在线主题预览工具 |
 | [@antmjs/vantui](https://github.com/antmjs/vantui) | 基于 Vant Weapp 开发的多端组件库，同时支持 Taro 和 React |
-| [sfc-playground-vant](https://github.com/zhixiaoqiang/sfc-playground-vant) | Vant Playground. 当前仅支持 Vant 3.0 以上 |
+| [vant-playground](https://github.com/LadyChatterleyLover/vant-playground) | Vant Playground |
+| [sfc-playground-vant](https://github.com/zhixiaoqiang/sfc-playground-vant) | Vant Playground |
+| [vue3-h5-template](https://github.com/yulimchen/vue3-h5-template) | 基于 Vant 的移动端项目模板 |
+| [vue3-vant-mobile](https://github.com/vue-zone/vue3-vant-mobile) | 基于 Vant 的移动端项目模板，开箱即用 |
+| [raycast-vant-documentation](https://github.com/Aisen60/raycast-vant-documentation) | 一个 Raycast 拓展，能在 Raycast 中搜索 Vant 组件库文档 |
+| [nuxt-vant-mobile](https://github.com/vue-zone/nuxt-vant-mobile) | 基于 Vant 的 Nuxt _⁴_ 项目模板，开箱即用 |
+| [mobvue](https://github.com/un-pany/mobvue) | 一个精心制作的移动端 H5 模板 |
+| [novlan1/press-ui](https://github.com/novlan1/press-ui) | 参照 Vant 打造的 uni-app 框架移动端组件库 |
 
 ### 其他链接
 
 - [意见反馈](https://github.com/vant-ui/vant/issues)
 - [更新日志](#/zh-CN/changelog)
-- [码云镜像仓库](https://gitee.com/vant-contrib/vant)
 - [Discussions 讨论区](https://github.com/vant-ui/vant/discussions)
 
 ## 贡献
@@ -96,13 +115,13 @@ Vant 3/4 支持现代浏览器以及 Chrome >= 51、iOS >= 10.0（与 Vue 3 一�
 
 以下是 Vant 和 Vant Weapp 的核心贡献者们：
 
-| [![chenjiahan](https://avatars.githubusercontent.com/u/7237365?s=80&v=4)](https://github.com/chenjiahan/) | [![cookfront](https://avatars.githubusercontent.com/u/4829465?s=80&v=4)](https://github.com/cookfront/) | [![w91](https://avatars.githubusercontent.com/u/2599455?s=80&v=4)](https://github.com/w91/) | [![pangxie1991](https://avatars.githubusercontent.com/u/5961240?s=80&v=4)](https://github.com/pangxie1991/) | [![rex-zsd](https://avatars.githubusercontent.com/u/8767877?s=80&v=4)](https://github.com/rex-zsd/) |
-| :-: | :-: | :-: | :-: | :-: |
-| [chenjiahan](https://github.com/chenjiahan/) | [cookfront](https://github.com/cookfront/) | [wangnaiyi](https://github.com/w91/) | [pangxie](https://github.com/pangxie1991/) | [rex-zsd](https://github.com/rex-zsd/) |
+| [![chenjiahan](https://avatars.githubusercontent.com/u/7237365?s=80&v=4)](https://github.com/chenjiahan/) | [![cookfront](https://avatars.githubusercontent.com/u/4829465?s=80&v=4)](https://github.com/cookfront/) | [![w91](https://avatars.githubusercontent.com/u/2599455?s=80&v=4)](https://github.com/w91/) | [![pangxie1991](https://avatars.githubusercontent.com/u/5961240?s=80&v=4)](https://github.com/pangxie1991/) | [![rex-zsd](https://avatars.githubusercontent.com/u/8767877?s=80&v=4)](https://github.com/rex-zsd/) | [![nemo-shen](https://avatars.githubusercontent.com/u/13480805?s=80&v=4)](https://github.com/nemo-shen/) |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| [chenjiahan](https://github.com/chenjiahan/) | [cookfront](https://github.com/cookfront/) | [wangnaiyi](https://github.com/w91/) | [pangxie](https://github.com/pangxie1991/) | [rex-zsd](https://github.com/rex-zsd/) | [nemo-shen](https://github.com/nemo-shen/) |
 
-| [![nemo-shen](https://avatars.githubusercontent.com/u/13480805?s=80&v=4)](https://github.com/nemo-shen/) | [![Lindysen](https://avatars.githubusercontent.com/u/33708359?s=80&v=4)](https://github.com/Lindysen/) | [![JakeLaoyu](https://avatars.githubusercontent.com/u/16181940?s=80&v=4)](https://github.com/JakeLaoyu/) | [![landluck](https://avatars.githubusercontent.com/u/27060081?s=80&v=4)](https://github.com/landluck/) | [![wjw-gavin](https://avatars.githubusercontent.com/u/19986739?s=80&v=4)](https://github.com/wjw-gavin/) |
-| :-: | :-: | :-: | :-: | :-: |
-| [nemo-shen](https://github.com/nemo-shen/) | [Lindysen](https://github.com/Lindysen/) | [JakeLaoyu](https://github.com/JakeLaoyu/) | [landluck](https://github.com/landluck/) | [wjw-gavin](https://github.com/wjw-gavin/) |
+| [![Lindysen](https://avatars.githubusercontent.com/u/33708359?s=80&v=4)](https://github.com/Lindysen/) | [![JakeLaoyu](https://avatars.githubusercontent.com/u/16181940?s=80&v=4)](https://github.com/JakeLaoyu/) | [![landluck](https://avatars.githubusercontent.com/u/27060081?s=80&v=4)](https://github.com/landluck/) | [![wjw-gavin](https://avatars.githubusercontent.com/u/19986739?s=80&v=4)](https://github.com/wjw-gavin/) | [![inottn](https://avatars.githubusercontent.com/u/18509404?s=80&v=4)](https://github.com/inottn/) | [![zhousg](https://avatars.githubusercontent.com/u/15833290?s=80&v=4)](https://github.com/zhousg/) |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| [Lindysen](https://github.com/Lindysen/) | [JakeLaoyu](https://github.com/JakeLaoyu/) | [landluck](https://github.com/landluck/) | [wjw-gavin](https://github.com/wjw-gavin/) | [inottn](https://github.com/inottn/) | [zhousg](https://github.com/zhousg/) |
 
 ### 贡献者们
 

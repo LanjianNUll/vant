@@ -50,16 +50,8 @@ npx vant-cli dev
 
 ### release
 
-发布组件库，发布前会自动执行 build 和 changelog 命令，并通过 [release-it](https://github.com/release-it/release-it) 发布 npm 包。
-
-### changelog
-
-基于 commit 记录生成更新日志，基于 [conventional-changelog](https://github.com/conventional-changelog/conventional-changelog) 实现。
+发布组件库，发布前会自动执行 build 命令，并按照流程发布 npm 包。
 
 ### commit-lint
 
 校验 commit message 的格式是否符合规范，需要配合 `husky` 在提交 commit 时触发。
-
-```bash
-npx husky add .husky/commit-msg 'npx --no-install vant-cli commit-lint $1'
-```

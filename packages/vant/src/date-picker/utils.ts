@@ -1,9 +1,13 @@
-import { extend, padZero, makeArrayProp } from '../utils';
+import { extend, padZero, makeArrayProp, clamp } from '../utils';
 import { pickerSharedProps } from '../picker/Picker';
 import type { PropType } from 'vue';
 import type { PickerOption } from '../picker';
 
-type Filter = (columnType: string, options: PickerOption[]) => PickerOption[];
+type Filter = (
+  columnType: string,
+  options: PickerOption[],
+  values: string[],
+) => PickerOption[];
 type Formatter = (type: string, option: PickerOption) => PickerOption;
 
 export const sharedProps = extend({}, pickerSharedProps, {
@@ -42,7 +46,8 @@ export const genOptions = <T extends string>(
   max: number,
   type: T,
   formatter: Formatter,
-  filter?: Filter
+  filter: Filter | undefined,
+  values: string[],
 ) => {
   const options = times(max - min + 1, (index) => {
     const value = padZero(min + index);
@@ -51,17 +56,16 @@ export const genOptions = <T extends string>(
       value,
     });
   });
-  return filter ? filter(type, options) : options;
+  return filter ? filter(type, options, values) : options;
 };
 
-export const formatValueRange = (values: string[], columns: PickerOption[]) =>
+export const formatValueRange = (values: string[], columns: PickerOption[][]) =>
   values.map((value, index) => {
     const column = columns[index];
     if (column.length) {
+      const minValue = +column[0].value!;
       const maxValue = +column[column.length - 1].value!;
-      if (+value > maxValue) {
-        return String(maxValue);
-      }
+      return padZero(clamp(+value, minValue, maxValue));
     }
     return value;
   });

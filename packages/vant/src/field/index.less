@@ -1,4 +1,5 @@
-:root {
+:root,
+:host {
   --van-field-label-width: 6.2em;
   --van-field-label-color: var(--van-text-color);
   --van-field-label-margin-right: var(--van-padding-sm);
@@ -6,8 +7,8 @@
   --van-field-input-error-text-color: var(--van-danger-color);
   --van-field-input-disabled-text-color: var(--van-text-color-3);
   --van-field-placeholder-text-color: var(--van-text-color-3);
-  --van-field-icon-size: 16px;
-  --van-field-clear-icon-size: 16px;
+  --van-field-icon-size: 18px;
+  --van-field-clear-icon-size: 18px;
   --van-field-clear-icon-color: var(--van-gray-5);
   --van-field-right-icon-color: var(--van-gray-6);
   --van-field-error-message-color: var(--van-danger-color);
@@ -45,7 +46,7 @@
       width: 100%;
       text-align: left;
       margin-bottom: var(--van-padding-base);
-      word-break: break-word;
+      overflow-wrap: break-word;
     }
 
     &--required {
@@ -92,16 +93,16 @@
       color: var(--van-field-placeholder-text-color);
     }
 
+    &:read-only {
+      cursor: default;
+    }
+
     &:disabled {
       color: var(--van-field-input-disabled-text-color);
       cursor: not-allowed;
       opacity: 1;
       // fix disabled color in mobile safari
       -webkit-text-fill-color: var(--van-field-input-disabled-text-color);
-    }
-
-    &:read-only {
-      cursor: default;
     }
 
     &--center {

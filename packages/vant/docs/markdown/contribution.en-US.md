@@ -15,7 +15,7 @@ Below are the guidelines for submitting feedback or code to Vant. Please take a 
 
 ### Local development
 
-Before developing locally, please make sure that [Node.js >= 14.19.0](https://nodejs.org) is installed in your development environment.
+Before developing locally, please make sure that [Node.js >= 18](https://nodejs.org) is installed in your development environment.
 
 Follow the steps below to develop Vant components locally.
 
@@ -38,16 +38,6 @@ Different branches of the repository correspond to different Vant versions, plea
 - The main branch corresponds to the Vant 4 version, suitable for Vue 3
 - 3.x branch corresponds to Vant 3 version, suitable for Vue 3
 - 2.x branch corresponds to Vant 2 version, suitable for Vue 2
-
-### Mirror repository
-
-If GitHub cloning is slow, you can also directly clone Vant's [mirror repository](https://gitee.com/vant-contrib/vant) directly on gitee:
-
-```bash
-git clone git@gitee.com:vant-contrib/vant.git
-```
-
-The mirror repository is only used to speed up local access, please do not submit issues and pull requests to the mirror repository.
 
 ### Directory Structure
 
@@ -101,7 +91,7 @@ When writing code, please note:
 
 If this is your first time submitting a pull request on GitHub, you can learn from the following article:
 
-- [First participation in open source](https://github.com/firstcontributions/first-contributions)
+- [First participation in open source](https://github.com/firstcontributions/first-contributions/blob/main/docs/translations/README.en-pirate.md)
 
 ### Pull Request Specification
 
@@ -118,6 +108,37 @@ When submitting a Pull Request, please note:
 3. Develop on the new branch. When development is complete, submit a pull request to the main branch of the main repository.
 4. The pull request is merged into the main repository after the review is approved.
 5. Wait for Vant to release a new version, usually once a week.
+
+### Pull Request Title Format
+
+The title of the Pull Request should be in the following format:
+
+```bash
+type(ComponentName?)：commit message
+```
+
+Example：
+
+- docs: fix typo in quickstart
+- build: optimize build speed
+- fix(Button): incorrect style
+- feat(Button): add color prop
+
+Allowed Types:
+
+- fix
+- feat
+- docs
+- perf
+- test
+- types
+- style
+- build
+- chore
+- release
+- refactor
+- breaking change
+- revert:
 
 ### Synchronize the latest code
 

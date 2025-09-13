@@ -37,15 +37,30 @@ test('should allow to drag to show right part', async () => {
   expect(track.style.transform).toEqual('translate3d(-100px, 0, 0)');
 });
 
-test('should call beforeClose before closing', () => {
+test('should call beforeClose before closing', async () => {
+  let event;
   let position;
+  let clickPosition;
+  let usePromise;
+  let promiseRet;
 
   const wrapper = mount(SwipeCell, {
     ...defaultProps,
     props: {
       ...defaultProps.props,
+      onClick(position) {
+        clickPosition = position;
+      },
       beforeClose(params) {
-        ({ position } = params);
+        if (usePromise) {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(promiseRet);
+            }, 100);
+          });
+        } else {
+          ({ event, position } = params);
+        }
       },
     },
   });
@@ -56,16 +71,31 @@ test('should call beforeClose before closing', () => {
 
   wrapper.vm.open('left');
   wrapper.trigger('click');
+
+  expect(event).toBeInstanceOf(MouseEvent);
   expect(position).toEqual('cell');
 
   wrapper.find('.van-swipe-cell__left').trigger('click');
+  expect(event).toBeInstanceOf(MouseEvent);
   expect(position).toEqual('left');
 
   wrapper.find('.van-swipe-cell__right').trigger('click');
+  expect(event).toBeInstanceOf(MouseEvent);
   expect(position).toEqual('right');
 
   wrapper.vm.close();
   expect(track.style.transform).toEqual('translate3d(0px, 0, 0)');
+
+  usePromise = true;
+  promiseRet = false;
+  wrapper.vm.open('right');
+  wrapper.find('.van-swipe-cell__right').trigger('click');
+  expect(clickPosition).toEqual('right');
+  wrapper.trigger('click');
+  expect(clickPosition).toEqual('right');
+  await later(200);
+  wrapper.trigger('click');
+  expect(clickPosition).toEqual('cell');
 });
 
 test('should close swipe cell after clicked', async () => {
@@ -192,4 +222,70 @@ test('should not trigger close event again if already closed', () => {
 
   wrapper.vm.close();
   expect(wrapper.emitted('close')).toHaveLength(1);
+});
+
+const createWithNativeWrapper = () => {
+  const onWrapperClick = vi.fn();
+
+  const component = {
+    template: `
+      <div class="native-wrapper" @click="onWrapperClick">
+        <swipe-cell v-bind="props" />
+      </div>
+    `,
+    components: {
+      SwipeCell,
+    },
+    setup() {
+      return {
+        props: defaultProps.props,
+        onWrapperClick,
+      };
+    },
+  };
+
+  const wrapper = mount(component);
+
+  const track = wrapper.find('.van-swipe-cell__wrapper').element;
+
+  const triggerNativeClick = () => {
+    const clickEvent = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+    });
+    track.dispatchEvent(clickEvent);
+  };
+
+  const swipeCell = wrapper.findComponent(SwipeCell);
+
+  return {
+    wrapper,
+    swipeCell,
+    onWrapperClick,
+    triggerNativeClick,
+  };
+};
+
+test('should not stop propagation of native click event when canceling swipe', async () => {
+  const { onWrapperClick, triggerNativeClick, swipeCell } =
+    createWithNativeWrapper();
+
+  triggerDrag(swipeCell, 5, 0);
+
+  await later();
+
+  triggerNativeClick();
+  expect(onWrapperClick).toHaveBeenCalled();
+});
+
+test('should not trigger native click event after drag operations in desktop simulation scenarios', async () => {
+  const { onWrapperClick, swipeCell } = createWithNativeWrapper();
+
+  triggerDrag(swipeCell, 50, 0);
+  await later();
+  expect(onWrapperClick).not.toHaveBeenCalled();
+
+  triggerDrag(swipeCell, -50, 0);
+  await later();
+  expect(onWrapperClick).not.toHaveBeenCalled();
 });

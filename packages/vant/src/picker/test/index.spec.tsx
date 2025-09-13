@@ -1,5 +1,6 @@
 import { later, mount, triggerDrag } from '../../../test';
-import { Picker, type PickerConfirmEventParams } from '..';
+import { Picker, type PickerOption, type PickerConfirmEventParams } from '..';
+import { computed, ref } from 'vue';
 
 const simpleColumn = [
   { text: '1990', value: '1990' },
@@ -41,6 +42,33 @@ test('should emit cancel event after clicking the cancel button', () => {
     {
       selectedOptions: [{ text: '1990', value: '1990' }],
       selectedValues: ['1990'],
+      selectedIndexes: [0],
+    },
+  ]);
+});
+
+test('should work correctly when dragging the column and changing columns prop', async () => {
+  const columnsOne = [
+    { text: '1990', value: '1990' },
+    { text: '1991', value: '1991' },
+  ];
+  const columnsTwo = [{ text: '1993', value: '1993' }];
+  const wrapper = mount(Picker, {
+    props: {
+      columns: columnsOne,
+    },
+  });
+
+  triggerDrag(wrapper.findAll('.van-picker-column')[0], 0, -100);
+  await wrapper.setProps({
+    columns: columnsTwo,
+  });
+  await wrapper.find('.van-picker__confirm').trigger('click');
+
+  expect(wrapper.emitted<[string, number]>('confirm')![0]).toEqual([
+    {
+      selectedOptions: [{ text: '1993', value: '1993' }],
+      selectedValues: ['1993'],
       selectedIndexes: [0],
     },
   ]);
@@ -143,6 +171,38 @@ test('should emit click-option event after clicking an option', async () => {
   ]);
 });
 
+test('should emit scroll-into event after draging the column', async () => {
+  const wrapper = mount(Picker, {
+    props: {
+      columns: simpleColumn,
+    },
+  });
+
+  triggerDrag(wrapper.find('.van-picker-column'), 0, -100);
+  await wrapper.find('.van-picker-column ul').trigger('transitionend');
+
+  expect(wrapper.emitted('scrollInto')).toEqual([
+    [{ columnIndex: 0, currentOption: { text: '1992', value: '1992' } }],
+  ]);
+});
+
+test('should emit scroll-into event after clicking an option', async () => {
+  const wrapper = mount(Picker, {
+    props: {
+      showToolbar: true,
+      columns: simpleColumn,
+    },
+  });
+
+  await wrapper.find('.van-picker-column__item').trigger('click');
+  expect(wrapper.emitted('scrollInto')![0]).toEqual([
+    {
+      columnIndex: 0,
+      currentOption: { text: '1990', value: '1990' },
+    },
+  ]);
+});
+
 test('should render bottom toolbar when toolbar-position is bottom', () => {
   const wrapper = mount(Picker, {
     props: {
@@ -225,7 +285,7 @@ test('should not reset index when columns unchanged', async () => {
 test('should allow to set rem option height', async () => {
   const originGetComputedStyle = window.getComputedStyle;
 
-  window.getComputedStyle = () => ({ fontSize: '16px' } as CSSStyleDeclaration);
+  window.getComputedStyle = () => ({ fontSize: '16px' }) as CSSStyleDeclaration;
 
   const wrapper = mount(Picker, {
     props: {
@@ -236,7 +296,7 @@ test('should allow to set rem option height', async () => {
 
   await later();
   expect(wrapper.find('.van-picker-column__item').style.height).toEqual(
-    '160px'
+    '160px',
   );
 
   window.getComputedStyle = originGetComputedStyle;
@@ -322,13 +382,15 @@ test('should be displayed correctly whhen the component is reused', async () => 
   await wrapper.setProps({ modelValue: ['1990', '01'] });
   await wrapper.find('.van-picker__confirm').trigger('click');
   expect(
-    wrapper.emitted<[PickerConfirmEventParams]>('confirm')![0][0].selectedValues
+    wrapper.emitted<[PickerConfirmEventParams]>('confirm')![0][0]
+      .selectedValues,
   ).toEqual(['1990', '01']);
 
   await wrapper.setProps({ modelValue: ['1992', '03'] });
   await wrapper.find('.van-picker__confirm').trigger('click');
   expect(
-    wrapper.emitted<[PickerConfirmEventParams]>('confirm')![1][0].selectedValues
+    wrapper.emitted<[PickerConfirmEventParams]>('confirm')![1][0]
+      .selectedValues,
   ).toEqual(['1992', '03']);
 
   // Test the scenario when a component is assigned multiple times in multiple columns
@@ -336,12 +398,127 @@ test('should be displayed correctly whhen the component is reused', async () => 
   await wrapper.setProps({ modelValue: ['1990', '01'] });
   await wrapper.find('.van-picker__confirm').trigger('click');
   expect(
-    wrapper.emitted<[PickerConfirmEventParams]>('confirm')![2][0].selectedValues
+    wrapper.emitted<[PickerConfirmEventParams]>('confirm')![2][0]
+      .selectedValues,
   ).toEqual(['1990', '01']);
 
   await wrapper.setProps({ modelValue: ['1992', '03'] });
   await wrapper.find('.van-picker__confirm').trigger('click');
   expect(
-    wrapper.emitted<[PickerConfirmEventParams]>('confirm')![3][0].selectedValues
+    wrapper.emitted<[PickerConfirmEventParams]>('confirm')![3][0]
+      .selectedValues,
   ).toEqual(['1992', '03']);
+});
+
+test('should allow to skip rendering confirm and cancel buttons', async () => {
+  const wrapper = mount(Picker, {
+    props: {
+      confirmButtonText: '',
+      cancelButtonText: '',
+    },
+  });
+
+  expect(wrapper.find('.van-picker__confirm').exists()).toBeFalsy();
+  expect(wrapper.find('.van-picker__cancel').exists()).toBeFalsy();
+});
+
+test('should render empty slot when options is empty', async () => {
+  const wrapper = mount(Picker, {
+    props: {
+      loading: true,
+      columns: [[], []],
+    },
+    slots: {
+      empty: () => <div>empty content</div>,
+    },
+  });
+
+  expect(wrapper.html()).not.toContain('empty content');
+
+  await wrapper.setProps({ loading: false });
+  expect(wrapper.html()).toContain('empty content');
+
+  await wrapper.setProps({ columns: [{ values: ['foo'] }] });
+  expect(wrapper.html()).not.toContain('empty content');
+});
+
+test('should emit correct values when clicking confirm button during column scrolling', async () => {
+  const columnsOne: PickerOption[] = [
+    { text: 'Beijing', value: 'Beijing' },
+    { text: 'Shanghai', value: 'Shanghai' },
+  ];
+  const columnsTwo: Record<string, PickerOption[]> = {
+    Beijing: [
+      { text: 'Dongcheng', value: 'Dongcheng' },
+      { text: 'Xicheng', value: 'Xicheng' },
+      { text: 'Chaoyang', value: 'Chaoyang' },
+      { text: 'Haidian', value: 'Haidian' },
+    ],
+    Shanghai: [
+      { text: 'Huangpu', value: 'Huangpu' },
+      { text: 'Xuhui', value: 'Xuhui' },
+      { text: 'Changning', value: 'Changning' },
+      { text: 'Pudong', value: 'Pudong' },
+    ],
+  };
+  const currentValues = ref(['Beijing', 'Dongcheng']);
+  const wrapper = mount({
+    setup() {
+      const columns = computed(() => [
+        columnsOne,
+        columnsTwo[currentValues.value[0]],
+      ]);
+      return () => (
+        <Picker v-model={currentValues.value} columns={columns.value} />
+      );
+    },
+  });
+  const picker = wrapper.findComponent(Picker);
+  // Scroll to select "Shanghai"
+  triggerDrag(picker.findAll('.van-picker-column')[0], 0, -100);
+  // Trigger confirm immediately without waiting for scroll animation to complete
+  await picker.find('.van-picker__confirm').trigger('click');
+  expect(picker.emitted('confirm')![0]).toEqual([
+    {
+      selectedOptions: [
+        { text: 'Shanghai', value: 'Shanghai' },
+        { text: 'Huangpu', value: 'Huangpu' },
+      ],
+      selectedValues: ['Shanghai', 'Huangpu'],
+      selectedIndexes: [1, 0],
+    },
+  ]);
+});
+
+// https://github.com/youzan/vant/issues/13423
+test('should emit default values when clear modelValue', async () => {
+  const columns = [
+    { text: '1', value: '1' },
+    { text: '2', value: '2' },
+  ];
+  const wrapper = mount({
+    setup() {
+      const modelValue = ref(['1']);
+      return () => (
+        <>
+          <button
+            class="clear-button"
+            onClick={() => (modelValue.value = [])}
+          />
+          <Picker v-model={modelValue.value} columns={columns} />
+        </>
+      );
+    },
+  });
+  const button = wrapper.find('.clear-button');
+  await button.trigger('click');
+  const picker = wrapper.findComponent(Picker);
+  await picker.find('.van-picker__confirm').trigger('click');
+  expect(picker.emitted('confirm')![0]).toEqual([
+    {
+      selectedOptions: [{ text: '1', value: '1' }],
+      selectedValues: ['1'],
+      selectedIndexes: [0],
+    },
+  ]);
 });

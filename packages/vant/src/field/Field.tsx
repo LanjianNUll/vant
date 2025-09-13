@@ -9,6 +9,7 @@ import {
   defineComponent,
   type PropType,
   type ExtractPropTypes,
+  type HTMLAttributes,
 } from 'vue';
 
 // Utils
@@ -27,6 +28,7 @@ import {
   makeNumericProp,
   createNamespace,
   type ComponentInstance,
+  clamp,
 } from '../utils';
 import {
   cutString,
@@ -81,16 +83,24 @@ export const fieldSharedProps = {
   autofocus: Boolean,
   clearable: Boolean,
   maxlength: numericProp,
+  max: Number,
+  min: Number,
   formatter: Function as PropType<(value: string) => string>,
   clearIcon: makeStringProp('clear'),
   modelValue: makeNumericProp(''),
   inputAlign: String as PropType<FieldTextAlign>,
   placeholder: String,
   autocomplete: String,
+  autocapitalize: String,
+  autocorrect: String,
   errorMessage: String,
   enterkeyhint: String,
   clearTrigger: makeStringProp<FieldClearTrigger>('focus'),
   formatTrigger: makeStringProp<FieldFormatTrigger>('onChange'),
+  spellcheck: {
+    type: Boolean,
+    default: null,
+  },
   error: {
     type: Boolean,
     default: null,
@@ -103,6 +113,7 @@ export const fieldSharedProps = {
     type: Boolean,
     default: null,
   },
+  inputmode: String as PropType<HTMLAttributes['inputmode']>,
 };
 
 export const fieldProps = extend({}, cellSharedProps, fieldSharedProps, {
@@ -187,6 +198,14 @@ export default defineComponent({
       return props.modelValue;
     });
 
+    const showRequiredMark = computed(() => {
+      const required = getProp('required');
+      if (required === 'auto') {
+        return props.rules?.some((rule: FieldRule) => rule.required);
+      }
+      return required;
+    });
+
     const runRules = (rules: FieldRule[]) =>
       rules.reduce(
         (promise, rule) =>
@@ -223,7 +242,7 @@ export default defineComponent({
               });
             }
           }),
-        Promise.resolve()
+        Promise.resolve(),
       );
 
     const resetValidation = () => {
@@ -302,7 +321,7 @@ export default defineComponent({
 
     const updateValue = (
       value: string,
-      trigger: FieldFormatTrigger = 'onChange'
+      trigger: FieldFormatTrigger = 'onChange',
     ) => {
       const originalValue = value;
       value = limitValueLength(value);
@@ -312,9 +331,26 @@ export default defineComponent({
       const limitDiffLen =
         getStringLength(originalValue) - getStringLength(value);
 
+      // https://github.com/youzan/vant/issues/13058
       if (props.type === 'number' || props.type === 'digit') {
         const isNumber = props.type === 'number';
         value = formatNumber(value, isNumber, isNumber);
+
+        if (
+          trigger === 'onBlur' &&
+          value !== '' &&
+          (props.min !== undefined || props.max !== undefined)
+        ) {
+          const adjustedValue = clamp(
+            +value,
+            props.min ?? -Infinity,
+            props.max ?? Infinity,
+          );
+
+          if (+value !== adjustedValue) {
+            value = adjustedValue.toString();
+          }
+        }
       }
 
       let formatterDiffLen = 0;
@@ -355,7 +391,7 @@ export default defineComponent({
 
             inputRef.value.setSelectionRange(
               Math.min(selectionStart, valueLen),
-              Math.min(selectionEnd, valueLen)
+              Math.min(selectionEnd, valueLen),
             );
           }
         } else {
@@ -491,8 +527,12 @@ export default defineComponent({
         autofocus: props.autofocus,
         placeholder: props.placeholder,
         autocomplete: props.autocomplete,
+        autocapitalize: props.autocapitalize,
+        autocorrect: props.autocorrect,
         enterkeyhint: props.enterkeyhint,
+        spellcheck: props.spellcheck,
         'aria-labelledby': props.label ? `${id}-label` : undefined,
+        'data-allow-mismatch': 'attribute',
         onBlur,
         onFocus,
         onInput,
@@ -504,10 +544,12 @@ export default defineComponent({
       };
 
       if (props.type === 'textarea') {
-        return <textarea {...inputAttrs} />;
+        return <textarea {...inputAttrs} inputmode={props.inputmode} />;
       }
 
-      return <input {...mapInputType(props.type)} {...inputAttrs} />;
+      return (
+        <input {...mapInputType(props.type, props.inputmode)} {...inputAttrs} />
+      );
     };
 
     const renderLeftIcon = () => {
@@ -583,7 +625,13 @@ export default defineComponent({
         return (
           <label
             id={`${id}-label`}
-            for={getInputId()}
+            for={slots.input ? undefined : getInputId()}
+            data-allow-mismatch="attribute"
+            onClick={(event: MouseEvent) => {
+              // https://github.com/youzan/vant/issues/11831
+              preventDefault(event);
+              focus();
+            }}
             style={
               labelAlign === 'top' && labelWidth
                 ? { width: addUnit(labelWidth) }
@@ -635,7 +683,7 @@ export default defineComponent({
         resetValidation();
         validateWithTrigger('onChange');
         nextTick(adjustTextareaSize);
-      }
+      },
     );
 
     onMounted(() => {
@@ -682,7 +730,7 @@ export default defineComponent({
           titleStyle={labelStyle.value}
           valueClass={bem('value')}
           titleClass={[
-            bem('label', [labelAlign, { required: props.required }]),
+            bem('label', [labelAlign, { required: showRequiredMark.value }]),
             props.labelClass,
           ]}
           arrowDirection={props.arrowDirection}

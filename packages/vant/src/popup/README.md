@@ -223,9 +223,11 @@ Use `teleport` prop to specify mount location.
 | position | Can be set to `top` `bottom` `right` `left` | _string_ | `center` |
 | overlay-class | Custom overlay class | _string \| Array \| object_ | - |
 | overlay-style | Custom overlay style | _object_ | - |
+| overlay-props | Overlay props, see [Overlay](#/en-US/overlay#api) component | _object_ | - |
 | duration | Transition duration, unit second | _number \| string_ | `0.3` |
 | z-index | Set the z-index to a fixed value | _number \| string_ | `2000+` |
 | round | Whether to show round corner | _boolean_ | `false` |
+| destroy-on-close `v4.9.10` | Whether to destroy content when closed | _boolean_ | `false` |
 | lock-scroll | Whether to lock background scroll | _boolean_ | `true` |
 | lazy-render | Whether to lazy render util appeared | _boolean_ | `true` |
 | close-on-popstate | Whether to close when popstate | _boolean_ | `false` |
@@ -235,7 +237,7 @@ Use `teleport` prop to specify mount location.
 | close-icon-position | Close Icon Position, can be set to `top-left` `bottom-left` `bottom-right` | _string_ | `top-right` |
 | before-close | Callback function before close | _(action: string) => boolean \| Promise\<boolean\>_ | - |
 | icon-prefix | Icon className prefix | _string_ | `van-icon` |
-| transition | Transition, equivalent to `name` prop of [transition](https://v3.vuejs.org/api/built-in-components.html#transition) | _string_ | - |
+| transition | Transition, equivalent to `name` prop of [transition](https://vuejs.org/api/built-in-components.html#transition) | _string_ | - |
 | transition-appear | Whether to apply transition on initial render | _boolean_ | `false` |
 | teleport | Specifies a target element where Popup will be mounted | _string \| Element_ | - |
 | safe-area-inset-top | Whether to enable top safe area adaptation | _boolean_ | `false` |

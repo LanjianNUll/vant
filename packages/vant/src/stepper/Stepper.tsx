@@ -122,11 +122,12 @@ export default defineComponent({
     const current = ref(getInitialValue());
 
     const minusDisabled = computed(
-      () => props.disabled || props.disableMinus || +current.value <= +props.min
+      () =>
+        props.disabled || props.disableMinus || +current.value <= +props.min,
     );
 
     const plusDisabled = computed(
-      () => props.disabled || props.disablePlus || +current.value >= +props.max
+      () => props.disabled || props.disablePlus || +current.value >= +props.max,
     );
 
     const inputStyle = computed(() => ({
@@ -272,7 +273,7 @@ export default defineComponent({
 
     watch(
       () => [props.max, props.min, props.integer, props.decimalLength],
-      check
+      check,
     );
 
     watch(
@@ -281,7 +282,7 @@ export default defineComponent({
         if (!isEqual(value, current.value)) {
           current.value = format(value!);
         }
-      }
+      },
     );
 
     watch(current, (value) => {
@@ -317,6 +318,7 @@ export default defineComponent({
           // set keyboard in modern browsers
           inputmode={props.integer ? 'numeric' : 'decimal'}
           placeholder={props.placeholder}
+          autocomplete="off"
           aria-valuemax={props.max}
           aria-valuemin={props.min}
           aria-valuenow={current.value}

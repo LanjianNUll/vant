@@ -71,8 +71,9 @@ export default {
   placeholder="Choose City"
   @click="showPicker = true"
 />
-<van-popup v-model:show="showPicker" round position="bottom">
+<van-popup v-model:show="showPicker" destroy-on-close round position="bottom">
   <van-picker
+    :model-value="pickerValue"
     title="Title"
     :columns="columns"
     @cancel="showPicker = false"
@@ -94,10 +95,12 @@ export default {
       { text: 'Maine', value: 'Maine' },
     ];
     const fieldValue = ref('');
+    const pickerValue = ref<Numeric[]>([]);
     const showPicker = ref(false);
 
-    const onConfirm = ({ selectedOptions }) => {
+    const onConfirm = ({ selectedValues, selectedOptions }) => {
       showPicker.value = false;
+      pickerValue.value = selectedValues;
       fieldValue.value = selectedOptions[0].text;
     };
 
@@ -276,11 +279,27 @@ export default {
 };
 ```
 
+### Empty content
+
+When the data is empty, you can use the `empty` slot to customize the empty content.
+
+```html
+<van-picker title="Title">
+  <template #empty>
+    <van-empty
+      image="https://fastly.jsdelivr.net/npm/@vant/assets/custom-empty-image.png"
+      image-size="80"
+      description="No data"
+    />
+  </template>
+</van-picker>
+```
+
 ### Custom Columns Field
 
 ```html
 <van-picker
-  :title="Title"
+  title="Title"
   :columns="columns"
   :columns-field-names="customFieldName"
 />
@@ -338,13 +357,15 @@ export default {
 
 | Attribute | Description | Type | Default |
 | --- | --- | --- | --- |
+| v-model | values of chosen option | _number[] \| string[]_ | - |
 | columns | Columns data | _PickerOption[] \| PickerOption[][]_ | `[]` |
 | columns-field-names | custom columns field | _object_ | `{ text: 'text', value: 'value', children: 'children' }` |
 | title | Toolbar title | _string_ | - |
-| confirm-button-text | Text of confirm button | _string_ | `Confirm` |
-| cancel-button-text | Text of cancel button | _string_ | `Cancel` |
+| confirm-button-text | Text of confirm button, setting it as an empty string can hide the button | _string_ | `Confirm` |
+| cancel-button-text | Text of cancel button, setting it as an empty string can hide the button | _string_ | `Cancel` |
 | toolbar-position | Toolbar position, cat be set to `bottom` | _string_ | `top` |
 | loading | Whether to show loading prompt | _boolean_ | `false` |
+| readonly | Whether to be readonly | _boolean_ | `false` |
 | show-toolbar | Whether to show toolbar | _boolean_ | `true` |
 | allow-html | Whether to allow HTML in option text | _boolean_ | `false` |
 | option-height | Option height, supports `px` `vw` `vh` `rem` unit, default `px` | _number \| string_ | `44` |
@@ -357,20 +378,22 @@ export default {
 | --- | --- | --- |
 | confirm | Emitted when the confirm button is clicked | _{ selectedValues, selectedOptions, selectedIndexes }_ |
 | cancel | Emitted when the cancel button is clicked | _{ selectedValues, selectedOptions, selectedIndexes }_ |
-| change | Emitted when current option is changed | _{ selectedValues, selectedOptions,selectedIndexes, columnIndex }_ |
+| change | Emitted when current selected option is changed | _{ selectedValues, selectedOptions,selectedIndexes, columnIndex }_ |
 | click-option | Emitted when an option is clicked | _{ currentOption, selectedValues, selectedOptions, selectedIndexes, columnIndex }_ |
+| scroll-into `v4.2.1` | Emitted when an option is scrolled into the middle selection area by clicking or dragging | _{ currentOption, columnIndex }_ |
 
 ### Slots
 
 | Name | Description | SlotProps |
 | --- | --- | --- |
-| toolbar `3.1.2` | Custom toolbar content | - |
+| toolbar | Custom toolbar content | - |
 | title | Custom title | - |
 | confirm | Custom confirm button text | - |
 | cancel | Custom cancel button text | - |
 | option | Custom option content | _option: PickerOption, index: number_ |
 | columns-top | Custom content above columns | - |
 | columns-bottom | Custom content below columns | - |
+| empty `v4.9.10` | Custom empty content | - |
 
 ### Data Structure of PickerOption
 
@@ -384,7 +407,7 @@ export default {
 
 ### Methods
 
-Use [ref](https://v3.vuejs.org/guide/component-template-refs.html) to get Picker instance and call instance methods.
+Use [ref](https://vuejs.org/guide/essentials/template-refs.html) to get Picker instance and call instance methods.
 
 | Name | Description | Attribute | Return value |
 | --- | --- | --- | --- |

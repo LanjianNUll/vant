@@ -39,6 +39,7 @@ const popupInheritProps = [
   'overlayClass',
   'overlayStyle',
   'closeOnClickOverlay',
+  'zIndex',
 ] as const;
 
 export const toastProps = {
@@ -61,6 +62,7 @@ export const toastProps = {
   overlayStyle: Object as PropType<CSSProperties>,
   closeOnClick: Boolean,
   closeOnClickOverlay: Boolean,
+  zIndex: numericProp,
 };
 
 export type ToastProps = ExtractPropTypes<typeof toastProps>;
@@ -143,7 +145,7 @@ export default defineComponent({
             updateShow(false);
           }, props.duration);
         }
-      }
+      },
     );
 
     onMounted(toggleClickable);

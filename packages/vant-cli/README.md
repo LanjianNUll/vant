@@ -32,6 +32,9 @@ yarn add @vant/cli -D
 
 # via pnpm
 pnpm add @vant/cli -D
+
+# via Bun
+bun add @vant/cli -D
 ```
 
 Please add the followed config to `package.json` file.
@@ -43,7 +46,7 @@ Please add the followed config to `package.json` file.
     "test": "vant-cli test",
     "lint": "vant-cli lint",
     "build": "vant-cli build",
-    "prepare": "husky install",
+    "prepare": "husky",
     "release": "vant-cli release",
     "build-site": "vant-cli build-site"
   },

@@ -1,4 +1,5 @@
-:root {
+:root,
+:host {
   --van-pagination-height: 40px;
   --van-pagination-font-size: var(--van-font-size-md);
   --van-pagination-item-width: 36px;
@@ -70,14 +71,17 @@
       cursor: pointer;
     }
 
-    &--border::after {
-      border-width: var(--van-border-width);
+    &--border:first-child::after {
+      border-right-width: var(--van-border-width);
     }
 
     &--disabled {
-      color: var(--van-pagination-item-disabled-color);
-      background-color: var(--van-pagination-item-disabled-background);
-      opacity: var(--van-pagination-disabled-opacity);
+      &,
+      &:active {
+        color: var(--van-pagination-item-disabled-color);
+        background-color: var(--van-pagination-item-disabled-background);
+        opacity: var(--van-pagination-disabled-opacity);
+      }
     }
   }
 

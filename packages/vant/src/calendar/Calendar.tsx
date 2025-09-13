@@ -31,6 +31,7 @@ import {
   calcDateNum,
   compareMonth,
   getDayByOffset,
+  getMonthByOffset,
 } from './utils';
 
 // Composables
@@ -48,6 +49,7 @@ import CalendarHeader from './CalendarHeader';
 // Types
 import type {
   CalendarType,
+  CalendarSwitchMode,
   CalendarExpose,
   CalendarDayItem,
   CalendarMonthInstance,
@@ -56,6 +58,7 @@ import type {
 export const calendarProps = {
   show: Boolean,
   type: makeStringProp<CalendarType>('single'),
+  switchMode: makeStringProp<CalendarSwitchMode>('none'),
   title: String,
   color: String,
   round: truthProp,
@@ -84,15 +87,10 @@ export const calendarProps = {
   minDate: {
     type: Date,
     validator: isDate,
-    default: getToday,
   },
   maxDate: {
     type: Date,
     validator: isDate,
-    default: () => {
-      const now = getToday();
-      return new Date(now.getFullYear(), now.getMonth() + 6, now.getDate());
-    },
   },
   firstDayOfWeek: {
     type: numericProp,
@@ -116,25 +114,46 @@ export default defineComponent({
     'overRange',
     'update:show',
     'clickSubtitle',
+    'clickDisabledDate',
+    'clickOverlay',
+    'panelChange',
   ],
 
   setup(props, { emit, slots }) {
+    const canSwitch = computed(() => props.switchMode !== 'none');
+
+    const minDate = computed(() => {
+      if (!props.minDate && !canSwitch.value) {
+        return getToday();
+      }
+
+      return props.minDate;
+    });
+
+    const maxDate = computed(() => {
+      if (!props.maxDate && !canSwitch.value) {
+        return getMonthByOffset(getToday(), 6);
+      }
+
+      return props.maxDate;
+    });
+
     const limitDateRange = (
       date: Date,
-      minDate = props.minDate,
-      maxDate = props.maxDate
+      min = minDate.value,
+      max = maxDate.value,
     ) => {
-      if (compareDay(date, minDate) === -1) {
-        return minDate;
+      if (min && compareDay(date, min) === -1) {
+        return min;
       }
-      if (compareDay(date, maxDate) === 1) {
-        return maxDate;
+      if (max && compareDay(date, max) === 1) {
+        return max;
       }
       return date;
     };
 
     const getInitialDate = (defaultDate = props.defaultDate) => {
-      const { type, minDate, maxDate, allowSameDay } = props;
+      const { type, allowSameDay } = props;
 
       if (defaultDate === null) {
         return defaultDate;
@@ -146,15 +165,26 @@ export default defineComponent({
         if (!Array.isArray(defaultDate)) {
           defaultDate = [];
         }
+
+        // reset invalid default date
+        if (defaultDate.length === 1 && compareDay(defaultDate[0], now) === 1) {
+          defaultDate = [];
+        }
+
+        const min = minDate.value;
+        const max = maxDate.value;
+
         const start = limitDateRange(
           defaultDate[0] || now,
-          minDate,
-          allowSameDay ? maxDate : getPrevDay(maxDate)
+          min,
+          max ? (allowSameDay ? max : getPrevDay(max)) : undefined,
         );
+
         const end = limitDateRange(
-          defaultDate[1] || now,
-          allowSameDay ? minDate : getNextDay(minDate)
+          defaultDate[1] || (allowSameDay ? now : getNextDay(now)),
+          min ? (allowSameDay ? min : getNextDay(min)) : undefined,
         );
+
         return [start, end];
       }
 
@@ -171,32 +201,45 @@ export default defineComponent({
       return limitDateRange(defaultDate);
     };
 
+    const getInitialPanelDate = () => {
+      const date = Array.isArray(currentDate.value)
+        ? currentDate.value[0]
+        : currentDate.value;
+
+      return date ? date : limitDateRange(getToday());
+    };
+
     let bodyHeight: number;
 
     const bodyRef = ref<HTMLElement>();
 
-    const subtitle = ref<{ text: string; date?: Date }>({
-      text: '',
-      date: undefined,
-    });
     const currentDate = ref(getInitialDate());
+
+    const currentPanelDate = ref<Date>(getInitialPanelDate());
+
+    const currentMonthRef = ref<CalendarMonthInstance>();
 
     const [monthRefs, setMonthRefs] = useRefs<CalendarMonthInstance>();
 
     const dayOffset = computed(() =>
-      props.firstDayOfWeek ? +props.firstDayOfWeek % 7 : 0
+      props.firstDayOfWeek ? +props.firstDayOfWeek % 7 : 0,
     );
 
     const months = computed(() => {
       const months: Date[] = [];
-      const cursor = new Date(props.minDate);
+
+      if (!minDate.value || !maxDate.value) {
+        return months;
+      }
+
+      const cursor = new Date(minDate.value);
 
       cursor.setDate(1);
 
       do {
         months.push(new Date(cursor));
         cursor.setMonth(cursor.getMonth() + 1);
-      } while (compareMonth(cursor, props.maxDate) !== 1);
+      } while (compareMonth(cursor, maxDate.value) !== 1);
 
       return months;
     });
@@ -225,7 +268,7 @@ export default defineComponent({
       const bottom = top + bodyHeight;
 
       const heights = months.value.map((item, index) =>
-        monthRefs.value[index].getHeight()
+        monthRefs.value[index].getHeight(),
       );
       const heightSum = heights.reduce((a, b) => a + b, 0);
 
@@ -270,28 +313,29 @@ export default defineComponent({
 
       /* istanbul ignore else */
       if (currentMonth) {
-        subtitle.value = {
-          text: currentMonth.getTitle(),
-          date: currentMonth.date,
-        };
+        currentMonthRef.value = currentMonth;
       }
     };
 
     const scrollToDate = (targetDate: Date) => {
-      raf(() => {
-        months.value.some((month, index) => {
-          if (compareMonth(month, targetDate) === 0) {
-            if (bodyRef.value) {
-              monthRefs.value[index].scrollToDate(bodyRef.value, targetDate);
+      if (canSwitch.value) {
+        currentPanelDate.value = targetDate;
+      } else {
+        raf(() => {
+          months.value.some((month, index) => {
+            if (compareMonth(month, targetDate) === 0) {
+              if (bodyRef.value) {
+                monthRefs.value[index].scrollToDate(bodyRef.value, targetDate);
+              }
+              return true;
             }
-            return true;
-          }
 
-          return false;
+            return false;
+          });
+
+          onScroll();
         });
-
-        onScroll();
-      });
+      }
     };
 
     const scrollToCurrentDate = () => {
@@ -307,7 +351,7 @@ export default defineComponent({
         if (isDate(targetDate)) {
           scrollToDate(targetDate);
         }
-      } else {
+      } else if (!canSwitch.value) {
         raf(onScroll);
       }
     };
@@ -317,11 +361,14 @@ export default defineComponent({
         return;
       }
 
-      raf(() => {
-        // add Math.floor to avoid decimal height issues
-        // https://github.com/vant-ui/vant/issues/5640
-        bodyHeight = Math.floor(useRect(bodyRef).height);
-      });
+      if (!canSwitch.value) {
+        raf(() => {
+          // add Math.floor to avoid decimal height issues
+          // https://github.com/vant-ui/vant/issues/5640
+          bodyHeight = Math.floor(useRect(bodyRef).height);
+        });
+      }
+
       scrollToCurrentDate();
     };
 
@@ -342,6 +389,11 @@ export default defineComponent({
       }
 
       return true;
+    };
+
+    const onPanelChange = (date: Date) => {
+      currentPanelDate.value = date;
+      emit('panelChange', { date });
     };
 
     const onConfirm = () =>
@@ -377,12 +429,12 @@ export default defineComponent({
     const getDisabledDate = (
       disabledDays: CalendarDayItem[],
       startDay: Date,
-      date: Date
+      date: Date,
     ): Date | undefined =>
       disabledDays.find(
         (day) =>
           compareDay(startDay, day.date!) === -1 &&
-          compareDay(day.date!, date) === -1
+          compareDay(day.date!, date) === -1,
       )?.date;
 
     // disabled calendarDay
@@ -390,7 +442,7 @@ export default defineComponent({
       monthRefs.value.reduce((arr, ref) => {
         arr.push(...(ref.disabledDays?.value ?? []));
         return arr;
-      }, [] as CalendarDayItem[])
+      }, [] as CalendarDayItem[]),
     );
 
     const onClickDay = (item: CalendarDayItem) => {
@@ -416,7 +468,7 @@ export default defineComponent({
             const disabledDay = getDisabledDate(
               disabledDays.value,
               startDay,
-              date
+              date,
             );
 
             if (disabledDay) {
@@ -445,7 +497,7 @@ export default defineComponent({
         const dates = currentDate.value as Date[];
 
         const selectedIndex = dates.findIndex(
-          (dateItem: Date) => compareDay(dateItem, date) === 0
+          (dateItem: Date) => compareDay(dateItem, date) === 0,
         );
 
         if (selectedIndex !== -1) {
@@ -461,31 +513,39 @@ export default defineComponent({
       }
     };
 
+    const onClickOverlay = (event: MouseEvent) => emit('clickOverlay', event);
+
     const updateShow = (value: boolean) => emit('update:show', value);
 
     const renderMonth = (date: Date, index: number) => {
       const showMonthTitle = index !== 0 || !props.showSubtitle;
       return (
         <CalendarMonth
-          v-slots={pick(slots, ['top-info', 'bottom-info', 'month-title'])}
-          ref={setMonthRefs(index)}
+          v-slots={pick(slots, [
+            'top-info',
+            'bottom-info',
+            'month-title',
+            'text',
+          ])}
+          ref={canSwitch.value ? currentMonthRef : setMonthRefs(index)}
           date={date}
           currentDate={currentDate.value}
           showMonthTitle={showMonthTitle}
           firstDayOfWeek={dayOffset.value}
+          lazyRender={canSwitch.value ? false : props.lazyRender}
+          maxDate={maxDate.value}
+          minDate={minDate.value}
           {...pick(props, [
             'type',
             'color',
-            'minDate',
-            'maxDate',
             'showMark',
             'formatter',
             'rowHeight',
-            'lazyRender',
             'showSubtitle',
             'allowSameDay',
           ])}
           onClick={onClickDay}
+          onClickDisabledDate={(item) => emit('clickDisabledDate', item)}
         />
       );
     };
@@ -530,17 +590,34 @@ export default defineComponent({
     const renderCalendar = () => (
       <div class={bem()}>
         <CalendarHeader
-          v-slots={pick(slots, ['title', 'subtitle'])}
-          date={subtitle.value.date}
+          v-slots={pick(slots, [
+            'title',
+            'subtitle',
+            'prev-month',
+            'prev-year',
+            'next-month',
+            'next-year',
+          ])}
+          date={currentMonthRef.value?.date}
+          maxDate={maxDate.value}
+          minDate={minDate.value}
           title={props.title}
-          subtitle={subtitle.value.text}
+          subtitle={currentMonthRef.value?.getTitle()}
           showTitle={props.showTitle}
           showSubtitle={props.showSubtitle}
+          switchMode={props.switchMode}
           firstDayOfWeek={dayOffset.value}
           onClickSubtitle={(event: MouseEvent) => emit('clickSubtitle', event)}
+          onPanelChange={onPanelChange}
         />
-        <div ref={bodyRef} class={bem('body')} onScroll={onScroll}>
-          {months.value.map(renderMonth)}
+        <div
+          ref={bodyRef}
+          class={bem('body')}
+          onScroll={canSwitch.value ? undefined : onScroll}
+        >
+          {canSwitch.value
+            ? renderMonth(currentPanelDate.value, 0)
+            : months.value.map(renderMonth)}
         </div>
         {renderFooter()}
       </div>
@@ -548,15 +625,14 @@ export default defineComponent({
 
     watch(() => props.show, init);
     watch(
-      () => [props.type, props.minDate, props.maxDate],
-      () => reset(getInitialDate(currentDate.value))
+      () => [props.type, props.minDate, props.maxDate, props.switchMode],
+      () => reset(getInitialDate(currentDate.value)),
     );
     watch(
       () => props.defaultDate,
-      (value = null) => {
-        currentDate.value = value;
-        scrollToCurrentDate();
-      }
+      (value) => {
+        reset(value);
+      },
     );
 
     useExpose<CalendarExpose>({
@@ -581,6 +657,7 @@ export default defineComponent({
             closeOnPopstate={props.closeOnPopstate}
             safeAreaInsetTop={props.safeAreaInsetTop}
             closeOnClickOverlay={props.closeOnClickOverlay}
+            onClickOverlay={onClickOverlay}
             onUpdate:show={updateShow}
           />
         );

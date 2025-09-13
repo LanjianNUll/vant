@@ -115,22 +115,54 @@ export default {
 };
 ```
 
+### Required
+
+Use the `required` prop to display a required asterisk.
+
+```html
+<van-cell-group inset>
+  <van-field
+    v-model="username"
+    required
+    label="Username"
+    placeholder="Username"
+  />
+  <van-field v-model="phone" required label="Phone" placeholder="Phone" />
+</van-cell-group>
+```
+
+Please note that the `required` prop is only used for controlling the style. For form validation, you need to use the `rule.required` option to control the validation logic.
+
+### Auto Required
+
+You can set `required="auto"` on the Form component, and all the fields inside the Form will automatically display the asterisk based on the `rule.required` option.
+
+```html
+<van-form required="auto">
+  <van-field
+    v-model="username"
+    :rules="[{ required: true }]"
+    label="Username"
+    placeholder="Username"
+  />
+  <van-field
+    v-model="phone"
+    :rules="[{ required: false }]"
+    label="Phone"
+    placeholder="Phone"
+  />
+</van-form>
+```
+
 ### Error Info
 
 Use `error` or `error-message` to show error info.
 
 ```html
 <van-cell-group inset>
-  <van-field
-    v-model="username"
-    error
-    required
-    label="Username"
-    placeholder="Username"
-  />
+  <van-field v-model="username" error label="Username" placeholder="Username" />
   <van-field
     v-model="phone"
-    required
     label="Phone"
     placeholder="Phone"
     error-message="Invalid phone"
@@ -285,14 +317,16 @@ Use `label-align` prop to align the input value, can be set to `center`, `right`
 | name | As the identifier when submitting the form | _string_ | - |
 | id | Input id, the for attribute of the label also will be set | _string_ | `van-field-n-input` |
 | type | Input type, support all [native types](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#input_types) and `digit` type | _FieldType_ | `text` |
-| size | Size, can be set to `large` | _string_ | - |
+| size | Size, can be set to `large` `normal` | _string_ | - |
 | maxlength | Max length of value | _number \| string_ | - |
+| min `v4.9.5` | When the input type is `number` or `digit`, set the minimum allowable value | _number_ | - |
+| max `v4.9.5` | When the input type is `number` or `digit`, set the maximum allowable value | _number_ | - |
 | placeholder | Input placeholder | _string_ | - |
 | border | Whether to show inner border | _boolean_ | `true` |
 | disabled | Whether to disable field | _boolean_ | `false` |
 | readonly | Whether to be readonly | _boolean_ | `false` |
 | colon | Whether to display colon after label | _boolean_ | `false` |
-| required | Whether to show required mark | _boolean_ | `false` |
+| required | Whether to show required mark | _boolean \| 'auto'_ | `null` |
 | center | Whether to center content vertically | _boolean_ | `true` |
 | clearable | Whether to be clearable | _boolean_ | `false` |
 | clear-icon | Clear icon name | _string_ | `clear` |
@@ -317,7 +351,12 @@ Use `label-align` prop to align the input value, can be set to `center`, `right`
 | icon-prefix | Icon className prefix | _string_ | `van-icon` |
 | rules | Form validation rules | _FieldRule[]_ | - |
 | autocomplete | HTML native attribute, see [MDN - autocomplete](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) | _string_ | - |
+| autocapitalize `v4.6.2` | HTML native attribute, see [MDN - autocapitalize](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/autocapitalize)<br> | _string_ | - |
 | enterkeyhint | HTML native attribute, see [MDN - enterkeyhint](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/enterkeyhint)<br> | _string_ | - |
+| spellcheck `v4.6.2` | HTML native attribute, see [MDN - spellcheck](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/spellcheck)<br> | _boolean_ | - |
+| autocorrect `v4.6.2` | HTML native attribute, Safari only, see [MDN - autocorrect](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#autocorrect)<br> | _string_ | - |
+| inputmode `v4.9.9` | HTML native attribute, see [MDN - inputmode](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inputmode) | _string_ | Set automatically according to the `type` prop |
+| rows | HTML native attribute, the number of visible text lines for the control, only valid for textarea | _number \| string_ | - |
 
 ### Events
 
@@ -336,7 +375,7 @@ Use `label-align` prop to align the input value, can be set to `center`, `right`
 
 ### Methods
 
-Use [ref](https://v3.vuejs.org/guide/component-template-refs.html) to get Field instance and call instance methods.
+Use [ref](https://vuejs.org/guide/essentials/template-refs.html) to get Field instance and call instance methods.
 
 | Name  | Description         | Attribute | Return value |
 | ----- | ------------------- | --------- | ------------ |
@@ -404,8 +443,8 @@ The component provides the following CSS variables, which can be used to customi
 | --van-field-input-error-text-color | _var(--van-danger-color)_ | - |
 | --van-field-input-disabled-text-color | _var(--van-text-color-3)_ | - |
 | --van-field-placeholder-text-color | _var(--van-text-color-3)_ | - |
-| --van-field-icon-size | _16px_ | - |
-| --van-field-clear-icon-size | _16px_ | - |
+| --van-field-icon-size | _18px_ | - |
+| --van-field-clear-icon-size | _18px_ | - |
 | --van-field-clear-icon-color | _var(--van-gray-5)_ | - |
 | --van-field-right-icon-color | _var(--van-gray-6)_ | - |
 | --van-field-error-message-color | _var(--van-danger-color)_ | - |

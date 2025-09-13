@@ -91,7 +91,9 @@ export default {
           return new Promise((resolve) => {
             showConfirmDialog({
               title: 'Are you sure to delete?',
-            }).then(resolve);
+            })
+              .then(() => resolve(true))
+              .catch(() => resolve(false));
           });
       }
     };
@@ -132,14 +134,15 @@ export default {
 
 ### beforeClose Params
 
-| Attribute | Description    | Type                                       |
-| --------- | -------------- | ------------------------------------------ |
-| name      | Name           | _string \| number_                         |
-| position  | Click position | _'left' \| 'right' \| 'cell' \| 'outside'_ |
+| Attribute | Description | Type |
+| --- | --- | --- |
+| event `v4.9.4` | The event object that triggers the closing action | _MouseEvent \| TouchEvent_ |
+| name | Name | _string \| number_ |
+| position | Click position | _'left' \| 'right' \| 'cell' \| 'outside'_ |
 
 ### Methods
 
-Use [ref](https://v3.vuejs.org/guide/component-template-refs.html) to get SwipeCell instance and call instance methods.
+Use [ref](https://vuejs.org/guide/essentials/template-refs.html) to get SwipeCell instance and call instance methods.
 
 | Name  | Description     | Attribute                 | Return value |
 | ----- | --------------- | ------------------------- | ------------ |

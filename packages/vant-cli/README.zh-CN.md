@@ -1,10 +1,10 @@
 # Vant CLI
 
-Vant CLI 是一个基于 Vite 实现的 Vue 组件库构建工具，通过 Vant CLI 可以快速搭建一套功能完备的 Vue 组件库。
+Vant CLI 是一个基于 Rsbuild 实现的 Vue 组件库构建工具，通过 Vant CLI 可以快速搭建一套功能完备的 Vue 组件库。
 
 ### 特性
 
-- 基于 Vite 实现，享受愉悦的开发体验
+- 基于 Rsbuild 实现，享受愉悦的开发体验
 - 提供丰富的命令，涵盖从开发测试到构建发布的完整流程
 - 基于约定的目录结构，自动生成优雅的文档站点和组件示例
 - 内置 ESLint 校验规则，提交代码时自动执行校验
@@ -29,6 +29,9 @@ yarn add @vant/cli -D
 
 # 通过 pnpm
 pnpm add @vant/cli -D
+
+# 通过 Bun
+bun add @vant/cli -D
 ```
 
 安装完成后，请将以下配置添加到 package.json 文件中
@@ -40,7 +43,7 @@ pnpm add @vant/cli -D
     "test": "vant-cli test",
     "lint": "vant-cli lint",
     "build": "vant-cli build",
-    "prepare": "husky install",
+    "prepare": "husky",
     "release": "vant-cli release",
     "build-site": "vant-cli build-site"
   },

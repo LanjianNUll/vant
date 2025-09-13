@@ -30,7 +30,7 @@ import type { PickerExpose } from '../picker/types';
 
 const [name, bem] = createNamespace('area');
 
-export const areaProps = extend({}, pickerSharedProps, {
+export const areaProps = extend({}, pick(pickerSharedProps, INHERIT_PROPS), {
   modelValue: String,
   columnsNum: makeNumericProp(3),
   columnsPlaceholder: makeArrayProp<string>(),
@@ -66,7 +66,7 @@ export default defineComponent({
           emit('update:modelValue', lastCode);
         }
       },
-      { deep: true }
+      { deep: true },
     );
 
     watch(
@@ -87,7 +87,7 @@ export default defineComponent({
           codes.value = [];
         }
       },
-      { immediate: true }
+      { immediate: true },
     );
 
     useExpose<PickerExpose>({

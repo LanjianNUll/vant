@@ -142,13 +142,13 @@ app.use(CellGroup);
 | --- | --- | --- | --- |
 | title | Title | _number \| string_ | - |
 | value | Right text | _number \| string_ | - |
-| label | Description below the title | _string_ | - |
-| size | Size, can be set to `large` | _string_ | - |
+| label | Description below the title | _number \| string_ | - |
+| size | Size, can be set to `large` `normal` | _string_ | - |
 | icon | Left Icon | _string_ | - |
 | icon-prefix | Icon className prefix | _string_ | `van-icon` |
 | tag | Custom element tag | _string_ | `div` |
 | url | Link URL | _string_ | - |
-| to | Target route of the link, same as to of vue-router | _string \| object_ | - |
+| to | The target route should navigate to when clicked on, same as the [to prop](https://router.vuejs.org/api/interfaces/RouterLinkProps.html#Properties-to) of Vue Router | _string \| object_ | - |
 | replace | If true, the navigation will not leave a history record | _boolean_ | `false` |
 | border | Whether to show inner border | _boolean_ | `true` |
 | center | Whether to center content vertically | _boolean_ | `false` |
@@ -220,11 +220,13 @@ The component provides the following CSS variables, which can be used to customi
 | --van-cell-label-line-height | _var(--van-line-height-sm)_ | - |
 | --van-cell-label-margin-top | _var(--van-padding-base)_ | - |
 | --van-cell-value-color | _var(--van-text-color-2)_ | - |
+| --van-cell-value-font-size | _inherit_ | - |
 | --van-cell-icon-size | _16px_ | - |
 | --van-cell-right-icon-color | _var(--van-gray-6)_ | - |
 | --van-cell-large-vertical-padding | _var(--van-padding-sm)_ | - |
 | --van-cell-large-title-font-size | _var(--van-font-size-lg)_ | - |
 | --van-cell-large-label-font-size | _var(--van-font-size-md)_ | - |
+| --van-cell-large-value-font-size | _inherit_ | - |
 | --van-cell-group-background | _var(--van-background-2)_ | - |
 | --van-cell-group-title-color | _var(--van-text-color-2)_ | - |
 | --van-cell-group-title-padding | _var(--van-padding-md) var(--van-padding-md) var(--van-padding-xs)_ | - |

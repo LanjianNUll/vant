@@ -15,7 +15,7 @@
 
 ### 本地开发
 
-在进行本地开发前，请先确保你的开发环境中安装了 [Node.js >= 14.19.0](https://nodejs.org)。
+在进行本地开发前，请先确保你的开发环境中安装了 [Node.js >= 18](https://nodejs.org)。
 
 按照下面的步骤操作，即可在本地开发 Vant 组件。
 
@@ -38,16 +38,6 @@ pnpm dev
 - main 分支对应 Vant 4 版本，适用于 Vue 3
 - 3.x 分支对应 Vant 3 版本 ，适用于 Vue 3
 - 2.x 分支对应 Vant 2 版本，适用于 Vue 2
-
-### 镜像仓库
-
-如果 GitHub 克隆速度较慢，你也可以直接克隆 Vant 在 gitee 上的[镜像仓库](https://gitee.com/vant-contrib/vant)：
-
-```bash
-git clone git@gitee.com:vant-contrib/vant.git
-```
-
-镜像仓库仅用于加快国内的访问速度，请勿在镜像仓库中提 issue 和 Pull Request。
 
 ### 目录结构
 
@@ -101,7 +91,7 @@ src
 
 如果你是第一次在 GitHub 上提 Pull Request ，可以阅读下面这两篇文章来学习：
 
-- [第一次参与开源](https://github.com/firstcontributions/first-contributions/blob/main/translations/README.zh-cn.md)
+- [第一次参与开源](https://github.com/firstcontributions/first-contributions/blob/main/docs/translations/README.zh-cn.md)
 - [如何优雅地在 GitHub 上贡献代码](https://segmentfault.com/a/1190000000736629)
 
 ### Pull Request 规范
@@ -119,6 +109,37 @@ src
 3. 在新分支上进行开发，开发完成后，提 Pull Request 到主仓库的 main 分支。
 4. Pull Request 会在 Review 通过后被合并到主仓库。
 5. 等待 Vant 发布新版本，一般是每周一次。
+
+### Pull Request 标题格式
+
+Pull Request 的标题应该遵循以下格式：
+
+```bash
+type(ComponentName?)：commit message
+```
+
+示例：
+
+- docs: fix typo in quickstart
+- build: optimize build speed
+- fix(Button): incorrect style
+- feat(Button): add color prop
+
+可选的类型：
+
+- fix
+- feat
+- docs
+- perf
+- test
+- types
+- style
+- build
+- chore
+- release
+- refactor
+- breaking change
+- revert:
 
 ### 同步最新代码
 

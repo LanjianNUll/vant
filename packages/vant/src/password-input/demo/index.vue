@@ -56,8 +56,8 @@ const onInput = (key: ValueKeys) => {
     return;
   }
 
-  const maxlegnth = current.value === 'customLength' ? 4 : 6;
-  const newValue = (values.value[current.value] + key).slice(0, maxlegnth);
+  const maxlength = current.value === 'customLength' ? 4 : 6;
+  const newValue = (values.value[current.value] + key).slice(0, maxlength);
 
   values.value[current.value] = newValue;
 
@@ -77,7 +77,7 @@ const onDelete = () => {
 
   values.value[current.value] = values.value[current.value].slice(
     0,
-    values.value[current.value].length - 1
+    values.value[current.value].length - 1,
   );
 
   if (current.value === 'showInfo') {

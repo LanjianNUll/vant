@@ -52,7 +52,7 @@ export type FieldRuleMessage =
 
 export type FieldRuleValidator = (
   value: any,
-  rule: FieldRule
+  rule: FieldRule,
 ) => boolean | string | Promise<boolean | string>;
 
 export type FieldRuleFormatter = (value: any, rule: FieldRule) => string;
@@ -72,6 +72,7 @@ export type FieldValidationStatus = 'passed' | 'failed' | 'unvalidated';
 // Shared props of Field and Form
 export type FieldFormSharedProps =
   | 'colon'
+  | 'required'
   | 'disabled'
   | 'readonly'
   | 'labelWidth'
@@ -83,7 +84,7 @@ export type FieldExpose = {
   blur: () => void | undefined;
   focus: () => void | undefined;
   validate: (
-    rules?: FieldRule[] | undefined
+    rules?: FieldRule[] | undefined,
   ) => Promise<void | FieldValidateError>;
   resetValidation: () => void;
   getValidationStatus: () => FieldValidationStatus;

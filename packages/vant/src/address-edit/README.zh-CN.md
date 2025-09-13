@@ -91,9 +91,9 @@ export default {
 | detail-maxlength | 详细地址最大长度 | _number \| string_ | `200` |
 | is-saving | 是否显示保存按钮加载动画 | _boolean_ | `false` |
 | is-deleting | 是否显示删除按钮加载动画 | _boolean_ | `false` |
-| tel-validator | 手机号格式校验函数 | _string => boolean_ | - |
+| tel-validator | 手机号格式校验函数 | _(val: string) => boolean_ | - |
 | tel-maxlength | 手机号最大长度 | _number \| string_ | - |
-| validator | 自定义校验函数 | _(key, val) => string_ | - |
+| validator | 自定义校验函数 | _(key: string, val: string) => string_ | - |
 
 ### Events
 
@@ -101,6 +101,7 @@ export default {
 | --- | --- | --- |
 | save | 点击保存按钮时触发 | _info: AddressEditInfo_ |
 | focus | 输入框聚焦时触发 | _key: string_ |
+| change `v4.7.0` | 仅 `name` 和 `tel` 输入框值改变触发 | _{key: string, value: string}_ |
 | delete | 确认删除地址时触发 | _info: AddressEditInfo_ |
 | select-search | 选中搜索结果时触发 | _value: string_ |
 | click-area | 点击收件地区时触发 | - |
@@ -121,6 +122,7 @@ export default {
 | 方法名           | 说明         | 参数                    | 返回值 |
 | ---------------- | ------------ | ----------------------- | ------ |
 | setAddressDetail | 设置详细地址 | _addressDetail: string_ | -      |
+| setAreaCode      | 设置地区编号 | _code: string_          | -      |
 
 ### 类型定义
 

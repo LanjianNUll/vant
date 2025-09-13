@@ -1,12 +1,61 @@
 # 更新日志
 
+## v7.1.0
+
+`2024-09-17`
+
+- 升级 Rsbuild v1
+
+## v7.0.3
+
+`2024-05-18`
+
+- 修复 scopedId 生成异常
+
+## v7.0.2
+
+`2024-04-20`
+
+- 支持读取 `rsbuild.config.*` 配置文件
+- 支持编译 Vue SFC scopeId
+
+## v7.0.1
+
+`2024-04-14`
+
+- 修复 tsconfig 导致的编译错误
+
+## v7.0.0
+
+`2024-04-14`
+
+请注意，由于 Vant 仓库自身 workflow 的变化，Vant CLI v7 包含了较大的 breaking changes。
+
+如果你在使用 Vant CLI v6，可以基于 v6 版本 fork 进行使用。你可以在 [vant_cli_v6](https://github.com/youzan/vant/tree/vant_cli_v6) 分支上找到 v6 代码。
+
+- 站点的构建工具切换为 [Rsbuild](https://github.com/web-infra-dev/rsbuild)
+- 移除 vant-cli test 命令
+- 移除 vant-cli release 命令
+- 移除 vant-cli changelog 命令
+- 升级 commander v11
+- 升级 markdown-it v13
+
+## v6.2.0
+
+`2023-07-29`
+
+- 支持替换 dynamic import 中的文件后缀
+- 升级 vite v4.4
+- 升级 esbuild v0.18
+- 升级 prettier v3
+
 ## v6.1.0
 
 `2023-03-19`
 
 - 升级 typescript v5
-- 升级 esbuild 0.17
-- 升级 vite 4.2
+- 升级 esbuild v0.17
+- 升级 vite v4.2
 - 优化 tsc 错误日志的格式
 
 ## v6.0.1

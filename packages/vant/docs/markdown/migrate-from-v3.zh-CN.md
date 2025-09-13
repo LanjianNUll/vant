@@ -19,6 +19,9 @@ yarn add vant@^4 @vant/compat@^1
 
 # 通过 pnpm 安装
 pnpm add vant@^4 @vant/compat@^1
+
+# 通过 Bun 安装
+bun add vant@^4 @vant/compat@^1
 ```
 
 你也可以直接修改 `package.json` 的 `dependencies` 字段中的版本号，修改完成后需要重新安装依赖。
@@ -76,7 +79,7 @@ import { showToast, buttonProps } from 'vant';
 import 'vant/lib/index.css';
 ```
 
-- 通过 [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components) 插件实现按需引入样式，详细用法参见 [快速上手](#/zh-CN/quickstart)。
+- 通过 [unplugin-vue-components](https://github.com/unplugin/unplugin-vue-components) 插件实现按需引入样式，详细用法参见 [快速上手](#/zh-CN/quickstart)。
 
 ## 组件重构
 
@@ -274,7 +277,7 @@ Notify.clear();
 
 ### ImagePreview 调用方式调整
 
-Vant 4 中，`ImagePreview` 组件的调用方式也进行了调整，与 `ImagePreview` 组件的改动一致：
+Vant 4 中，`ImagePreview` 组件的调用方式也进行了调整，与 `Dialog` 组件的改动一致：
 
 ```js
 // Vant 3

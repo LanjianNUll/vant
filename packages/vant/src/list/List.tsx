@@ -1,10 +1,12 @@
 import {
   ref,
   watch,
+  computed,
   nextTick,
   onUpdated,
   onMounted,
   defineComponent,
+  type PropType,
   type ExtractPropTypes,
 } from 'vue';
 
@@ -20,7 +22,7 @@ import {
 // Composables
 import { useRect, useScrollParent, useEventListener } from '@vant/use';
 import { useExpose } from '../composables/use-expose';
-import { useTabStatus } from '../composables/use-tab-status';
+import { useAllTabStatus } from '../composables/use-tab-status';
 
 // Components
 import { Loading } from '../loading';
@@ -36,6 +38,7 @@ export const listProps = {
   loading: Boolean,
   disabled: Boolean,
   finished: Boolean,
+  scroller: Object as PropType<Element>,
   errorText: String,
   direction: makeStringProp<ListDirection>('down'),
   loadingText: String,
@@ -57,8 +60,9 @@ export default defineComponent({
     const loading = ref(props.loading);
     const root = ref<HTMLElement>();
     const placeholder = ref<HTMLElement>();
-    const tabStatus = useTabStatus();
+    const tabStatus = useAllTabStatus();
     const scrollParent = useScrollParent(root);
+    const scroller = computed(() => props.scroller || scrollParent.value);
 
     const check = () => {
       nextTick(() => {
@@ -75,7 +79,7 @@ export default defineComponent({
 
         const { direction } = props;
         const offset = +props.offset;
-        const scrollParentRect = useRect(scrollParent);
+        const scrollParentRect = useRect(scroller);
 
         if (!scrollParentRect.height || isHidden(root)) {
           return;
@@ -170,7 +174,7 @@ export default defineComponent({
     useExpose<ListExpose>({ check });
 
     useEventListener('scroll', check, {
-      target: scrollParent,
+      target: scroller,
       passive: true,
     });
 

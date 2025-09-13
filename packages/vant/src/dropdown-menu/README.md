@@ -59,7 +59,7 @@ export default {
 ### Custom Content
 
 ```html
-<van-dropdown-menu>
+<van-dropdown-menu ref="menuRef">
   <van-dropdown-item v-model="value" :options="options" />
   <van-dropdown-item title="Title" ref="item">
     <van-cell center title="Title">
@@ -86,7 +86,8 @@ import { ref } from 'vue';
 
 export default {
   setup() {
-    const item = ref(null);
+    const menuRef = ref(null);
+    const itemRef = ref(null);
     const value = ref(0);
     const switch1 = ref(false);
     const switch2 = ref(false);
@@ -97,10 +98,13 @@ export default {
     ];
     const onConfirm = () => {
       item.value.toggle();
+      // or
+      // menuRef.value.close();
     };
 
     return {
-      item,
+      menuRef,
+      itemRef,
       value,
       switch1,
       switch2,
@@ -118,6 +122,20 @@ Use `active-color` prop to custom active color of the title and options.
 ```html
 <van-dropdown-menu active-color="#ee0a24">
   <van-dropdown-item v-model="value1" :options="option1" />
+  <van-dropdown-item v-model="value2" :options="option2" />
+</van-dropdown-menu>
+```
+
+### Swipe Items
+
+You can set `swipe-threshold` prop to customize threshold number.
+
+```html
+<van-dropdown-menu swipe-threshold="4">
+  <van-dropdown-item v-model="value1" :options="option1" />
+  <van-dropdown-item v-model="value2" :options="option2" />
+  <van-dropdown-item v-model="value2" :options="option2" />
+  <van-dropdown-item v-model="value2" :options="option2" />
   <van-dropdown-item v-model="value2" :options="option2" />
 </van-dropdown-menu>
 ```
@@ -153,6 +171,8 @@ Use `active-color` prop to custom active color of the title and options.
 | overlay | Whether to show overlay | _boolean_ | `true` |
 | close-on-click-overlay | Whether to close when overlay is clicked | _boolean_ | `true` |
 | close-on-click-outside | Whether to close when outside is clicked | _boolean_ | `true` |
+| swipe-threshold | Horizontal scrolling is allowed when the number of items exceeds the threshold and the total width exceeds the width of the menu. | _number \| string_ | - |
+| auto-locate | When the ancestor element is set with a transform, the position of the dropdown menu will be automatically adjusted. | _boolean_ | `false` |
 
 ### DropdownItem Props
 
@@ -183,9 +203,17 @@ Use `active-color` prop to custom active color of the title and options.
 | default | Content      |
 | title   | Custom title |
 
+### DropdownMenu Methods
+
+Use [ref](https://vuejs.org/guide/essentials/template-refs.html) to get DropdownMenu instance and call instance methods.
+
+| Name  | Description              | Attribute | Return value |
+| ----- | ------------------------ | --------- | ------------ |
+| close | Close all dropdown items | -         | -            |
+
 ### DropdownItem Methods
 
-Use [ref](https://v3.vuejs.org/guide/component-template-refs.html) to get DropdownItem instance and call instance methods.
+Use [ref](https://vuejs.org/guide/essentials/template-refs.html) to get DropdownItem instance and call instance methods.
 
 | Name   | Description    | Attribute        | Return value |
 | ------ | -------------- | ---------------- | ------------ |
@@ -201,28 +229,32 @@ import type {
   DropdownItemProps,
   DropdownItemOption,
   DropdownItemInstance,
+  DropdownMenuInstance,
   DropdownMenuDirection,
 } from 'vant';
 ```
 
-`DropdownItemInstance` is the type of component instance:
+`DropdownMenuInstance` and `DropdownItemInstance` are the types of component instances:
 
 ```ts
 import { ref } from 'vue';
-import type { DropdownItemInstance } from 'vant';
+import type { DropdownMenuInstance, DropdownItemInstance } from 'vant';
 
+const dropdownMenuRef = ref<DropdownMenuInstance>();
 const dropdownItemRef = ref<DropdownItemInstance>();
 
+dropdownMenuRef.value?.close();
 dropdownItemRef.value?.toggle();
 ```
 
 ### Data Structure of Option
 
-| Key   | Description | Type               |
-| ----- | ----------- | ------------------ |
-| text  | Text        | _string_           |
-| value | Value       | _number \| string_ |
-| icon  | Left icon   | _string_           |
+| Key      | Description               | Type                          |
+| -------- | ------------------------- | ----------------------------- |
+| text     | Text                      | _string_                      |
+| value    | Value                     | _number \| string \| boolean_ |
+| disabled | Whether to disable option | _boolean_                     |
+| icon     | Left icon                 | _string_                      |
 
 ## Theming
 
@@ -242,5 +274,6 @@ The component provides the following CSS variables, which can be used to customi
 | --van-dropdown-menu-title-padding | _0 var(--van-padding-xs)_ | - |
 | --van-dropdown-menu-title-line-height | _var(--van-line-height-lg)_ | - |
 | --van-dropdown-menu-option-active-color | _var(--van-primary-color)_ | - |
+| --van-dropdown-menu-option-disabled-color | _var(--van-text-color-3)_ | - |
 | --van-dropdown-menu-content-max-height | _80%_ | - |
 | --van-dropdown-item-z-index | _10_ | - |

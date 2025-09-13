@@ -46,7 +46,7 @@ export default defineComponent({
     if (!parent) {
       if (process.env.NODE_ENV !== 'production') {
         console.error(
-          '[Vant] <TabbarItem> must be a child component of <Tabbar>.'
+          '[Vant] <TabbarItem> must be a child component of <Tabbar>.',
         );
       }
       return;
@@ -59,7 +59,7 @@ export default defineComponent({
         const { $route } = vm;
         const { to } = props;
         const config = isObject(to) ? to : { path: to };
-        return !!$route.matched.find((val) => {
+        return $route.matched.some((val) => {
           const pathMatched = 'path' in config && config.path === val.path;
           const nameMatched = 'name' in config && config.name === val.name;
           return pathMatched || nameMatched;

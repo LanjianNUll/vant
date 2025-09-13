@@ -1,14 +1,16 @@
 {
   "name": "@vant/use",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "Vant Composition API",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.mjs",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.esm.mjs",
-      "require": "./dist/index.cjs.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "sideEffects": false,
@@ -16,12 +18,9 @@
     "dist"
   ],
   "scripts": {
-    "clean": "rimraf ./dist",
-    "dev": "node ./build.js -w",
-    "build:types": "tsc -p ./tsconfig.json --emitDeclarationOnly",
-    "build:bundle": "node ./build.js",
-    "build": "pnpm clean && pnpm build:bundle && pnpm build:types",
-    "release": "pnpm build && release-it",
+    "dev": "rslib dev",
+    "build": "rslib build",
+    "release": "vant-cli release",
     "prepare": "pnpm build"
   },
   "publishConfig": {
@@ -37,19 +36,11 @@
   "author": "chenjiahan",
   "license": "MIT",
   "devDependencies": {
-    "esbuild": "^0.17.12",
-    "release-it": "^15.4.1",
-    "rimraf": "^4.0.4",
-    "typescript": "^5.0.2",
-    "vue": "^3.2.47"
+    "@rslib/core": "^0.12.4",
+    "typescript": "^5.9.2",
+    "vue": "^3.5.21"
   },
   "peerDependencies": {
     "vue": "^3.0.0"
-  },
-  "release-it": {
-    "git": {
-      "tag": false,
-      "commitMessage": "release: @vant/use v${version}"
-    }
   }
 }

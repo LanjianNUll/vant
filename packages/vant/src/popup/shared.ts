@@ -1,3 +1,4 @@
+import type { OverlayProps } from '../overlay';
 import { truthProp, unknownProp, Interceptor, numericProp } from '../utils';
 import type { PropType, CSSProperties, TeleportProps } from 'vue';
 
@@ -18,6 +19,8 @@ export const popupSharedProps = {
   lazyRender: truthProp,
   // callback function before close
   beforeClose: Function as PropType<Interceptor>,
+  // overlay props
+  overlayProps: Object as PropType<Partial<OverlayProps>>,
   // overlay custom style
   overlayStyle: Object as PropType<CSSProperties>,
   // overlay custom class name
@@ -31,5 +34,5 @@ export const popupSharedProps = {
 export type PopupSharedPropKeys = Array<keyof typeof popupSharedProps>;
 
 export const popupSharedPropKeys = Object.keys(
-  popupSharedProps
+  popupSharedProps,
 ) as PopupSharedPropKeys;

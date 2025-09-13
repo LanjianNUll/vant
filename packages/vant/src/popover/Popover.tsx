@@ -21,6 +21,7 @@ import {
   truthProp,
   numericProp,
   unknownProp,
+  BORDER_RIGHT,
   BORDER_BOTTOM,
   makeArrayProp,
   makeStringProp,
@@ -30,6 +31,7 @@ import {
 
 // Composables
 import { useClickAway } from '@vant/use';
+import { useScopeId } from '../composables/use-scope-id';
 import { useSyncPropRef } from '../composables/use-sync-prop-ref';
 
 // Components
@@ -40,6 +42,7 @@ import { Popup } from '../popup';
 import {
   PopoverTheme,
   PopoverAction,
+  PopoverActionsDirection,
   PopoverTrigger,
   PopoverPlacement,
 } from './types';
@@ -60,6 +63,7 @@ export const popoverProps = {
   theme: makeStringProp<PopoverTheme>('light'),
   overlay: Boolean,
   actions: makeArrayProp<PopoverAction>(),
+  actionsDirection: makeStringProp<PopoverActionsDirection>('vertical'),
   trigger: makeStringProp<PopoverTrigger>('click'),
   duration: numericProp,
   showArrow: truthProp,
@@ -98,7 +102,7 @@ export default defineComponent({
 
     const show = useSyncPropRef(
       () => props.show,
-      (value) => emit('update:show', value)
+      (value) => emit('update:show', value),
     );
 
     const getPopoverOptions = () => ({
@@ -124,7 +128,7 @@ export default defineComponent({
         return createPopper(
           wrapperRef.value,
           popoverRef.value.popupRef.value,
-          getPopoverOptions()
+          getPopoverOptions(),
         );
       }
       return null;
@@ -193,7 +197,14 @@ export default defineComponent({
             class={bem('action-icon')}
           />
         ),
-        <div class={[bem('action-text'), BORDER_BOTTOM]}>{action.text}</div>,
+        <div
+          class={[
+            bem('action-text'),
+            { [BORDER_BOTTOM]: props.actionsDirection === 'vertical' },
+          ]}
+        >
+          {action.text}
+        </div>,
       ];
     };
 
@@ -202,7 +213,11 @@ export default defineComponent({
       return (
         <div
           role="menuitem"
-          class={[bem('action', { disabled, 'with-icon': icon }), className]}
+          class={[
+            bem('action', { disabled, 'with-icon': icon }),
+            { [BORDER_RIGHT]: props.actionsDirection === 'horizontal' },
+            className,
+          ]}
           style={{ color }}
           tabindex={disabled ? undefined : 0}
           aria-disabled={disabled || undefined}
@@ -251,10 +266,11 @@ export default defineComponent({
           lockScroll={false}
           onUpdate:show={updateShow}
           {...attrs}
+          {...useScopeId()}
           {...pick(props, popupProps)}
         >
           {props.showArrow && <div class={bem('arrow')} />}
-          <div role="menu" class={bem('content')}>
+          <div role="menu" class={bem('content', props.actionsDirection)}>
             {slots.default ? slots.default() : props.actions.map(renderAction)}
           </div>
         </Popup>

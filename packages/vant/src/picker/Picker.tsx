@@ -66,7 +66,7 @@ export const pickerSharedProps = extend(
     swipeDuration: makeNumericProp(1000),
     visibleOptionNum: makeNumericProp(6),
   },
-  pickerToolbarProps
+  pickerToolbarProps,
 );
 
 export const pickerProps = extend({}, pickerSharedProps, {
@@ -83,7 +83,14 @@ export default defineComponent({
 
   props: pickerProps,
 
-  emits: ['confirm', 'cancel', 'change', 'clickOption', 'update:modelValue'],
+  emits: [
+    'confirm',
+    'cancel',
+    'change',
+    'scrollInto',
+    'clickOption',
+    'update:modelValue',
+  ],
 
   setup(props, { emit, slots }) {
     const columnsRef = ref<HTMLElement>();
@@ -97,7 +104,7 @@ export default defineComponent({
     const fields = computed(() => assignDefaultFields(props.columnsFieldNames));
     const optionHeight = computed(() => unitToPx(props.optionHeight));
     const columnsType = computed(() =>
-      getColumnsType(props.columns, fields.value)
+      getColumnsType(props.columns, fields.value),
     );
 
     const currentColumns = computed<PickerColumn[]>(() => {
@@ -113,21 +120,22 @@ export default defineComponent({
     });
 
     const hasOptions = computed(() =>
-      currentColumns.value.some((options) => options.length)
+      currentColumns.value.some((options) => options.length),
     );
 
     const selectedOptions = computed(() =>
       currentColumns.value.map((options, index) =>
-        findOptionByValue(options, selectedValues.value[index], fields.value)
-      )
+        findOptionByValue(options, selectedValues.value[index], fields.value),
+      ),
     );
 
     const selectedIndexes = computed(() =>
       currentColumns.value.map((options, index) =>
         options.findIndex(
-          (option) => option[fields.value.value] === selectedValues.value[index]
-        )
-      )
+          (option) =>
+            option[fields.value.value] === selectedValues.value[index],
+        ),
+      ),
     );
 
     const setValue = (index: number, value: Numeric) => {
@@ -154,7 +162,7 @@ export default defineComponent({
           if (!isOptionExist(options, value, fields.value)) {
             setValue(
               index,
-              options.length ? options[0][fields.value.value] : undefined
+              options.length ? options[0][fields.value.value] : undefined,
             );
           }
         });
@@ -165,11 +173,14 @@ export default defineComponent({
       });
     };
 
-    const onClickOption = (currentOption: PickerOption, columnIndex: number) =>
-      emit(
-        'clickOption',
-        extend({ columnIndex, currentOption }, getEventParams())
-      );
+    const onClickOption = (
+      currentOption: PickerOption,
+      columnIndex: number,
+    ) => {
+      const params = { columnIndex, currentOption };
+      emit('clickOption', extend(getEventParams(), params));
+      emit('scrollInto', params);
+    };
 
     const confirm = () => {
       children.forEach((child) => child.stopMomentum());
@@ -178,6 +189,7 @@ export default defineComponent({
       // wait nextTick to ensure the model value is update to date
       // when confirm event is emitted
       nextTick(() => {
+        const params = getEventParams();
         emit('confirm', params);
       });
 
@@ -202,6 +214,12 @@ export default defineComponent({
           onClickOption={(option: PickerOption) =>
             onClickOption(option, columnIndex)
           }
+          onScrollInto={(option: PickerOption) => {
+            emit('scrollInto', {
+              currentOption: option,
+              columnIndex,
+            });
+          }}
         />
       ));
 
@@ -224,6 +242,11 @@ export default defineComponent({
     const renderColumns = () => {
       const wrapHeight = optionHeight.value * +props.visibleOptionNum;
       const columnsStyle = { height: `${wrapHeight}px` };
+
+      if (!props.loading && !hasOptions.value && slots.empty) {
+        return slots.empty();
+      }
+
       return (
         <div ref={columnsRef} class={bem('columns')} style={columnsStyle}>
           {renderColumnItems()}
@@ -245,23 +268,20 @@ export default defineComponent({
       }
     };
 
-    watch(
-      currentColumns,
-      (columns) => {
-        columns.forEach((options, index) => {
-          if (
-            options.length &&
-            !isOptionExist(options, selectedValues.value[index], fields.value)
-          ) {
-            setValue(
-              index,
-              getFirstEnabledOption(options)![fields.value.value]
-            );
-          }
-        });
-      },
-      { immediate: true }
-    );
+    const resetSelectedValues = (columns: PickerColumn[]) => {
+      columns.forEach((options, index) => {
+        if (
+          options.length &&
+          !isOptionExist(options, selectedValues.value[index], fields.value)
+        ) {
+          setValue(index, getFirstEnabledOption(options)![fields.value.value]);
+        }
+      });
+    };
+
+    watch(currentColumns, (columns) => resetSelectedValues(columns), {
+      immediate: true,
+    });
 
     // preserve last emitted model value
     // when props.modelValue is updated by parent component,
@@ -277,9 +297,14 @@ export default defineComponent({
           selectedValues.value = newValues.slice(0);
           lastEmittedModelValue = newValues.slice(0);
         }
+
+        if (props.modelValue.length === 0) {
+          resetSelectedValues(currentColumns.value);
+        }
       },
-      { deep: true }
+      { deep: true },
     );
+
     watch(
       selectedValues,
       (newValues) => {
@@ -288,7 +313,7 @@ export default defineComponent({
           emit('update:modelValue', lastEmittedModelValue);
         }
       },
-      { immediate: true }
+      { immediate: true },
     );
 
     // useEventListener will set passive to `false` to eliminate the warning of Chrome

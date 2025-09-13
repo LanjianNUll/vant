@@ -92,7 +92,7 @@ export default defineComponent({
     const size = computed(() => state[props.vertical ? 'height' : 'width']);
 
     const delta = computed(() =>
-      props.vertical ? touch.deltaY.value : touch.deltaX.value
+      props.vertical ? touch.deltaY.value : touch.deltaX.value,
     );
 
     const minOffset = computed(() => {
@@ -106,13 +106,13 @@ export default defineComponent({
     const maxCount = computed(() =>
       size.value
         ? Math.ceil(Math.abs(minOffset.value) / size.value)
-        : count.value
+        : count.value,
     );
 
     const trackSize = computed(() => count.value * size.value);
 
     const activeIndicator = computed(
-      () => (state.active + count.value) % count.value
+      () => (state.active + count.value) % count.value,
     );
 
     const isCorrectDirection = computed(() => {
@@ -123,7 +123,9 @@ export default defineComponent({
     const trackStyle = computed(() => {
       const style: CSSProperties = {
         transitionDuration: `${state.swiping ? 0 : props.duration}ms`,
-        transform: `translate${props.vertical ? 'Y' : 'X'}(${state.offset}px)`,
+        transform: `translate${
+          props.vertical ? 'Y' : 'X'
+        }(${+state.offset.toFixed(2)}px)`,
       };
 
       if (size.value) {
@@ -189,7 +191,7 @@ export default defineComponent({
         if (children[count.value - 1] && targetOffset !== 0) {
           const outLeftBound = targetOffset > 0;
           children[count.value - 1].setOffset(
-            outLeftBound ? -trackSize.value : 0
+            outLeftBound ? -trackSize.value : 0,
           );
         }
       }
@@ -362,7 +364,7 @@ export default defineComponent({
           pace = offset > 0 ? (delta.value > 0 ? -1 : 1) : 0;
         } else {
           pace = -Math[delta.value > 0 ? 'ceil' : 'floor'](
-            delta.value / size.value
+            delta.value / size.value,
           );
         }
 
@@ -452,12 +454,15 @@ export default defineComponent({
 
     watch(
       () => props.initialSwipe,
-      (value) => initialize(+value)
+      (value) => initialize(+value),
     );
 
     watch(count, () => initialize(state.active));
     watch(() => props.autoplay, autoplay);
-    watch([windowWidth, windowHeight], resize);
+    watch(
+      [windowWidth, windowHeight, () => props.width, () => props.height],
+      resize,
+    );
     watch(usePageVisibility(), (visible) => {
       if (visible === 'visible') {
         autoplay();

@@ -105,7 +105,7 @@ export default defineComponent({
 
     const getActiveAnchor = (
       scrollTop: number,
-      rects: Array<{ top: number; height: number }>
+      rects: Array<{ top: number; height: number }>,
     ) => {
       for (let i = children.length - 1; i >= 0; i--) {
         const prevHeight = i > 0 ? rects[i - 1].height : 0;
@@ -132,7 +132,7 @@ export default defineComponent({
       const scrollParentRect = useRect(scrollParent);
 
       const rects = children.map((item) =>
-        item.getRect(scrollParent.value, scrollParentRect)
+        item.getRect(scrollParent.value, scrollParentRect),
       );
 
       let active = -1;
@@ -140,7 +140,11 @@ export default defineComponent({
         const match = getMatchAnchor(selectActiveIndex);
         if (match) {
           const rect = match.getRect(scrollParent.value, scrollParentRect);
-          active = getActiveAnchor(rect.top, rects);
+          if (props.sticky && props.stickyOffsetTop) {
+            active = getActiveAnchor(rect.top - props.stickyOffsetTop, rects);
+          } else {
+            active = getActiveAnchor(rect.top, rects);
+          }
         }
       } else {
         active = getActiveAnchor(scrollTop, rects);
@@ -229,7 +233,11 @@ export default defineComponent({
         }
 
         if (props.sticky && props.stickyOffsetTop) {
-          setRootScrollTop(getRootScrollTop() - props.stickyOffsetTop);
+          if (getRootScrollTop() === offsetHeight - scrollParentRect.height) {
+            setRootScrollTop(getRootScrollTop());
+          } else {
+            setRootScrollTop(getRootScrollTop() - props.stickyOffsetTop);
+          }
         }
 
         emit('select', match.index);
@@ -258,7 +266,7 @@ export default defineComponent({
         const { clientX, clientY } = event.touches[0];
         const target = document.elementFromPoint(
           clientX,
-          clientY
+          clientY,
         ) as HTMLElement;
         if (target) {
           const { index } = target.dataset;

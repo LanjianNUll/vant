@@ -32,6 +32,8 @@ showImagePreview(['https://fastly.jsdelivr.net/npm/@vant/assets/apple-1.jpeg']);
 
 ### Basic Usage
 
+When calling `showImagePreview`, you can directly pass an array of images to display the image preview.
+
 ```js
 import { showImagePreview } from 'vant';
 
@@ -42,6 +44,8 @@ showImagePreview([
 ```
 
 ### Set Start Position
+
+`showImagePreview` supports passing a configuration object, and you can specify the initial position (index value) of the image through the `startPosition` option.
 
 ```js
 import { showImagePreview } from 'vant';
@@ -57,7 +61,7 @@ showImagePreview({
 
 ### Show Close Icon
 
-After setting the `closeable` attribute, the close icon will be displayed in the upper right corner of the pop-up layer, and the icon can be customized through the `close-icon` attribute, and the icon location can be customized by using the `close-icon-position` attribute.
+When the `closeable` option is enabled, a close icon will be displayed in the top-right corner of the popup layer. You can customize the icon by using the `close-icon` option, and the icon position can be customized using the `close-icon-position` option.
 
 ```js
 import { showImagePreview } from 'vant';
@@ -72,6 +76,8 @@ showImagePreview({
 ```
 
 ### Close Event
+
+You can listen to the close event of the image preview through the `onClose` option.
 
 ```js
 import { showToast, showImagePreview } from 'vant';
@@ -88,6 +94,8 @@ showImagePreview({
 ```
 
 ### Before Close
+
+You can pass a callback function through the `beforeClose` option to perform specific operations before closing the image preview.
 
 ```js
 import { showImagePreview } from 'vant';
@@ -106,6 +114,8 @@ setTimeout(() => {
 ```
 
 ### Use ImagePreview Component
+
+If you need to embed components or other custom content inside the ImagePreview, you can directly use the ImagePreview component and customize it using the `index` slot. Before using it, you need to register the component through `app.use` or other methods.
 
 ```html
 <van-image-preview v-model:show="show" :images="images" @change="onChange">
@@ -140,10 +150,14 @@ export default {
 
 ### Use image slot
 
-When using ImagePreview component, you can custom the image through the `image` slot, such as render a video content.
+When using ImagePreview component, you can custom the image through the `image` slot, such as render a video content. In this example, you can also set `close-on-click-image` prop to `false`, so that the preview won't be accidentally closed when you click on the video.
 
 ```html
-<van-image-preview v-model:show="show" :images="images">
+<van-image-preview
+  v-model:show="show"
+  :images="images"
+  :close-on-click-image="false"
+>
   <template #image="{ src }">
     <video style="width: 100%;" controls>
       <source :src="src" />
@@ -171,15 +185,29 @@ export default {
 };
 ```
 
+When you customize the image through the `image` slot, you can bind the `style` and `onLoad` callback through the params of the slot, which can allow the `<img>` tag to support image scaling.
+
+```html
+<van-image-preview
+  v-model:show="show"
+  :images="images"
+  :close-on-click-image="false"
+>
+  <template #image="{ src, style, onLoad }">
+    <img :src="src" :style="[{ width: '100%' }, style]" @load="onLoad" />
+  </template>
+</van-image-preview>
+```
+
 ## API
 
 ### Methods
 
 Vant exports following ImagePreview utility functions:
 
-| Methods          | Description        | Attribute | Return value         |
-| ---------------- | ------------------ | --------- | -------------------- | --------------------- |
-| showImagePreview | Show image preview | `string[] | ImagePreviewOptions` | imagePreview Instance |
+| Methods | Description | Attribute | Return value |
+| --- | --- | --- | --- |
+| showImagePreview | Display a full-screen image preview component | _string[] \| ImagePreviewOptions_ | ImagePreview Instance |
 
 ### ImagePreviewOptions
 
@@ -195,6 +223,10 @@ Vant exports following ImagePreview utility functions:
 | onChange | Emitted when current image changed | _Function_ | - |
 | onScale | Emitted when scaling current image | _Function_ | - |
 | closeOnPopstate | Whether to close when popstate | _boolean_ | `true` |
+| doubleScale `v4.7.2` | Whether to enable double tap zoom gesture. When disabled, the image preview will be closed immediately upon clicking | _boolean_ | `true` |
+| closeOnClickImage `v4.8.3` | Whether to close when image is clicked | _boolean_ | `true` |
+| closeOnClickOverlay `v4.6.4` | Whether to close when overlay is clicked | _boolean_ | `true` |
+| vertical `v4.8.6` | Whether to enable vertical gesture sliding | _boolean_ | `false` |
 | beforeClose | Callback function before close | _(action) => boolean \| Promise_ | - |
 | className | Custom className | _string \| Array \| object_ | - |
 | maxZoom | Max zoom | _number \| string_ | `3` |
@@ -202,7 +234,7 @@ Vant exports following ImagePreview utility functions:
 | closeable | Whether to show close icon | _boolean_ | `false` |
 | closeIcon | Close icon name | _string_ | `clear` |
 | closeIconPosition | Close icon position, can be set to `top-left` `bottom-left` `bottom-right` | _string_ | `top-right` |
-| transition | Transition, equivalent to `name` prop of [transition](https://v3.vuejs.org/api/built-in-components.html#transition) | _string_ | `van-fade` |
+| transition | Transition, equivalent to `name` prop of [transition](https://vuejs.org/api/built-in-components.html#transition) | _string_ | `van-fade` |
 | overlayClass | Custom overlay class | _string \| Array \| object_ | - |
 | overlayStyle | Custom overlay style | _object_ | - |
 | teleport | Specifies a target element where ImagePreview will be mounted | _string \| Element_ | - |
@@ -218,15 +250,19 @@ Vant exports following ImagePreview utility functions:
 | show-index | Whether to show index | _boolean_ | `true` |
 | show-indicators | Whether to show indicators | _boolean_ | `false` |
 | loop | Whether to enable loop | _boolean_ | `true` |
+| double-scale | Whether to enable double tap zoom gesture. When disabled, the image preview will be closed immediately upon clicking | _boolean_ | `true` |
 | before-close | Callback function before close | _(action: number) => boolean \| Promise\<boolean\>_ | - |
 | close-on-popstate | Whether to close when popstate | _boolean_ | `true` |
-| class-name | Custom className | _string \| Array \| object_ | - |
+| close-on-click-image `v4.8.3` | Whether to close when image is clicked | _boolean_ | `true` |
+| close-on-click-overlay `v4.6.4` | Whether to close when overlay is clicked | _boolean_ | `true` |
+| vertical `v4.8.6` | Whether to enable vertical gesture sliding | _boolean_ | `false` |
+| class-name | Custom className (apply to Popup in image preview) | _string \| Array \| object_ | - |
 | max-zoom | Max zoom | _number \| string_ | `3` |
 | min-zoom | Min zoom | _number \| string_ | `1/3` |
 | closeable | Whether to show close icon | _boolean_ | `false` |
 | close-icon | Close icon name | _string_ | `clear` |
 | close-icon-position | Close icon position, can be set to `top-left` `bottom-left` `bottom-right` | _string_ | `top-right` |
-| transition | Transition, equivalent to `name` prop of [transition](https://v3.vuejs.org/api/built-in-components.html#transition) | _string_ | `van-fade` |
+| transition | Transition, equivalent to `name` prop of [transition](https://vuejs.org/api/built-in-components.html#transition) | _string_ | `van-fade` |
 | overlay-class | Custom overlay class | _string \| Array \| object_ | - |
 | overlay-style | Custom overlay style | _object_ | - |
 | teleport | Specifies a target element where ImagePreview will be mounted | _string \| Element_ | - |
@@ -247,7 +283,8 @@ Use [ref](https://vuejs.org/v2/api/#ref) to get ImagePreview instance and call i
 
 | Name | Description | Attribute | Return value |
 | --- | --- | --- | --- |
-| swipeTo `2.9.0` | Swipe to target index | _index: number, options?: SwipeToOptions_ | - |
+| resetScale `4.7.4` | Reset the current image's zoom ratio | - | - |
+| swipeTo | Swipe to target index | _index: number, options?: SwipeToOptions_ | - |
 
 ### Types
 
@@ -277,9 +314,9 @@ imagePreviewRef.value?.swipeTo(1);
 
 | Name | Description | SlotProps |
 | --- | --- | --- |
-| index | Custom index | { index: index of current image } |
+| index | Custom index | _{ index: index of current image }_ |
 | cover | Custom content that covers the image preview | - |
-| image | Custom image content | { src: current image src } |
+| image | Custom image content | _{ src: current image src, onLoad: load image, style: current image style }_ |
 
 ### onClose Parameters
 

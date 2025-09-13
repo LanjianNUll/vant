@@ -47,7 +47,6 @@ const DEFAULT_DATA: AddressEditInfo = {
   tel: '',
   city: '',
   county: '',
-  country: '',
   province: '',
   areaCode: '',
   isDefault: false,
@@ -95,6 +94,7 @@ export default defineComponent({
   emits: [
     'save',
     'focus',
+    'change',
     'delete',
     'clickArea',
     'changeArea',
@@ -111,7 +111,7 @@ export default defineComponent({
     const detailFocused = ref(false);
 
     const areaListLoaded = computed(
-      () => isObject(props.areaList) && Object.keys(props.areaList).length
+      () => isObject(props.areaList) && Object.keys(props.areaList).length,
     );
 
     const areaText = computed(() => {
@@ -128,12 +128,16 @@ export default defineComponent({
 
     // hide bottom field when use search && detail get focused
     const hideBottomFields = computed(
-      () => props.searchResult?.length && detailFocused.value
+      () => props.searchResult?.length && detailFocused.value,
     );
 
     const onFocus = (key: string) => {
       detailFocused.value = key === 'addressDetail';
       emit('focus', key);
+    };
+
+    const onChange = (key: string, value: string) => {
+      emit('change', { key, value });
     };
 
     const rules = computed<Record<string, FieldRule[]>>(() => {
@@ -225,6 +229,7 @@ export default defineComponent({
             v-slots={slots}
             v-show={!hideBottomFields.value}
             center
+            border={false}
             title={t('defaultAddress')}
             class={bem('default')}
           />
@@ -246,7 +251,7 @@ export default defineComponent({
           if (
             options &&
             options.every(
-              (option) => option && option.value !== AREA_EMPTY_CODE
+              (option) => option && option.value !== AREA_EMPTY_CODE,
             )
           ) {
             assignAreaText(options as PickerOption[]);
@@ -256,7 +261,7 @@ export default defineComponent({
       {
         deep: true,
         immediate: true,
-      }
+      },
     );
 
     return () => {
@@ -272,6 +277,7 @@ export default defineComponent({
               rules={rules.value.name}
               placeholder={t('name')}
               onFocus={() => onFocus('name')}
+              onUpdate:modelValue={(val) => onChange('name', val)}
             />
             <Field
               v-model={data.tel}
@@ -282,6 +288,7 @@ export default defineComponent({
               maxlength={props.telMaxlength}
               placeholder={t('tel')}
               onFocus={() => onFocus('tel')}
+              onUpdate:modelValue={(val) => onChange('tel', val)}
             />
             <Field
               v-show={props.showArea}
@@ -289,7 +296,7 @@ export default defineComponent({
               label={t('area')}
               is-link={!disableArea}
               modelValue={areaText.value}
-              rules={rules.value.areaCode}
+              rules={props.showArea ? rules.value.areaCode : undefined}
               placeholder={props.areaPlaceholder || t('area')}
               onFocus={() => onFocus('areaCode')}
               onClick={() => {

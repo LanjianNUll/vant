@@ -17,6 +17,7 @@ async function readMarkdown(options: Options) {
   const mds = await glob(normalizePath(`${options.path}/**/*.md`));
   return mds
     .filter((md) => options.test.test(md))
+    .sort((a, b) => a.localeCompare(b)) // keep order
     .map((path) => fse.readFileSync(path, 'utf-8'));
 }
 
@@ -36,7 +37,7 @@ export async function parseAndWrite(options: Options) {
   const webTypes = genWebTypes(vueTags, options);
   fse.outputFileSync(
     join(options.outputDir, 'web-types.json'),
-    JSON.stringify(webTypes)
+    JSON.stringify(webTypes),
   );
 }
 

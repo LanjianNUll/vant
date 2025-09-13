@@ -22,6 +22,7 @@ import {
 
 // Composables
 import { useId } from '../composables/use-id';
+import { useExpose } from '../composables/use-expose';
 import {
   useRect,
   useChildren,
@@ -41,8 +42,10 @@ export const dropdownMenuProps = {
   duration: makeNumericProp(0.2),
   direction: makeStringProp<DropdownMenuDirection>('down'),
   activeColor: String,
+  autoLocate: Boolean,
   closeOnClickOutside: truthProp,
   closeOnClickOverlay: truthProp,
+  swipeThreshold: numericProp,
 };
 
 export type DropdownMenuProps = ExtractPropTypes<typeof dropdownMenuProps>;
@@ -64,7 +67,11 @@ export default defineComponent({
     const scrollParent = useScrollParent(root);
 
     const opened = computed(() =>
-      children.some((item) => item.state.showWrapper)
+      children.some((item) => item.state.showWrapper),
+    );
+
+    const scrollable = computed(
+      () => props.swipeThreshold && children.length > +props.swipeThreshold,
     );
 
     const barStyle = computed<CSSProperties | undefined>(() => {
@@ -75,11 +82,15 @@ export default defineComponent({
       }
     });
 
+    const close = () => {
+      children.forEach((item) => {
+        item.toggle(false);
+      });
+    };
+
     const onClickAway = () => {
       if (props.closeOnClickOutside) {
-        children.forEach((item) => {
-          item.toggle(false);
-        });
+        close();
       }
     };
 
@@ -119,7 +130,11 @@ export default defineComponent({
           id={`${id}-${index}`}
           role="button"
           tabindex={disabled ? undefined : 0}
-          class={[bem('item', { disabled }), { [HAPTICS_FEEDBACK]: !disabled }]}
+          data-allow-mismatch="attribute"
+          class={[
+            bem('item', { disabled, grow: scrollable.value }),
+            { [HAPTICS_FEEDBACK]: !disabled },
+          ]}
           onClick={() => {
             if (!disabled) {
               toggleItem(index);
@@ -142,7 +157,8 @@ export default defineComponent({
       );
     };
 
-    linkChildren({ id, props, offset, updateOffset });
+    useExpose({ close, opened });
+    linkChildren({ id, props, offset, opened, updateOffset });
     useClickAway(root, onClickAway);
     useEventListener('scroll', onScroll, {
       target: scrollParent,
@@ -154,7 +170,10 @@ export default defineComponent({
         <div
           ref={barRef}
           style={barStyle.value}
-          class={bem('bar', { opened: opened.value })}
+          class={bem('bar', {
+            opened: opened.value,
+            scrollable: scrollable.value,
+          })}
         >
           {children.map(renderTitle)}
         </div>

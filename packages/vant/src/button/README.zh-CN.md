@@ -26,8 +26,8 @@ app.use(Button);
 <van-button type="primary">主要按钮</van-button>
 <van-button type="success">成功按钮</van-button>
 <van-button type="default">默认按钮</van-button>
-<van-button type="warning">警告按钮</van-button>
 <van-button type="danger">危险按钮</van-button>
+<van-button type="warning">警告按钮</van-button>
 ```
 
 ### 朴素按钮
@@ -84,6 +84,7 @@ app.use(Button);
 <van-button icon="plus" type="primary" />
 <van-button icon="plus" type="primary">按钮</van-button>
 <van-button
+  plain
   icon="https://fastly.jsdelivr.net/npm/@vant/assets/user-active.png"
   type="primary"
 >
@@ -131,6 +132,32 @@ app.use(Button);
 </van-button>
 ```
 
+### 动画按钮
+
+搭配 Button 和 [Swipe 组件](/#/zh-CN/swipe)，可以实现垂直滚动的动画按钮效果。
+
+```html
+<van-button type="danger" round>
+  <van-swipe
+    vertical
+    class="notice-swipe"
+    :autoplay="2000"
+    :touchable="false"
+    :show-indicators="false"
+  >
+    <van-swipe-item>做任务</van-swipe-item>
+    <van-swipe-item>抽大奖</van-swipe-item>
+  </van-swipe>
+</van-button>
+
+<style>
+  .notice-swipe {
+    height: 40px;
+    line-height: 40px;
+  }
+</style>
+```
+
 ## API
 
 ### Props
@@ -157,7 +184,7 @@ app.use(Button);
 | loading-type | [加载图标类型](#/zh-CN/loading)，可选值为 `spinner` | _string_ | `circular` |
 | loading-size | 加载图标大小，默认单位为 `px` | _number \| string_ | `20px` |
 | url | 点击后跳转的链接地址 | _string_ | - |
-| to | 点击后跳转的目标路由对象，等同于 vue-router 的 [to 属性](https://router.vuejs.org/zh/api/#to) | _string \| object_ | - |
+| to | 点击后跳转的目标路由对象，等同于 Vue Router 的 [to 属性](https://router.vuejs.org/zh/api/interfaces/RouterLinkProps.html#Properties-to) | _string \| object_ | - |
 | replace | 是否在跳转时替换当前页面历史 | _boolean_ | `false` |
 
 ### Events

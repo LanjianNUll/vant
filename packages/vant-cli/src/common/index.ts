@@ -1,15 +1,15 @@
 import fse from 'fs-extra';
 import { sep, join } from 'node:path';
 import { SRC_DIR, getVantConfig } from './constant.js';
-import { InlineConfig, loadConfigFromFile, mergeConfig } from 'vite';
+import { type InlineConfig, loadConfigFromFile, mergeConfig } from 'vite';
 
 const { lstatSync, existsSync, readdirSync, readFileSync, outputFileSync } =
   fse;
 
 export const EXT_REGEXP = /\.\w+$/;
 export const SFC_REGEXP = /\.(vue)$/;
-export const DEMO_REGEXP = new RegExp('\\' + sep + 'demo$');
-export const TEST_REGEXP = new RegExp('\\' + sep + 'test$');
+export const DEMO_REGEXP = new RegExp(`\\${sep}demo$`);
+export const TEST_REGEXP = new RegExp(`\\${sep}test$`);
 export const ASSET_REGEXP = /\.(png|jpe?g|gif|webp|ico|jfif|svg|woff2?|ttf)$/i;
 export const STYLE_REGEXP = /\.(css|less|scss)$/;
 export const SCRIPT_REGEXP = /\.(js|ts|jsx|tsx)$/;
@@ -24,8 +24,12 @@ export function replaceExt(path: string, ext: string) {
   return path.replace(EXT_REGEXP, ext);
 }
 
-export function hasDefaultExport(code: string) {
-  return code.includes('export default') || code.includes('export { default }');
+export function hasExportOrDefineOptions(code: string) {
+  return (
+    code.includes('export default') ||
+    code.includes('export { default }') ||
+    code.includes('defineOptions')
+  );
 }
 
 export function getComponents() {
@@ -38,11 +42,11 @@ export function getComponents() {
       ENTRY_EXTS.some((ext) => {
         const path = join(SRC_DIR, dir, `index.${ext}`);
         if (existsSync(path)) {
-          return hasDefaultExport(readFileSync(path, 'utf-8'));
+          return hasExportOrDefineOptions(readFileSync(path, 'utf-8'));
         }
 
         return false;
-      })
+      }),
     );
 }
 
@@ -65,14 +69,14 @@ export function camelize(str: string): string {
 export function pascalize(str: string): string {
   return camelize(str).replace(
     pascalizeRE,
-    (_, c1, c2) => c1.toUpperCase() + c2
+    (_, c1, c2) => c1.toUpperCase() + c2,
   );
 }
 
 export function decamelize(str: string, sep = '-') {
   return str
-    .replace(/([a-z\d])([A-Z])/g, '$1' + sep + '$2')
-    .replace(/([A-Z])([A-Z][a-z\d]+)/g, '$1' + sep + '$2')
+    .replace(/([a-z\d])([A-Z])/g, `$1${sep}$2`)
+    .replace(/([A-Z])([A-Z][a-z\d]+)/g, `$1${sep}$2`)
     .toLowerCase();
 }
 
@@ -116,7 +120,7 @@ export function smartOutputFile(filePath: string, content: string) {
 
 export async function mergeCustomViteConfig(
   config: InlineConfig,
-  mode: 'production' | 'development'
+  mode: 'production' | 'development',
 ): Promise<InlineConfig> {
   const vantConfig = getVantConfig();
   const configureVite = vantConfig.build?.configureVite;
@@ -127,7 +131,7 @@ export async function mergeCustomViteConfig(
       command: mode === 'development' ? 'serve' : 'build',
     },
     undefined,
-    process.cwd()
+    process.cwd(),
   );
 
   if (configureVite) {
